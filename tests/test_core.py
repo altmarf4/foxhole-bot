@@ -10,9 +10,8 @@ from foxbot.core.alerts import crossed_thresholds
 from foxbot.core.catalog import Catalog
 from foxbot.core.locations import SEED_PATH, LocationService
 from foxbot.core.locpicker import split_evenly
-from foxbot.db import MIGRATIONS
 from foxbot.core.text import EMBED_TOTAL_LIMIT, chunk_lines, clip, fit_board_embeds
-from foxbot.db import Database
+from foxbot.db import MIGRATIONS, Database
 
 
 @pytest.fixture
