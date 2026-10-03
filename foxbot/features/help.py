@@ -54,10 +54,13 @@ INTROS = {
         "A shared facility queue: what the regiment wants produced at its facilities, in order, who is working on "
         "each entry and what is done."
     ),
-    "mine": "Everything you created or have access to across stockpiles, ships and bases, with their timers.",
+    "mine": (
+        "Everything you created or have access to across stockpiles, ships and bases, with their timers, plus the "
+        "open logi runs you requested or claimed."
+    ),
     "settings": (
         "Admin panel: admin and logistics roles, alerts channel, reminder thresholds, faction, storage and ship "
-        "types, ticket services, Rare Alloys channels, orders channel and backups."
+        "types, ticket services, Rare Alloys channels, orders channel, war alerts and backups."
     ),
     "permissions": "Admin panel to choose which roles may use each part of the bot. Admins always pass.",
     "setup": "Guided first-time setup: roles, alerts channel, faction, ticket staff, who can use the trackers and the boards.",

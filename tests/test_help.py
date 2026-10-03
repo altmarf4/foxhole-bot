@@ -15,7 +15,7 @@ EXTENSIONS = [
     "foxbot.features.help",
 ]
 
-EMOJI = re.compile("[\U0001F000-\U0001FAFF☀-➿⬀-⯿️]")
+EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]")
 
 
 @pytest.fixture

@@ -24,7 +24,7 @@ OVERFLOW_RESERVE = 60
 FOOTER = "Only you can see this. Pick an entry below to open its panel."
 EMPTY = (
     "Nothing to show yet. Stockpiles, ships and bases you add, refresh, follow with **Notify Me** "
-    "or (for private stockpiles) have access to show up here."
+    "or (for private stockpiles) have access to show up here, as do open logi runs you requested or claimed."
 )
 
 
@@ -148,6 +148,25 @@ async def msupps_entries(bot: FoxBot, member: discord.Member, module: ModuleType
     return result
 
 
+async def logi_entries(bot: FoxBot, member: discord.Member, module: ModuleType, now: int) -> list[MineEntry]:
+    result = []
+    for row in await guild_rows(bot, "logi_runs", member.guild.id):
+        if row["status"] not in module.ACTIVE_STATUSES:
+            continue
+        reasons = []
+        if row["created_by"] == member.id:
+            reasons.append("requested")
+        if row["claimed_by"] == member.id:
+            reasons.append("claimed")
+        if not reasons or not await module.can_access(bot, member, row):
+            continue
+        line = f"**{md(row['title'])}** [{row['priority']}] - {md(module.route_text(row))} - {module.progress_text(row)}"
+        result.append(
+            MineEntry("logi", row["id"], row["title"], module.destination_of(row), None, line, module.state_label(row), reasons)
+        )
+    return result
+
+
 @dataclass(frozen=True)
 class Feature:
     kind: str
@@ -161,6 +180,7 @@ FEATURES = [
     Feature("stockpile", "Stockpiles", "Stockpile", "foxbot.features.stockpiles", stockpile_entries),
     Feature("ship", "Ships", "Ship", "foxbot.features.ships", ship_entries),
     Feature("msupps", "Msupps", "Base", "foxbot.features.msupps", msupps_entries),
+    Feature("logi", "Logi Runs", "Logi run", "foxbot.features.logi", logi_entries),
 ]
 FEATURES_BY_KIND = {feature.kind: feature for feature in FEATURES}
 

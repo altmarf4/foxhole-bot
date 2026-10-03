@@ -34,6 +34,7 @@ foxbot/
     settings.py     typed per-guild settings (JSON values, cached)
     permissions.py  groups, admin check, check_group/check_admin helpers
     locations.py    War API hexes/towns, fuzzy resolve, autocomplete choices
+    warapi.py       War API client (ETags, at least 0.5 s between requests, cached last response)
     locpicker.py    cascading hex -> town picker (ephemeral) used by every location-based add flow
     boards.py       live board framework (render -> embeds + select + buttons; debounced refresh; DynamicItems)
     alerts.py       timed reminder framework (thresholds, public posts, private DMs, subscribers)
@@ -51,7 +52,7 @@ Services hang off the bot: `bot.db`, `bot.settings`, `bot.perms`, `bot.locations
 
 ## Permissions
 
-Groups: `stockpile`, `ship`, `msupps`, `orders`, `rares`, `tickets` (ticket staff), `inventory`.
+Groups: `stockpile`, `ship`, `msupps`, `orders`, `rares`, `tickets` (ticket staff), `inventory`, `logi`, `facility`.
 Admin = server owner, Discord Administrator permission, or the configured admin role. Admins pass every check.
 Granting `@everyone` to a group opens it to all members. Configured in the `/permissions` panel with role pickers.
 Moderation commands use native Discord permissions (Manage Messages / Manage Roles).
@@ -120,13 +121,56 @@ As designed with the regiment: `/ticket open` modal (regiment + optional notes, 
 ## Admin
 
 - `/setup` wizard: one ephemeral panel to set admin role, logistics role, alerts channel, faction, ticket staff (permissions), and post boards.
-- `/settings` panel (admin role, logistics role, alert channel, thresholds, storage types, ship types, faction, ticket services, rares log/voice channels) and `/permissions` panel (role pickers per group).
+- `/settings` panel (admin role, logistics role, alert channel, thresholds, storage types, ship types, faction, ticket services, rares log/voice channels, war alerts) and `/permissions` panel (role pickers per group).
 - Daily SQLite backup (online backup API) to `data/backups/`, keep 14.
 
 ## Phase 2 (War API)
 
 `/war status`, live war board, detection of a new war (warId change) with an admin one-click archive, town-captured alerts using dynamic map data and the faction setting.
 
+As built:
+
+- Commands (group `/war`, server only, replies only the user sees): `/war status` (the board embed), `/war hex <hex>` (hex autocomplete; who holds each town), `/war captures` (every town change this war, newest first, paged), `/war board` (admin, posts the live board), `/war archive` (admin, see Archive).
+- War board: kind `war`, title "War". War number, day, status, victory towns per side out of the number needed, casualties, enlistments, the last 10 town changes and the data age. Buttons Recent Captures and Hex Status, no select.
+- Polling every 5 minutes from the shard in `WAR_API_SHARD`: the war state, then each map's dynamic data (ETags). The map list refreshes every 6 hours or on a new war; `HomeRegionC` and `HomeRegionW` are skipped (no map data). War reports (casualties, enlistments) refresh every 30 minutes; totals are kept per map, so a map that fails keeps its last values.
+- Towns are town bases, relic bases and keeps, named after the nearest Major map label, then Minor, then any label. A town whose name cannot be loaded shows as "Unknown town" until a later poll fills it in.
+- Baseline: the first poll after a start or after a new war records each map silently, so changes made while the bot was offline never alert. No capture is recorded before the war's conquest start time.
+- Data age: "War API data updated" only advances when at least one map loaded; the board warns after 20 minutes without fresh data.
+- Victory towns: flag 0x01 is a victory town, 0x10 scorched. Each scorched victory town lowers the number needed by one; the board shows both numbers.
+- Storage: `war_towns` (current owner per town), `war_events` (changes per war), `meta` key `war_state` (JSON), `war_archives`.
+- Alerts (`/settings` > War): Off (default), Our faction only, All changes. Our faction only uses the faction setting, adds "we lost it" / "we took it" and colours the message by loss or gain. All changes from one poll are one message.
+- New war notice (with the persistent Archive Previous War button) and war over notice are posted in every server. Alerts and notices go to the war alert channel, else the alerts channel, else the war board's channel, and never ping anyone. Nothing is announced on the first poll after a start.
+- Archive (new-war cleanup), admin only, after a confirmation that shows the counts:
+  - First a backup of the whole database to `data/backups/war-<number>-<server id>-<UTC time>.db` (`-2`, `-3` for repeats in the same second). The daily 14-copy prune does not touch these. If the backup fails, nothing is deleted.
+  - Then, for that server only and in one transaction: stockpiles, ships, msupps bases, inventory snapshots and their items, orders with lines and contributions, logi runs and the facility queue, plus their per-entry rows (access lists, subscribers, reminder roles, screenshots, alert state, alert messages). Reminder messages, order cards and logi ping messages are deleted from Discord where possible.
+  - Kept: settings, permissions, boards, Rare Alloys, tickets and war history. A `war_archives` row records who, when and the counts, every board refreshes, and one server cannot run two archives at once.
+  - War number: the notice button (`fw:archive:<number>`) carries the previous war's number and is refused, pointing to `/war archive`, once a newer notice exists. `/war archive` uses the current war's number when a winner is declared, otherwise the current number minus 1.
+
 ## Phase 3
 
 Logi run requests (create, claim, deliver, pings), facility queue (simple shared list).
+
+As built: both use new permission groups, `logi` (Logi runs) and `facility` (Facility queue), set in `/permissions` and in the `/setup` step "Who can use the trackers". Every action on a private panel re-loads the entry, re-checks permission and only applies if the status and the claimer or worker are still what the panel showed; otherwise the panel refreshes and says what changed.
+
+### Logi runs
+
+- Fields: title, cargo, pickup (optional location), destination (location), priority (High/Medium/Low, default Medium), notes, status (open, claimed, delivered, cancelled), who claimed, delivered or cancelled it and when, ping message.
+- Commands (group `/logi`, server only): `/logi request title cargo destination_hex [destination_town] [pickup] [priority] [notes]` (location autocomplete, the town filtered by the hex; unknown places are saved as typed with a note), `/logi list`, `/logi history` (delivered or cancelled in the last 7 days, paged), `/logi board` (admin).
+- Board: kind `logi`, title "Logi Runs". Open runs grouped by priority, oldest first, then claimed runs with who and since when. Select of 25 (open before claimed, by priority then age). Buttons Request Run (location picker for the destination, then a form with title, cargo, pickup, priority, notes) and History.
+- Private panel: Claim, Unclaim, Mark Delivered, Edit (title, cargo, pickup, destination, notes), Cancel Run (confirm with "Cancel Run" / "Keep Run"), Refresh, and a priority select.
+- Who: the `logi` group requests, views and claims; the requester and the claimer always see their own run. Unclaim: the claimer or an admin. Mark Delivered: the claimer, the requester or an admin, also straight from open. Edit, priority and cancel: the requester or an admin, while open or claimed.
+- Ping: one message per request in the logi board's channel (else the alerts channel) mentioning the logistics role, with persistent Claim and Details buttons. It is removed once the run is claimed, delivered or cancelled and kept current when the run is edited. Unclaiming opens the run again without a second ping. The requester is told whether the ping went out.
+- DMs: the requester gets a DM when someone else claims or delivers the run. Cancelling and unclaiming send none.
+- `/mine` lists open and claimed runs the user requested or claimed.
+- Schema v3 adds `cancelled_by` and `cancelled_at` to `logi_runs`.
+
+### Facility queue
+
+- Fields: item (catalog item or free text, up to 80 characters), quantity (1 to 100,000), facility (optional text), notes, position, status (queued, in progress, done), worker, who marked it done, requester.
+- Commands (group `/facility`, server only): `/facility add item quantity [facility] [notes]` (item autocomplete from the catalog for the server's faction; facility autocomplete from recently used facilities, then map locations), `/facility list` (also opens entries done in the last 24 hours), `/facility board` (admin).
+- Board: kind `facility`, title "Facility Queue". Numbered list: in progress first (worker and since when), then queued in order, then entries done in the last 24 hours on one line (newest 5 and "and N more"). Select of 25 in that order. Buttons Add (form), Done Today (paged list) and Clear Done (admin, confirmation; permanently deletes done entries).
+- Private panel: Start Working, Stop Working, Mark Done, Move Up, Move Down, Move to Top, Back to Queue (undo Mark Done; the entry returns at the top of the queue), Edit, Remove (confirmation), Refresh.
+- Order: `position` is gap-free over queued and in-progress entries and rewritten in the same transaction as every change; done entries get 0. Only queued entries move; in-progress entries keep their slots and Stop Working keeps the entry's place.
+- Who: any `facility` member starts work and moves entries. Stop Working: the worker or an admin. Mark Done: anyone on a queued entry; on an in-progress entry the worker, the requester or an admin. Edit, Remove and Back to Queue: the requester, the worker, whoever marked it done, or an admin.
+- Item matching: item code, exact name, name without "(Crate)", then a cautious whole-word guess (also with a trailing "s" removed). Guesses and unmatched text are reported to the user.
+- No pings or DMs, and no `/mine` section yet.

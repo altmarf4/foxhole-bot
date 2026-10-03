@@ -143,8 +143,8 @@ async def test_settings_panel_opens_ephemeral_with_sections(world):
     panel = payload["view"]
     assert_view_limits(panel)
     section_select = select_of(panel, discord.ui.Select, 0)
-    assert [o.value for o in section_select.options] == ["general", "stockpiles", "ships", "tickets", "rares", "orders"]
-    for key, title in [("stockpiles", "Stockpiles"), ("ships", "Ships"), ("tickets", "Tickets"), ("rares", "Rares"), ("orders", "Orders")]:
+    assert [o.value for o in section_select.options] == ["general", "stockpiles", "ships", "tickets", "rares", "orders", "war"]
+    for key, title in [("stockpiles", "Stockpiles"), ("ships", "Ships"), ("tickets", "Tickets"), ("rares", "Rares"), ("orders", "Orders"), ("war", "War")]:
         payload = await go_to_section(w, panel, key)
         assert payload["embed"].title == f"Settings - {title}"
         assert len(payload["embed"]) <= 6000
@@ -497,6 +497,63 @@ async def test_orders_channel_set_and_clear(world):
     assert await bot.settings.get(gid, keys.ORDERS_CHANNEL) is None
 
 
+async def test_war_alerts_set_and_clear(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    panel = last(await open_settings(w))[1]["view"]
+    payload = await go_to_section(w, panel, "war")
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Town change alerts"].startswith("**Off**")
+    assert fields["War alert channel"].startswith("Not set.")
+    assert_view_limits(panel)
+    modal = (await click(w, panel, "Set War Alerts")).response.modal
+    assert isinstance(modal, w.admin.WarAlertsModal)
+    assert_modal_limits(modal)
+    assert [o.label for o in modal.mode_field.component.options] == ["Off", "Our faction only", "All changes"]
+    assert [o.label for o in modal.mode_field.component.options if o.default] == ["Off"]
+    set_label_value(modal.mode_field, "Our faction only")
+    set_label_value(modal.channel_field, w.channel)
+    payload = last(await submit(w, modal))[1]
+    assert payload["content"].startswith("War alerts saved.")
+    assert "faction is not set" in payload["content"]
+    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "ours"
+    assert await bot.settings.get(gid, keys.WAR_ALERT_CHANNEL) == w.channel.id
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert "faction is not set, so these alerts are off" in fields["Town change alerts"]
+    assert fields["War alert channel"] == f"<#{w.channel.id}>"
+    await bot.settings.set(gid, keys.FACTION, "colonial")
+    reopened = (await click(w, panel, "Set War Alerts")).response.modal
+    assert [o.label for o in reopened.mode_field.component.options if o.default] == ["Our faction only"]
+    assert [d.id for d in reopened.channel_field.component.default_values] == [w.channel.id]
+    set_label_value(reopened.mode_field, "All changes")
+    set_label_value(reopened.channel_field, w.channel)
+    payload = last(await submit(w, reopened))[1]
+    assert payload["content"] == "War alerts saved."
+    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "all"
+    await bot.settings.set(gid, keys.WAR_ALERT_MODE, "ours")
+    payload = last(await click(w, panel, "Clear War Alert Channel"))[1]
+    assert payload["content"].startswith("War alert channel cleared.")
+    assert await bot.settings.get(gid, keys.WAR_ALERT_CHANNEL) is None
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Town change alerts"] == "**Our faction only**: towns the Colonials lost or took."
+    off = (await click(w, panel, "Set War Alerts")).response.modal
+    set_label_value(off.mode_field, "Off")
+    set_label_value(off.channel_field, [])
+    await submit(w, off)
+    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "off"
+    assert await bot.db.fetchval("SELECT COUNT(*) FROM guild_settings WHERE key = 'war_alert_mode'") == 0
+    sneaky = w.admin.WarAlertsModal(panel, "off", None)
+    set_label_value(sneaky.mode_field, "All changes")
+    set_label_value(sneaky.channel_field, [])
+    interaction = await submit(w, sneaky, w.plain)
+    assert "Only bot admins" in last(interaction)[1]["content"]
+    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "off"
+    for label in ["Set War Alerts", "Clear War Alert Channel"]:
+        interaction = await click(w, panel, label, w.plain)
+        assert "Only bot admins" in last(interaction)[1]["content"]
+        assert interaction.response.modal is None
+
+
 async def test_settings_callbacks_recheck_admin(world):
     w = world
     bot, gid = w.bot, w.guild.id
@@ -651,8 +708,8 @@ async def test_setup_wizard_full_flow(world):
     await pick(w, wizard, select_of(wizard, discord.ui.RoleSelect), [w.logi])
     assert await bot.perms.roles_for(gid, "stockpile") == set()
     payload = last(await click(w, wizard, "Apply to All"))[1]
-    assert "Saved for all six groups" in payload["content"]
-    for group in ["stockpile", "ship", "msupps", "orders", "inventory", "rares"]:
+    assert "Saved for all 8 groups" in payload["content"]
+    for group in ["stockpile", "ship", "msupps", "orders", "inventory", "rares", "logi", "facility"]:
         assert await bot.perms.roles_for(gid, group) == {w.logi.id}
     assert await bot.perms.roles_for(gid, "tickets") == {w.officer.id}
     assert [d.id for d in select_of(wizard, discord.ui.RoleSelect).default_values] == [w.logi.id]

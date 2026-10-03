@@ -1,6 +1,7 @@
 import asyncio
 from pathlib import Path
 
+import aiosqlite
 import discord
 import pytest
 
@@ -120,6 +121,19 @@ async def test_database_migrates_and_settings_roundtrip():
     assert await store.get(1, keys.ALERT_THRESHOLDS) == [3, 1, 24]
     version = await db.fetchval("PRAGMA user_version")
     assert version == len(MIGRATIONS)
+    await db.close()
+
+
+async def test_database_from_schema_v2_gains_logi_cancel_columns(tmp_path):
+    path = tmp_path / "old.db"
+    raw = await aiosqlite.connect(path)
+    await raw.executescript(f"BEGIN;\n{MIGRATIONS[0]}\n{MIGRATIONS[1]}\nPRAGMA user_version = 2;\nCOMMIT;")
+    await raw.close()
+    db = Database(path)
+    await db.connect()
+    columns = {row["name"] for row in await db.fetchall("PRAGMA table_info(logi_runs)")}
+    assert {"cancelled_by", "cancelled_at"} <= columns
+    assert await db.fetchval("PRAGMA user_version") == len(MIGRATIONS)
     await db.close()
 
 

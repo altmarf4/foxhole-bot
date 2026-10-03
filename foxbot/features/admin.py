@@ -53,6 +53,7 @@ SEND_PERMISSIONS = {"view_channel": "View Channel", "send_messages": "Send Messa
 RENAME_PERMISSIONS = {"view_channel": "View Channel", "manage_channels": "Manage Channels"}
 
 ACCESS_GROUPS = ["stockpile", "ship", "msupps", "orders", "inventory", "rares", "logi", "facility"]
+ALL_ACCESS_GROUPS = f"all {len(ACCESS_GROUPS)} groups"
 
 SECTIONS = {
     "general": ("General", "Roles, alerts channel, reminder thresholds, faction, backups"),
@@ -61,7 +62,11 @@ SECTIONS = {
     "tickets": ("Tickets", "Services, prices and ticket channels"),
     "rares": ("Rares", "Rare Alloys log and voice channels"),
     "orders": ("Orders", "Orders channel"),
+    "war": ("War", "Town change alerts and war notices"),
 }
+
+WAR_ALERT_MODES = {"Off": "off", "Our faction only": "ours", "All changes": "all"}
+FACTION_TEAM_NAMES = {"warden": "Wardens", "colonial": "Colonials"}
 
 SETUP_STEPS = [
     ("admin", "Admin role"),
@@ -449,6 +454,44 @@ async def orders_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
     return embed
 
 
+def war_mode_label(value: Any) -> str:
+    lookup = {stored: label for label, stored in WAR_ALERT_MODES.items()}
+    return lookup.get(str(value).lower(), "Off") if value else "Off"
+
+
+def war_mode_text(mode_label: str, faction: Any) -> str:
+    team = FACTION_TEAM_NAMES.get(str(faction).lower()) if faction else None
+    if mode_label == "All changes":
+        return "**All changes**: every town that changes hands, on any side."
+    if mode_label == "Our faction only":
+        if team is None:
+            return "**Our faction only**, but the faction is not set, so these alerts are off. Set it under General."
+        return f"**Our faction only**: towns the {team} lost or took."
+    return "**Off**: no town change alerts are posted."
+
+
+async def war_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    mode = war_mode_label(await bot.settings.get(guild.id, keys.WAR_ALERT_MODE))
+    channel_id = await bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL)
+    faction = await bot.settings.get(guild.id, keys.FACTION)
+    embed = discord.Embed(
+        title="Settings - War",
+        description=(
+            "Town change alerts from the official War API, checked every 5 minutes. All changes from one check "
+            "are posted as one message. New war and war over notices go to the same channel."
+        ),
+        colour=Colour.INFO,
+    )
+    embed.add_field(name="Town change alerts", value=war_mode_text(mode, faction), inline=False)
+    embed.add_field(
+        name="War alert channel",
+        value=channel_text(channel_id, "Not set. War posts go to the alerts channel, or to the war board's channel."),
+        inline=False,
+    )
+    embed.set_footer(text="War posts never ping anyone. Admins archive the previous war with /war archive.")
+    return embed
+
+
 def permissions_embed(guild: discord.Guild, current: dict[str, set[int]]) -> discord.Embed:
     embed = discord.Embed(
         title="Permissions",
@@ -582,7 +625,7 @@ class GeneralModal(BaseModal, title="General Settings"):
             "Faction",
             [*FACTIONS, NO_FACTION],
             default=faction_label(faction),
-            description="Used to tell apart items that share a name. Switch it every war.",
+            description="Used for items that share a name and for war alerts. Switch it every war.",
         )
         for item in (self.admin_field, self.logistics_field, self.channel_field, self.thresholds_field, self.faction_field):
             self.add_item(item)
@@ -737,6 +780,43 @@ class OrdersChannelModal(BaseModal, title="Orders Channel"):
         await self.panel.show(interaction, "\n".join(filter(None, ["Orders channel saved.", warning])))
 
 
+class WarAlertsModal(BaseModal, title="War Alerts"):
+    def __init__(self, panel: SettingsPanel, mode: Any, channel_id: int | None):
+        super().__init__()
+        self.panel = panel
+        self.mode_field = select_field(
+            "Town change alerts",
+            list(WAR_ALERT_MODES),
+            default=war_mode_label(mode),
+            description="Our faction only uses the faction from General settings.",
+        )
+        self.channel_field = channel_select_label(
+            "War alert channel",
+            "Town changes and war notices. Leave empty to use the alerts channel.",
+            channel_id,
+            TEXT_CHANNEL_TYPES,
+        )
+        self.add_item(self.mode_field)
+        self.add_item(self.channel_field)
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        guild = await self.panel.guard(interaction)
+        if guild is None:
+            return
+        bot = self.panel.bot
+        mode = WAR_ALERT_MODES.get(select_value(self.mode_field) or "Off", "off")
+        await store_optional(bot, guild.id, keys.WAR_ALERT_MODE, None if mode == "off" else mode)
+        channel_id = first_id(self.channel_field)
+        await store_optional(bot, guild.id, keys.WAR_ALERT_CHANNEL, channel_id)
+        problems = []
+        if mode == "ours" and not await bot.settings.get(guild.id, keys.FACTION):
+            problems.append("The faction is not set, so our-faction alerts stay off until you set it under General.")
+        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, "post war alerts")
+        if warning:
+            problems.append(warning)
+        await self.panel.show(interaction, "\n".join(["War alerts saved.", *problems]))
+
+
 class AdminPanel(BaseView):
     def __init__(self, bot: FoxBot, guild_id: int, owner_id: int):
         super().__init__(owner_id=owner_id)
@@ -798,6 +878,10 @@ class SettingsPanel(AdminPanel):
             self._button("Set Orders Channel", discord.ButtonStyle.primary, self._edit_orders, row=1)
             self._button("Clear Orders Channel", discord.ButtonStyle.secondary, self._clear_orders, row=1)
             return await orders_embed(self.bot, guild)
+        if self.section == "war":
+            self._button("Set War Alerts", discord.ButtonStyle.primary, self._edit_war, row=1)
+            self._button("Clear War Alert Channel", discord.ButtonStyle.secondary, self._clear_war_channel, row=1)
+            return await war_embed(self.bot, guild)
         self._button("Edit General Settings", discord.ButtonStyle.primary, self._edit_general, row=1)
         self._button("Back Up Now", discord.ButtonStyle.secondary, self._backup, row=1)
         return await general_embed(self.bot, guild)
@@ -956,6 +1040,20 @@ class SettingsPanel(AdminPanel):
 
     async def _clear_orders(self, interaction: discord.Interaction) -> None:
         await self._clear(interaction, keys.ORDERS_CHANNEL, "Orders channel cleared.")
+
+    async def _edit_war(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        modal = WarAlertsModal(
+            self,
+            await self.bot.settings.get(guild.id, keys.WAR_ALERT_MODE),
+            await self.bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL),
+        )
+        await interaction.response.send_modal(modal)
+
+    async def _clear_war_channel(self, interaction: discord.Interaction) -> None:
+        await self._clear(interaction, keys.WAR_ALERT_CHANNEL, "War alert channel cleared. War posts go to the alerts channel.")
 
 
 class PermissionModal(BaseModal):
@@ -1138,7 +1236,7 @@ class SetupWizard(AdminPanel):
         else:
             shown = sorted(sets[0]) if same else []
         select = discord.ui.RoleSelect(
-            placeholder="Pick the roles for all six groups...",
+            placeholder=f"Pick the roles for {ALL_ACCESS_GROUPS}...",
             min_values=0,
             max_values=25,
             default_values=role_defaults(guild, shown),
@@ -1154,7 +1252,7 @@ class SetupWizard(AdminPanel):
             pending = f"\n\nSelected, not saved yet: {roles_text(guild, set(self.pending_access), 'no roles (admins only)')}"
         return clip(
             f"Who may use {names}?\n"
-            "Pick roles and press **Apply to All**. This replaces the roles of all six groups. "
+            f"Pick roles and press **Apply to All**. This replaces the roles of {ALL_ACCESS_GROUPS}. "
             "**Allow Everyone** opens them to every member. Press **Next** to keep the current access. "
             "Fine-tune single groups later with `/permissions`.\n\n" + "\n".join(lines) + pending,
             4000,
@@ -1264,7 +1362,7 @@ class SetupWizard(AdminPanel):
         for group in ACCESS_GROUPS:
             await self.bot.perms.set_roles(guild.id, group, role_ids)
         self.pending_access = None
-        await self.show(interaction, f"Saved for all six groups: {roles_text(guild, role_ids, 'admins only')}.")
+        await self.show(interaction, f"Saved for {ALL_ACCESS_GROUPS}: {roles_text(guild, role_ids, 'admins only')}.")
 
     async def _allow_everyone(self, interaction: discord.Interaction) -> None:
         guild = await self.guard(interaction)
@@ -1273,7 +1371,7 @@ class SetupWizard(AdminPanel):
         for group in ACCESS_GROUPS:
             await self.bot.perms.set_roles(guild.id, group, {guild.id})
         self.pending_access = None
-        await self.show(interaction, "Every member can now use all six groups.")
+        await self.show(interaction, f"Every member can now use {ALL_ACCESS_GROUPS}.")
 
     async def _board_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
         if await self.guard(interaction) is None:

@@ -22,6 +22,13 @@ from foxbot.core.ui import EmbedPaginator, PickerView
 msupps = None
 
 
+@pytest.fixture(autouse=True)
+def frozen_clock(monkeypatch):
+    frozen = timeutil.now()
+    monkeypatch.setattr(timeutil, "now", lambda: frozen)
+    return frozen
+
+
 @pytest.fixture
 async def world():
     global msupps

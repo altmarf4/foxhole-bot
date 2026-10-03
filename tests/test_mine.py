@@ -249,3 +249,54 @@ async def test_works_without_stockpiles_loaded():
         assert "not available" in broken.recorder.last[1]["content"]
     finally:
         await bot.db.close()
+
+
+async def test_mine_lists_open_logi_runs_requested_or_claimed():
+    bot, guild, member, other, channel, officers = await build(["foxbot.features.logi", "foxbot.features.mine"])
+    try:
+        logi = module(bot, "logi")
+        await bot.perms.set_roles(guild.id, "logi", {officers.id})
+
+        async def run(user, title, **overrides):
+            values = dict(
+                title=title,
+                cargo="60 Bmats",
+                pickup_hex="",
+                pickup_region="",
+                dest_hex="Deadlands",
+                dest_region="",
+                priority="High",
+                notes="",
+                user_id=user.id,
+            )
+            values.update(overrides)
+            return await logi.create(bot, guild.id, **values)
+
+        requested = await run(member, "My request")
+        claimed = await logi.claim(bot, await run(other, "Claimed by me", priority="Low"), member.id)
+        finished = await run(member, "Finished one")
+        await logi.deliver(bot, finished, member.id)
+        await run(other, "Somebody else")
+        kind, payload = await run_mine(bot, member, channel)
+        assert kind == "send" and payload["ephemeral"]
+        assert payload["content"] == "You are involved in 2 tracked entries."
+        assert [e.title for e in payload["embeds"]] == ["Logi Runs (2)"]
+        text = payload["embeds"][0].description
+        assert "**My request** [High] - to Deadlands - open, requested <t:" in text and "(requested)" in text
+        assert f"**Claimed by me** [Low] - to Deadlands - claimed by <@{member.id}>" in text and "(claimed)" in text
+        assert "Finished one" not in text and "Somebody else" not in text
+        view = payload["view"]
+        options = {o.value: o for o in view.options}
+        assert set(options) == {f"logi:{requested['id']}", f"logi:{claimed['id']}"}
+        assert options[f"logi:{requested['id']}"].label == "Logi run: My request - Deadlands"
+        assert options[f"logi:{claimed['id']}"].description == "Claimed | Low | claimed"
+        select = find_select(view)
+        select_values(select, [f"logi:{claimed['id']}"])
+        pick = make_interaction(bot, member, channel=channel)
+        await select.callback(pick)
+        kind, opened = pick.recorder.last
+        assert kind == "send" and opened["ephemeral"] and isinstance(opened["view"], logi.RunPanel)
+        other_view = await run_mine(bot, other, channel)
+        assert [e.title for e in other_view[1]["embeds"]] == ["Logi Runs (2)"]
+    finally:
+        await bot.db.close()

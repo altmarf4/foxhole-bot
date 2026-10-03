@@ -360,7 +360,12 @@ CREATE TABLE facility_queue (
 CREATE INDEX idx_facility_queue_guild ON facility_queue (guild_id, status, position);
 """
 
-MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2]
+SCHEMA_V3 = """
+ALTER TABLE logi_runs ADD COLUMN cancelled_by INTEGER;
+ALTER TABLE logi_runs ADD COLUMN cancelled_at INTEGER;
+"""
+
+MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3]
 
 
 class Transaction:
