@@ -1,0 +1,4271 @@
+{
+  "fetched_at": 1790977756.782194,
+  "hexes": [
+    {
+      "key": "AcrithiaHex",
+      "name": "Acrithia",
+      "regions": [
+        {
+          "name": "Camp Omicron",
+          "major": true
+        },
+        {
+          "name": "Heir Apparent",
+          "major": true
+        },
+        {
+          "name": "Legion Ranch",
+          "major": true
+        },
+        {
+          "name": "Nereid Keep",
+          "major": true
+        },
+        {
+          "name": "Patridia",
+          "major": true
+        },
+        {
+          "name": "Swordfort",
+          "major": true
+        },
+        {
+          "name": "The Brinehold",
+          "major": true
+        },
+        {
+          "name": "Thetus Ring",
+          "major": true
+        },
+        {
+          "name": "Astero's Spear",
+          "major": false
+        },
+        {
+          "name": "Duelling Kegs",
+          "major": false
+        },
+        {
+          "name": "Fated Heel",
+          "major": false
+        },
+        {
+          "name": "Final March",
+          "major": false
+        },
+        {
+          "name": "Riverlands",
+          "major": false
+        },
+        {
+          "name": "Weary Slumber",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "AllodsBightHex",
+      "name": "Allod's Bight",
+      "regions": [
+        {
+          "name": "Belaying Trace",
+          "major": true
+        },
+        {
+          "name": "Homesick",
+          "major": true
+        },
+        {
+          "name": "Mercy's Wail",
+          "major": true
+        },
+        {
+          "name": "Rumhold",
+          "major": true
+        },
+        {
+          "name": "Scurvyshire",
+          "major": true
+        },
+        {
+          "name": "The Stone Plank",
+          "major": true
+        },
+        {
+          "name": "The Turncoat",
+          "major": true
+        },
+        {
+          "name": "A Captain's Repose",
+          "major": false
+        },
+        {
+          "name": "Allod's Children",
+          "major": false
+        },
+        {
+          "name": "Blunder Bight",
+          "major": false
+        },
+        {
+          "name": "Breath of Cetus",
+          "major": false
+        },
+        {
+          "name": "Gangrenous Hollow",
+          "major": false
+        },
+        {
+          "name": "Harpy's Perch",
+          "major": false
+        },
+        {
+          "name": "The List",
+          "major": false
+        },
+        {
+          "name": "The Rumroad",
+          "major": false
+        },
+        {
+          "name": "Titan's End",
+          "major": false
+        },
+        {
+          "name": "Witch's Last Flight",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "AshFieldsHex",
+      "name": "Ash Fields",
+      "regions": [
+        {
+          "name": "Ashtown",
+          "major": true
+        },
+        {
+          "name": "Camp Omega",
+          "major": true
+        },
+        {
+          "name": "Cometa",
+          "major": true
+        },
+        {
+          "name": "Electi",
+          "major": true
+        },
+        {
+          "name": "Sootflow",
+          "major": true
+        },
+        {
+          "name": "The Ashfort",
+          "major": true
+        },
+        {
+          "name": "The Calamity",
+          "major": true
+        },
+        {
+          "name": "Gunslinger's Pass",
+          "major": false
+        },
+        {
+          "name": "Mount Blackmoth",
+          "major": false
+        },
+        {
+          "name": "Mount Brimstone",
+          "major": false
+        },
+        {
+          "name": "Omega Valley",
+          "major": false
+        },
+        {
+          "name": "Tar Creek",
+          "major": false
+        },
+        {
+          "name": "The Red River",
+          "major": false
+        },
+        {
+          "name": "The Stillness",
+          "major": false
+        },
+        {
+          "name": "Twin Flames",
+          "major": false
+        },
+        {
+          "name": "Wasteful Calm",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "BasinSionnachHex",
+      "name": "Basin Sionnach",
+      "regions": [
+        {
+          "name": "Basinhome",
+          "major": true
+        },
+        {
+          "name": "Cuttail Station",
+          "major": true
+        },
+        {
+          "name": "Lamplight",
+          "major": true
+        },
+        {
+          "name": "Sess",
+          "major": true
+        },
+        {
+          "name": "Stoic",
+          "major": true
+        },
+        {
+          "name": "The Den",
+          "major": true
+        },
+        {
+          "name": "Basin Sionnach",
+          "major": false
+        },
+        {
+          "name": "Cunning Cross",
+          "major": false
+        },
+        {
+          "name": "Radiant Shore",
+          "major": false
+        },
+        {
+          "name": "The Foxfields",
+          "major": false
+        },
+        {
+          "name": "Torchwood",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "CallahansPassageHex",
+      "name": "Callahan's Passage",
+      "regions": [
+        {
+          "name": "Cragstown",
+          "major": true
+        },
+        {
+          "name": "Crumbling Post",
+          "major": true
+        },
+        {
+          "name": "Lochan Berth",
+          "major": true
+        },
+        {
+          "name": "Overlook Hill",
+          "major": true
+        },
+        {
+          "name": "Sc\u00e1th Passing",
+          "major": true
+        },
+        {
+          "name": "Solas Gorge",
+          "major": true
+        },
+        {
+          "name": "The Crumbling Passage",
+          "major": true
+        },
+        {
+          "name": "The Latch",
+          "major": true
+        },
+        {
+          "name": "The Procession",
+          "major": true
+        },
+        {
+          "name": "White Chapel",
+          "major": true
+        },
+        {
+          "name": "Callahan's Eye",
+          "major": false
+        },
+        {
+          "name": "Chapel Access",
+          "major": false
+        },
+        {
+          "name": "Cragsfield",
+          "major": false
+        },
+        {
+          "name": "Cragsroad",
+          "major": false
+        },
+        {
+          "name": "Lingering Lashes",
+          "major": false
+        },
+        {
+          "name": "Lochan",
+          "major": false
+        },
+        {
+          "name": "Lost Tops",
+          "major": false
+        },
+        {
+          "name": "Sioc Approach",
+          "major": false
+        },
+        {
+          "name": "Solas Gateway",
+          "major": false
+        },
+        {
+          "name": "Soured Fields",
+          "major": false
+        },
+        {
+          "name": "The Key",
+          "major": false
+        },
+        {
+          "name": "The Lance",
+          "major": false
+        },
+        {
+          "name": "The Rust Road",
+          "major": false
+        },
+        {
+          "name": "The Stern",
+          "major": false
+        },
+        {
+          "name": "Twisted Mumble",
+          "major": false
+        },
+        {
+          "name": "Whispering Gulch",
+          "major": false
+        },
+        {
+          "name": "Winding Crag",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "CallumsCapeHex",
+      "name": "Callums Cape",
+      "regions": [
+        {
+          "name": "Callum's Keep",
+          "major": true
+        },
+        {
+          "name": "Camp Hollow",
+          "major": true
+        },
+        {
+          "name": "Holdout",
+          "major": true
+        },
+        {
+          "name": "Ire",
+          "major": true
+        },
+        {
+          "name": "Lookout",
+          "major": true
+        },
+        {
+          "name": "Naofa",
+          "major": true
+        },
+        {
+          "name": "Scouts Jest",
+          "major": true
+        },
+        {
+          "name": "Hollowhill",
+          "major": false
+        },
+        {
+          "name": "Princefal Burn",
+          "major": false
+        },
+        {
+          "name": "The Dreg",
+          "major": false
+        },
+        {
+          "name": "The Gunwall",
+          "major": false
+        },
+        {
+          "name": "The River Vein",
+          "major": false
+        },
+        {
+          "name": "Trail of the Dead",
+          "major": false
+        },
+        {
+          "name": "Valta Downs",
+          "major": false
+        },
+        {
+          "name": "Vex",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ClahstraHex",
+      "name": "Clahstra",
+      "regions": [
+        {
+          "name": "Bewailing Fort",
+          "major": true
+        },
+        {
+          "name": "East Narthex",
+          "major": true
+        },
+        {
+          "name": "The Treasury",
+          "major": true
+        },
+        {
+          "name": "The Vault",
+          "major": true
+        },
+        {
+          "name": "Third Chapter",
+          "major": true
+        },
+        {
+          "name": "Transept",
+          "major": true
+        },
+        {
+          "name": "Watchful Nave",
+          "major": true
+        },
+        {
+          "name": "Weephome",
+          "major": true
+        },
+        {
+          "name": "Penitent Inlet",
+          "major": false
+        },
+        {
+          "name": "Saint's Crossing",
+          "major": false
+        },
+        {
+          "name": "Second Prayer",
+          "major": false
+        },
+        {
+          "name": "Sleeping Choir",
+          "major": false
+        },
+        {
+          "name": "Sly Passage",
+          "major": false
+        },
+        {
+          "name": "The Four Pillars",
+          "major": false
+        },
+        {
+          "name": "The Garth",
+          "major": false
+        },
+        {
+          "name": "The Laity",
+          "major": false
+        },
+        {
+          "name": "Woodlouse Ledge",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ClansheadValleyHex",
+      "name": "Clanshead Valley",
+      "regions": [
+        {
+          "name": "Fallen Crown",
+          "major": true
+        },
+        {
+          "name": "Fort Ealar",
+          "major": true
+        },
+        {
+          "name": "Fort Esterwild",
+          "major": true
+        },
+        {
+          "name": "Fort Windham",
+          "major": true
+        },
+        {
+          "name": "Sweetholt",
+          "major": true
+        },
+        {
+          "name": "The King",
+          "major": true
+        },
+        {
+          "name": "The Pike",
+          "major": true
+        },
+        {
+          "name": "Bramble Field",
+          "major": false
+        },
+        {
+          "name": "Lost Orphans",
+          "major": false
+        },
+        {
+          "name": "Tallowild",
+          "major": false
+        },
+        {
+          "name": "The Bastard's Channel",
+          "major": false
+        },
+        {
+          "name": "The Weathered Advance",
+          "major": false
+        },
+        {
+          "name": "Throne of Druiminn",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "DeadLandsHex",
+      "name": "Deadlands",
+      "regions": [
+        {
+          "name": "Abandoned Ward",
+          "major": true
+        },
+        {
+          "name": "Brine Glen",
+          "major": true
+        },
+        {
+          "name": "Callahan's Boot",
+          "major": true
+        },
+        {
+          "name": "Callahan's Gate",
+          "major": true
+        },
+        {
+          "name": "Iron's End",
+          "major": true
+        },
+        {
+          "name": "Liberation Point",
+          "major": true
+        },
+        {
+          "name": "Sun's Hollow",
+          "major": true
+        },
+        {
+          "name": "The Pits",
+          "major": true
+        },
+        {
+          "name": "The Salt Farms",
+          "major": true
+        },
+        {
+          "name": "The Salt March",
+          "major": true
+        },
+        {
+          "name": "The Spine",
+          "major": true
+        },
+        {
+          "name": "Biting Tarn",
+          "major": false
+        },
+        {
+          "name": "Border Concourse",
+          "major": false
+        },
+        {
+          "name": "Border Thicket",
+          "major": false
+        },
+        {
+          "name": "Callahan's Belt",
+          "major": false
+        },
+        {
+          "name": "Carpal Trail",
+          "major": false
+        },
+        {
+          "name": "Cemetary Junction",
+          "major": false
+        },
+        {
+          "name": "Cemetary Lane",
+          "major": false
+        },
+        {
+          "name": "Coracoid Footpath",
+          "major": false
+        },
+        {
+          "name": "Crumbling Passage",
+          "major": false
+        },
+        {
+          "name": "Hope's Causeway",
+          "major": false
+        },
+        {
+          "name": "Jaspar Range",
+          "major": false
+        },
+        {
+          "name": "Mandible Crossroads",
+          "major": false
+        },
+        {
+          "name": "Marrow Copse",
+          "major": false
+        },
+        {
+          "name": "Mercy Meadow",
+          "major": false
+        },
+        {
+          "name": "Mercy's End",
+          "major": false
+        },
+        {
+          "name": "Overgrown Pasture",
+          "major": false
+        },
+        {
+          "name": "Path to the Sun",
+          "major": false
+        },
+        {
+          "name": "Pommel Annex",
+          "major": false
+        },
+        {
+          "name": "Sunhaven Gateway",
+          "major": false
+        },
+        {
+          "name": "Tarsal Pathway",
+          "major": false
+        },
+        {
+          "name": "The Abbey Drag",
+          "major": false
+        },
+        {
+          "name": "The Blade",
+          "major": false
+        },
+        {
+          "name": "The Boneyard",
+          "major": false
+        },
+        {
+          "name": "The Crossing",
+          "major": false
+        },
+        {
+          "name": "The Great March",
+          "major": false
+        },
+        {
+          "name": "The Iron Passage",
+          "major": false
+        },
+        {
+          "name": "The Iron Road",
+          "major": false
+        },
+        {
+          "name": "The Plaza",
+          "major": false
+        },
+        {
+          "name": "The Salt Trail",
+          "major": false
+        },
+        {
+          "name": "The Shorn Fields",
+          "major": false
+        },
+        {
+          "name": "The Steppes",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "DrownedValeHex",
+      "name": "Drowned Vale",
+      "regions": [
+        {
+          "name": "Bootnap",
+          "major": true
+        },
+        {
+          "name": "Coaldrifter Stead",
+          "major": true
+        },
+        {
+          "name": "Eastmarch",
+          "major": true
+        },
+        {
+          "name": "Loggerhead",
+          "major": true
+        },
+        {
+          "name": "Singing Serpents",
+          "major": true
+        },
+        {
+          "name": "Splinter Pens",
+          "major": true
+        },
+        {
+          "name": "The Baths",
+          "major": true
+        },
+        {
+          "name": "The Saltcaps",
+          "major": true
+        },
+        {
+          "name": "The Wash",
+          "major": true
+        },
+        {
+          "name": "Vessel",
+          "major": true
+        },
+        {
+          "name": "Wisp's Warning",
+          "major": true
+        },
+        {
+          "name": "Esterfal",
+          "major": false
+        },
+        {
+          "name": "Fleetsfall River",
+          "major": false
+        },
+        {
+          "name": "Linger",
+          "major": false
+        },
+        {
+          "name": "Sop Fields",
+          "major": false
+        },
+        {
+          "name": "Sprite's Game",
+          "major": false
+        },
+        {
+          "name": "The Other Vein",
+          "major": false
+        },
+        {
+          "name": "The Turtlerocks",
+          "major": false
+        },
+        {
+          "name": "The Willow Wood",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "EndlessShoreHex",
+      "name": "Endless Shore",
+      "regions": [
+        {
+          "name": "Brackish Point",
+          "major": true
+        },
+        {
+          "name": "Enduring Wake",
+          "major": true
+        },
+        {
+          "name": "Iron Junction",
+          "major": true
+        },
+        {
+          "name": "Saltbrook Channel",
+          "major": true
+        },
+        {
+          "name": "S\u00eddhe Fall",
+          "major": true
+        },
+        {
+          "name": "The Old Jack Tar",
+          "major": true
+        },
+        {
+          "name": "The Overland",
+          "major": true
+        },
+        {
+          "name": "Tuatha Watchpost",
+          "major": true
+        },
+        {
+          "name": "Wellchurch",
+          "major": true
+        },
+        {
+          "name": "Woodbind",
+          "major": true
+        },
+        {
+          "name": "Balor's Crown",
+          "major": false
+        },
+        {
+          "name": "Battered Landing",
+          "major": false
+        },
+        {
+          "name": "Dannan Coast",
+          "major": false
+        },
+        {
+          "name": "Dearg's Fang",
+          "major": false
+        },
+        {
+          "name": "Kelpie's Mane",
+          "major": false
+        },
+        {
+          "name": "Kelpie's Tail",
+          "major": false
+        },
+        {
+          "name": "Liegehearth",
+          "major": false
+        },
+        {
+          "name": "Merrow's Rest",
+          "major": false
+        },
+        {
+          "name": "The Dark Road",
+          "major": false
+        },
+        {
+          "name": "The Evil Eye",
+          "major": false
+        },
+        {
+          "name": "The North Star",
+          "major": false
+        },
+        {
+          "name": "The Selkie Bluffs",
+          "major": false
+        },
+        {
+          "name": "The Styx",
+          "major": false
+        },
+        {
+          "name": "The Whispering Waves",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "FarranacCoastHex",
+      "name": "Farranac Coast",
+      "regions": [
+        {
+          "name": "Huskhollow",
+          "major": true
+        },
+        {
+          "name": "Macha's Keening",
+          "major": true
+        },
+        {
+          "name": "Mara",
+          "major": true
+        },
+        {
+          "name": "Pleading Wharf",
+          "major": true
+        },
+        {
+          "name": "Scarp of Ambrose",
+          "major": true
+        },
+        {
+          "name": "Scythe",
+          "major": true
+        },
+        {
+          "name": "Terra",
+          "major": true
+        },
+        {
+          "name": "The Bone Haft",
+          "major": true
+        },
+        {
+          "name": "The Jade Cove",
+          "major": true
+        },
+        {
+          "name": "Transient Valley",
+          "major": true
+        },
+        {
+          "name": "Victa",
+          "major": true
+        },
+        {
+          "name": "Apollo's Landing",
+          "major": false
+        },
+        {
+          "name": "Cackling Strand",
+          "major": false
+        },
+        {
+          "name": "Carrion Fields",
+          "major": false
+        },
+        {
+          "name": "Cora Lushlands",
+          "major": false
+        },
+        {
+          "name": "Cormac Beach",
+          "major": false
+        },
+        {
+          "name": "Gulf of the Daughters",
+          "major": false
+        },
+        {
+          "name": "Hermes Inlet",
+          "major": false
+        },
+        {
+          "name": "Iuxta Gulf",
+          "major": false
+        },
+        {
+          "name": "Kardia",
+          "major": false
+        },
+        {
+          "name": "Liberation Street",
+          "major": false
+        },
+        {
+          "name": "McCarthy Fields",
+          "major": false
+        },
+        {
+          "name": "Mooring Dens",
+          "major": false
+        },
+        {
+          "name": "Sickle Hill",
+          "major": false
+        },
+        {
+          "name": "Skeleton Road",
+          "major": false
+        },
+        {
+          "name": "Sunder Beach",
+          "major": false
+        },
+        {
+          "name": "The Bay of Artemis",
+          "major": false
+        },
+        {
+          "name": "The Heart Road",
+          "major": false
+        },
+        {
+          "name": "The Mirror",
+          "major": false
+        },
+        {
+          "name": "The Reaping Fields",
+          "major": false
+        },
+        {
+          "name": "The River Mercy",
+          "major": false
+        },
+        {
+          "name": "The Snag",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "FishermansRowHex",
+      "name": "Fisherman's Row",
+      "regions": [
+        {
+          "name": "Arcadia",
+          "major": true
+        },
+        {
+          "name": "Black Well",
+          "major": true
+        },
+        {
+          "name": "Dankana Post",
+          "major": true
+        },
+        {
+          "name": "Eidolo",
+          "major": true
+        },
+        {
+          "name": "Fort Ember",
+          "major": true
+        },
+        {
+          "name": "Hangman's Court",
+          "major": true
+        },
+        {
+          "name": "Oceanwatch",
+          "major": true
+        },
+        {
+          "name": "Peripti Landing",
+          "major": true
+        },
+        {
+          "name": "The Satyr Stone",
+          "major": true
+        },
+        {
+          "name": "Bident Crossroads",
+          "major": false
+        },
+        {
+          "name": "Heart of Rites",
+          "major": false
+        },
+        {
+          "name": "House Roloi",
+          "major": false
+        },
+        {
+          "name": "Lake Nerites",
+          "major": false
+        },
+        {
+          "name": "Liberty Hill",
+          "major": false
+        },
+        {
+          "name": "Progonos Watch",
+          "major": false
+        },
+        {
+          "name": "The Rite Road",
+          "major": false
+        },
+        {
+          "name": "Torch of Demeter",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "GodcroftsHex",
+      "name": "Godcrofts",
+      "regions": [
+        {
+          "name": "Argosa",
+          "major": true
+        },
+        {
+          "name": "Exile",
+          "major": true
+        },
+        {
+          "name": "Fleecewatch",
+          "major": true
+        },
+        {
+          "name": "Isawa",
+          "major": true
+        },
+        {
+          "name": "Lipsia",
+          "major": true
+        },
+        {
+          "name": "Protos",
+          "major": true
+        },
+        {
+          "name": "Saegio",
+          "major": true
+        },
+        {
+          "name": "The Axehead",
+          "major": true
+        },
+        {
+          "name": "Ursa Base",
+          "major": true
+        },
+        {
+          "name": "Barreller's Way",
+          "major": false
+        },
+        {
+          "name": "Den of Thieves",
+          "major": false
+        },
+        {
+          "name": "Peripti Depths",
+          "major": false
+        },
+        {
+          "name": "Perpetua Channel",
+          "major": false
+        },
+        {
+          "name": "Pig Island",
+          "major": false
+        },
+        {
+          "name": "Primus Trames",
+          "major": false
+        },
+        {
+          "name": "Vicit Bay",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "GreatMarchHex",
+      "name": "Great March",
+      "regions": [
+        {
+          "name": "Camp Senti",
+          "major": true
+        },
+        {
+          "name": "Dendr\u00f3 Field",
+          "major": true
+        },
+        {
+          "name": "Leto",
+          "major": true
+        },
+        {
+          "name": "Lionsfort",
+          "major": true
+        },
+        {
+          "name": "Myrmidon's Stay",
+          "major": true
+        },
+        {
+          "name": "Remnant Villa",
+          "major": true
+        },
+        {
+          "name": "Sitaria",
+          "major": true
+        },
+        {
+          "name": "The Swan",
+          "major": true
+        },
+        {
+          "name": "Violethome",
+          "major": true
+        },
+        {
+          "name": "Dalton Meadow",
+          "major": false
+        },
+        {
+          "name": "Eristown",
+          "major": false
+        },
+        {
+          "name": "Fateless Grove",
+          "major": false
+        },
+        {
+          "name": "Fengari",
+          "major": false
+        },
+        {
+          "name": "Halting Valley",
+          "major": false
+        },
+        {
+          "name": "Jack Field",
+          "major": false
+        },
+        {
+          "name": "Jackboot Creek",
+          "major": false
+        },
+        {
+          "name": "Legacy Pasture",
+          "major": false
+        },
+        {
+          "name": "Milowood",
+          "major": false
+        },
+        {
+          "name": "Mors Range",
+          "major": false
+        },
+        {
+          "name": "Remnant Acreage",
+          "major": false
+        },
+        {
+          "name": "Schala Estate",
+          "major": false
+        },
+        {
+          "name": "Scrabbling Motte",
+          "major": false
+        },
+        {
+          "name": "Serpent Charm",
+          "major": false
+        },
+        {
+          "name": "The Black Wing",
+          "major": false
+        },
+        {
+          "name": "The Great March",
+          "major": false
+        },
+        {
+          "name": "The Midmarch",
+          "major": false
+        },
+        {
+          "name": "The River Senti",
+          "major": false
+        },
+        {
+          "name": "The Spice Road",
+          "major": false
+        },
+        {
+          "name": "The White Wing",
+          "major": false
+        },
+        {
+          "name": "Violet Fields",
+          "major": false
+        },
+        {
+          "name": "Zealous Approach",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "GutterHex",
+      "name": "Gutter",
+      "regions": [
+        {
+          "name": "Kuoppa",
+          "major": true
+        },
+        {
+          "name": "Lost Kaivo",
+          "major": true
+        },
+        {
+          "name": "Rikki Sarana",
+          "major": true
+        },
+        {
+          "name": "Rotko Camp",
+          "major": true
+        },
+        {
+          "name": "Salaoja Road",
+          "major": true
+        },
+        {
+          "name": "Suojus",
+          "major": true
+        },
+        {
+          "name": "The Parras",
+          "major": true
+        },
+        {
+          "name": "Likainoja",
+          "major": false
+        },
+        {
+          "name": "Maanp\u00e4\u00e4",
+          "major": false
+        },
+        {
+          "name": "Mutalanko",
+          "major": false
+        },
+        {
+          "name": "Roskisranta",
+          "major": false
+        },
+        {
+          "name": "Sumun Koti Spillway",
+          "major": false
+        },
+        {
+          "name": "\u00c4mp\u00e4ri",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "HeartlandsHex",
+      "name": "Heartlands",
+      "regions": [
+        {
+          "name": "Barronswall",
+          "major": true
+        },
+        {
+          "name": "Barrony Ranch",
+          "major": true
+        },
+        {
+          "name": "Deeplaw Post",
+          "major": true
+        },
+        {
+          "name": "Fort Providence",
+          "major": true
+        },
+        {
+          "name": "Greenfield Orchard",
+          "major": true
+        },
+        {
+          "name": "Oleander Homestead",
+          "major": true
+        },
+        {
+          "name": "Proex\u00ed",
+          "major": true
+        },
+        {
+          "name": "The Blemish",
+          "major": true
+        },
+        {
+          "name": "The Breach",
+          "major": true
+        },
+        {
+          "name": "The Plough",
+          "major": true
+        },
+        {
+          "name": "18th Sideroad",
+          "major": false
+        },
+        {
+          "name": "Barronshire",
+          "major": false
+        },
+        {
+          "name": "Barrony Road",
+          "major": false
+        },
+        {
+          "name": "Cageroad",
+          "major": false
+        },
+        {
+          "name": "Crater Basin",
+          "major": false
+        },
+        {
+          "name": "Erimos Ranch",
+          "major": false
+        },
+        {
+          "name": "Harvester's Range",
+          "major": false
+        },
+        {
+          "name": "Janus Field",
+          "major": false
+        },
+        {
+          "name": "Kos Meadows",
+          "major": false
+        },
+        {
+          "name": "Loftmire",
+          "major": false
+        },
+        {
+          "name": "Lower Barrony Field",
+          "major": false
+        },
+        {
+          "name": "Oleander Fields",
+          "major": false
+        },
+        {
+          "name": "Pandora Compound",
+          "major": false
+        },
+        {
+          "name": "Providence Field",
+          "major": false
+        },
+        {
+          "name": "The Fuming Pen",
+          "major": false
+        },
+        {
+          "name": "The Orchard Wall",
+          "major": false
+        },
+        {
+          "name": "The Rollcage",
+          "major": false
+        },
+        {
+          "name": "The Salt Crossing",
+          "major": false
+        },
+        {
+          "name": "Upper Barrony Field",
+          "major": false
+        },
+        {
+          "name": "Upper Heartlands",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "HowlCountyHex",
+      "name": "Howl County",
+      "regions": [
+        {
+          "name": "Fort Red",
+          "major": true
+        },
+        {
+          "name": "Fort Rider",
+          "major": true
+        },
+        {
+          "name": "Great Warden Dam",
+          "major": true
+        },
+        {
+          "name": "Hungry Wolf",
+          "major": true
+        },
+        {
+          "name": "Little Lamb",
+          "major": true
+        },
+        {
+          "name": "Sickleshire",
+          "major": true
+        },
+        {
+          "name": "Slipgate Outpost",
+          "major": true
+        },
+        {
+          "name": "Teller Farm",
+          "major": true
+        },
+        {
+          "name": "Austriaca Reservoir",
+          "major": false
+        },
+        {
+          "name": "Checkpoint Titim",
+          "major": false
+        },
+        {
+          "name": "Snakewall",
+          "major": false
+        },
+        {
+          "name": "The Hunting Grounds",
+          "major": false
+        },
+        {
+          "name": "Viperwalk",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "KalokaiHex",
+      "name": "Kalokai",
+      "regions": [
+        {
+          "name": "Baccae Ridge",
+          "major": true
+        },
+        {
+          "name": "Camp Tau",
+          "major": true
+        },
+        {
+          "name": "Hallow",
+          "major": true
+        },
+        {
+          "name": "Lost Greensward",
+          "major": true
+        },
+        {
+          "name": "Night's Regret",
+          "major": true
+        },
+        {
+          "name": "Sourtooth",
+          "major": true
+        },
+        {
+          "name": "Sweethearth",
+          "major": true
+        },
+        {
+          "name": "Bleary",
+          "major": false
+        },
+        {
+          "name": "Clarity Meadow",
+          "major": false
+        },
+        {
+          "name": "Ichorus Amphitheatre",
+          "major": false
+        },
+        {
+          "name": "South March",
+          "major": false
+        },
+        {
+          "name": "The Stumble",
+          "major": false
+        },
+        {
+          "name": "The Vineroad",
+          "major": false
+        },
+        {
+          "name": "Vinum Rillet",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "KingsCageHex",
+      "name": "King's Cage",
+      "regions": [
+        {
+          "name": "Den of Knaves",
+          "major": true
+        },
+        {
+          "name": "Eastknife",
+          "major": true
+        },
+        {
+          "name": "Gibbet Fields",
+          "major": true
+        },
+        {
+          "name": "Scarlethold",
+          "major": true
+        },
+        {
+          "name": "Slipchain",
+          "major": true
+        },
+        {
+          "name": "Southblade",
+          "major": true
+        },
+        {
+          "name": "The Bailie",
+          "major": true
+        },
+        {
+          "name": "The Manacle",
+          "major": true
+        },
+        {
+          "name": "Blackguard's Wood",
+          "major": false
+        },
+        {
+          "name": "Bloodcroft",
+          "major": false
+        },
+        {
+          "name": "Celes Thicket",
+          "major": false
+        },
+        {
+          "name": "Concubine",
+          "major": false
+        },
+        {
+          "name": "Jester's Foil",
+          "major": false
+        },
+        {
+          "name": "Leafless Whim",
+          "major": false
+        },
+        {
+          "name": "Ocelot Bridge",
+          "major": false
+        },
+        {
+          "name": "The River Blaise",
+          "major": false
+        },
+        {
+          "name": "Wolfsbait",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "KuuraStrandHex",
+      "name": "Kuura Strand",
+      "regions": [
+        {
+          "name": "Faden Point",
+          "major": true
+        },
+        {
+          "name": "Lumia",
+          "major": true
+        },
+        {
+          "name": "Martti",
+          "major": true
+        },
+        {
+          "name": "Menneen",
+          "major": true
+        },
+        {
+          "name": "Suosalo",
+          "major": true
+        },
+        {
+          "name": "Talven",
+          "major": true
+        },
+        {
+          "name": "Diskanttileke",
+          "major": false
+        },
+        {
+          "name": "Pitk\u00e4j\u00e4nne",
+          "major": false
+        },
+        {
+          "name": "Sointuvasalmi",
+          "major": false
+        },
+        {
+          "name": "Staccatosola",
+          "major": false
+        },
+        {
+          "name": "Ukkos Gulf",
+          "major": false
+        },
+        {
+          "name": "Virebridge",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "LinnMercyHex",
+      "name": "Linn of Mercy",
+      "regions": [
+        {
+          "name": "Fort Duncan",
+          "major": true
+        },
+        {
+          "name": "Hardline",
+          "major": true
+        },
+        {
+          "name": "Lathair",
+          "major": true
+        },
+        {
+          "name": "Outwich Ranch",
+          "major": true
+        },
+        {
+          "name": "Rotdust",
+          "major": true
+        },
+        {
+          "name": "The Crimson Gardens",
+          "major": true
+        },
+        {
+          "name": "The First Coin",
+          "major": true
+        },
+        {
+          "name": "The Last Grove",
+          "major": true
+        },
+        {
+          "name": "The Long Whine",
+          "major": true
+        },
+        {
+          "name": "The Prairie Bazaar",
+          "major": true
+        },
+        {
+          "name": "Ulster Falls",
+          "major": true
+        },
+        {
+          "name": "Blackroad",
+          "major": false
+        },
+        {
+          "name": "Gallant Gough Boulevard",
+          "major": false
+        },
+        {
+          "name": "Merciful Strait",
+          "major": false
+        },
+        {
+          "name": "Mudhole",
+          "major": false
+        },
+        {
+          "name": "Nathair",
+          "major": false
+        },
+        {
+          "name": "Solas Burn",
+          "major": false
+        },
+        {
+          "name": "The Drone",
+          "major": false
+        },
+        {
+          "name": "The Great Scale",
+          "major": false
+        },
+        {
+          "name": "The River Mercy",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "LochMorHex",
+      "name": "Loch Mor",
+      "regions": [
+        {
+          "name": "Feirmor",
+          "major": true
+        },
+        {
+          "name": "Market Road",
+          "major": true
+        },
+        {
+          "name": "Mercy's Wish",
+          "major": true
+        },
+        {
+          "name": "Moon's Copse",
+          "major": true
+        },
+        {
+          "name": "The Roilfort",
+          "major": true
+        },
+        {
+          "name": "Tomb of the First",
+          "major": true
+        },
+        {
+          "name": "Westmarch",
+          "major": true
+        },
+        {
+          "name": "Bastard's Blade",
+          "major": false
+        },
+        {
+          "name": "Chattering Prairie",
+          "major": false
+        },
+        {
+          "name": "Escape",
+          "major": false
+        },
+        {
+          "name": "Fallen Fields",
+          "major": false
+        },
+        {
+          "name": "Lake Severspring",
+          "major": false
+        },
+        {
+          "name": "Loch Mor",
+          "major": false
+        },
+        {
+          "name": "Missing Bones",
+          "major": false
+        },
+        {
+          "name": "Ousterdown",
+          "major": false
+        },
+        {
+          "name": "Pockfields",
+          "major": false
+        },
+        {
+          "name": "Rip",
+          "major": false
+        },
+        {
+          "name": "Tear",
+          "major": false
+        },
+        {
+          "name": "The Founding Fields",
+          "major": false
+        },
+        {
+          "name": "The Glean",
+          "major": false
+        },
+        {
+          "name": "The Reaping Road",
+          "major": false
+        },
+        {
+          "name": "Widow's Wail",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "LykosIsleHex",
+      "name": "Lykos Isle",
+      "regions": [
+        {
+          "name": "Aetherwood",
+          "major": true
+        },
+        {
+          "name": "Astutia",
+          "major": true
+        },
+        {
+          "name": "Cyrus",
+          "major": true
+        },
+        {
+          "name": "Erebus Islet",
+          "major": true
+        },
+        {
+          "name": "Fort Guile",
+          "major": true
+        },
+        {
+          "name": "M\u0101rudia",
+          "major": true
+        },
+        {
+          "name": "The Squall",
+          "major": true
+        },
+        {
+          "name": "Dancing Waves",
+          "major": false
+        },
+        {
+          "name": "Duelling Daggers",
+          "major": false
+        },
+        {
+          "name": "Floria Pass",
+          "major": false
+        },
+        {
+          "name": "Mount Lynel",
+          "major": false
+        },
+        {
+          "name": "Rolling Die",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "MarbanHollow",
+      "name": "Marban Hollow",
+      "regions": [
+        {
+          "name": "Checkpoint Bua",
+          "major": true
+        },
+        {
+          "name": "Lockheed",
+          "major": true
+        },
+        {
+          "name": "Maiden's Veil",
+          "major": true
+        },
+        {
+          "name": "Mox",
+          "major": true
+        },
+        {
+          "name": "Oster Wall",
+          "major": true
+        },
+        {
+          "name": "Sanctum",
+          "major": true
+        },
+        {
+          "name": "The Spitrocks",
+          "major": true
+        },
+        {
+          "name": "Bleating Plateau",
+          "major": false
+        },
+        {
+          "name": "Bubble Basin",
+          "major": false
+        },
+        {
+          "name": "Deepfleet Valley",
+          "major": false
+        },
+        {
+          "name": "Gaping Maw",
+          "major": false
+        },
+        {
+          "name": "Lockheed Breakers",
+          "major": false
+        },
+        {
+          "name": "Lughbone Dam",
+          "major": false
+        },
+        {
+          "name": "Mount Mac Tire",
+          "major": false
+        },
+        {
+          "name": "Pilgrimage",
+          "major": false
+        },
+        {
+          "name": "Slender Cove",
+          "major": false
+        },
+        {
+          "name": "The Claim",
+          "major": false
+        },
+        {
+          "name": "The Clutch",
+          "major": false
+        },
+        {
+          "name": "The Curse",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "MooringCountyHex",
+      "name": "Mooring County",
+      "regions": [
+        {
+          "name": "Borderlane",
+          "major": true
+        },
+        {
+          "name": "Gravekeeper's Holdfast",
+          "major": true
+        },
+        {
+          "name": "Headstone",
+          "major": true
+        },
+        {
+          "name": "Luch's Workshop",
+          "major": true
+        },
+        {
+          "name": "MacConmara Barrows",
+          "major": true
+        },
+        {
+          "name": "Morrighan's Grave",
+          "major": true
+        },
+        {
+          "name": "Ogmaran",
+          "major": true
+        },
+        {
+          "name": "Reaching River",
+          "major": true
+        },
+        {
+          "name": "The Cut",
+          "major": true
+        },
+        {
+          "name": "The Spade",
+          "major": true
+        },
+        {
+          "name": "The Wind Hills",
+          "major": true
+        },
+        {
+          "name": "Wiccwalk",
+          "major": true
+        },
+        {
+          "name": "Lyon's Wood",
+          "major": false
+        },
+        {
+          "name": "Moon's Walk",
+          "major": false
+        },
+        {
+          "name": "Riverhill",
+          "major": false
+        },
+        {
+          "name": "Sc\u00e1th Copse",
+          "major": false
+        },
+        {
+          "name": "The Graveyard",
+          "major": false
+        },
+        {
+          "name": "The Mound",
+          "major": false
+        },
+        {
+          "name": "Wiccwood",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "MorgensCrossingHex",
+      "name": "Morgen's Crossing",
+      "regions": [
+        {
+          "name": "Allsight",
+          "major": true
+        },
+        {
+          "name": "Bastard's Block",
+          "major": true
+        },
+        {
+          "name": "Callum's Descent",
+          "major": true
+        },
+        {
+          "name": "Eversus",
+          "major": true
+        },
+        {
+          "name": "Lividus",
+          "major": true
+        },
+        {
+          "name": "Quietus",
+          "major": true
+        },
+        {
+          "name": "Crimson Thread",
+          "major": false
+        },
+        {
+          "name": "Rising Calm",
+          "major": false
+        },
+        {
+          "name": "The Bastard Sea",
+          "major": false
+        },
+        {
+          "name": "Ultimus",
+          "major": false
+        },
+        {
+          "name": "Velian Storm",
+          "major": false
+        },
+        {
+          "name": "Warmonger Bay",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "NevishLineHex",
+      "name": "Nevish Line",
+      "regions": [
+        {
+          "name": "Blackcoat Way",
+          "major": true
+        },
+        {
+          "name": "Blinding Stones",
+          "major": true
+        },
+        {
+          "name": "Grief Mother",
+          "major": true
+        },
+        {
+          "name": "Mistle Shrine",
+          "major": true
+        },
+        {
+          "name": "Princefal",
+          "major": true
+        },
+        {
+          "name": "The Scrying Belt",
+          "major": true
+        },
+        {
+          "name": "Tomb Father",
+          "major": true
+        },
+        {
+          "name": "Unruly",
+          "major": true
+        },
+        {
+          "name": "Blackburn Canal",
+          "major": false
+        },
+        {
+          "name": "Graven Falls",
+          "major": false
+        },
+        {
+          "name": "Interloper's Hook",
+          "major": false
+        },
+        {
+          "name": "Nevish Trail",
+          "major": false
+        },
+        {
+          "name": "Plumage",
+          "major": false
+        },
+        {
+          "name": "Princefal Burn",
+          "major": false
+        },
+        {
+          "name": "Tear Road",
+          "major": false
+        },
+        {
+          "name": "The Aging Ocean",
+          "major": false
+        },
+        {
+          "name": "The Arrow",
+          "major": false
+        },
+        {
+          "name": "The Burndocks",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "OarbreakerHex",
+      "name": "Oarbreaker Isles",
+      "regions": [
+        {
+          "name": "Fort Fogwood",
+          "major": true
+        },
+        {
+          "name": "Gold",
+          "major": true
+        },
+        {
+          "name": "Grisly Refuge",
+          "major": true
+        },
+        {
+          "name": "Integrum",
+          "major": true
+        },
+        {
+          "name": "Partisan Island",
+          "major": true
+        },
+        {
+          "name": "Posterus",
+          "major": true
+        },
+        {
+          "name": "Silver",
+          "major": true
+        },
+        {
+          "name": "The Conclave",
+          "major": true
+        },
+        {
+          "name": "The Dirk",
+          "major": true
+        },
+        {
+          "name": "Barrenson",
+          "major": false
+        },
+        {
+          "name": "Bronze",
+          "major": false
+        },
+        {
+          "name": "Castor",
+          "major": false
+        },
+        {
+          "name": "Cat Step",
+          "major": false
+        },
+        {
+          "name": "Kofteri Channel",
+          "major": false
+        },
+        {
+          "name": "Lion's Head Pass",
+          "major": false
+        },
+        {
+          "name": "Obitum",
+          "major": false
+        },
+        {
+          "name": "Pollux",
+          "major": false
+        },
+        {
+          "name": "Reliqua Lagoon",
+          "major": false
+        },
+        {
+          "name": "Sandalwood Beach",
+          "major": false
+        },
+        {
+          "name": "Skull Beach",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "OlavisWakeHex",
+      "name": "Olavis Wake",
+      "regions": [
+        {
+          "name": "Ilmari Bridge",
+          "major": true
+        },
+        {
+          "name": "Iltaku",
+          "major": true
+        },
+        {
+          "name": "Koskinla",
+          "major": true
+        },
+        {
+          "name": "Kulkue",
+          "major": true
+        },
+        {
+          "name": "Y\u00f6ohja",
+          "major": true
+        },
+        {
+          "name": "Arkku",
+          "major": false
+        },
+        {
+          "name": "Jumak\u00e4\u00e4rme",
+          "major": false
+        },
+        {
+          "name": "Kaant\u00f6rm\u00e4",
+          "major": false
+        },
+        {
+          "name": "The Corpse Road",
+          "major": false
+        },
+        {
+          "name": "Verisuisto",
+          "major": false
+        },
+        {
+          "name": "\u00c4idintyyni",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "OnyxHex",
+      "name": "Onyx",
+      "regions": [
+        {
+          "name": "Beholder's Span",
+          "major": true
+        },
+        {
+          "name": "Cisterna Run",
+          "major": true
+        },
+        {
+          "name": "Dexam",
+          "major": true
+        },
+        {
+          "name": "Garland",
+          "major": true
+        },
+        {
+          "name": "The Brink",
+          "major": true
+        },
+        {
+          "name": "The Waif",
+          "major": true
+        },
+        {
+          "name": "Achates Hills",
+          "major": false
+        },
+        {
+          "name": "Lapis Coastlands",
+          "major": false
+        },
+        {
+          "name": "Lazuli Hills",
+          "major": false
+        },
+        {
+          "name": "Opallios Flight",
+          "major": false
+        },
+        {
+          "name": "The Adamant",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "OriginHex",
+      "name": "Origin",
+      "regions": [
+        {
+          "name": "Arise",
+          "major": true
+        },
+        {
+          "name": "Dormio",
+          "major": true
+        },
+        {
+          "name": "Finis",
+          "major": true
+        },
+        {
+          "name": "Initium",
+          "major": true
+        },
+        {
+          "name": "Teichotima",
+          "major": true
+        },
+        {
+          "name": "The Steel Road",
+          "major": true
+        },
+        {
+          "name": "World Star",
+          "major": true
+        },
+        {
+          "name": "Cado",
+          "major": false
+        },
+        {
+          "name": "Exorior",
+          "major": false
+        },
+        {
+          "name": "Noventus Passage",
+          "major": false
+        },
+        {
+          "name": "Obsidio Island",
+          "major": false
+        },
+        {
+          "name": "Temple Field",
+          "major": false
+        },
+        {
+          "name": "The Dreamer's Road",
+          "major": false
+        },
+        {
+          "name": "The Echo",
+          "major": false
+        },
+        {
+          "name": "The Sundering",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "PalantineBermHex",
+      "name": "Palantine Berm",
+      "regions": [
+        {
+          "name": "Dryfeld",
+          "major": true
+        },
+        {
+          "name": "Leiri Hermanni",
+          "major": true
+        },
+        {
+          "name": "The Droll",
+          "major": true
+        },
+        {
+          "name": "The Pippeli Stones",
+          "major": true
+        },
+        {
+          "name": "Underlook",
+          "major": true
+        },
+        {
+          "name": "Vendett",
+          "major": true
+        },
+        {
+          "name": "Windburn Landing",
+          "major": true
+        },
+        {
+          "name": "Ensiferum",
+          "major": false
+        },
+        {
+          "name": "Ikimeri",
+          "major": false
+        },
+        {
+          "name": "Kaamos Lea",
+          "major": false
+        },
+        {
+          "name": "Lumivy\u00f6ry Hillscape",
+          "major": false
+        },
+        {
+          "name": "Parkukoti",
+          "major": false
+        },
+        {
+          "name": "Rolling Boulders",
+          "major": false
+        },
+        {
+          "name": "Wire Tail Islet",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "PariPeakHex",
+      "name": "Pari Peak",
+      "regions": [
+        {
+          "name": "Camp Surista",
+          "major": true
+        },
+        {
+          "name": "It\u00e4\u00e4n",
+          "major": true
+        },
+        {
+          "name": "Kohina Base",
+          "major": true
+        },
+        {
+          "name": "Little Raakkua",
+          "major": true
+        },
+        {
+          "name": "Pariah",
+          "major": true
+        },
+        {
+          "name": "Kuunvaara",
+          "major": false
+        },
+        {
+          "name": "Peitt\u00e4v\u00e4 Ascent",
+          "major": false
+        },
+        {
+          "name": "Sanguine Comet",
+          "major": false
+        },
+        {
+          "name": "Syd\u00e4nkolo",
+          "major": false
+        },
+        {
+          "name": "Syker\u00f6 Bay",
+          "major": false
+        },
+        {
+          "name": "Yaga's Leg",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "PipersEnclaveHex",
+      "name": "Piper's Enclave",
+      "regions": [
+        {
+          "name": "Aegocerus Fortress",
+          "major": true
+        },
+        {
+          "name": "House of Lyterius",
+          "major": true
+        },
+        {
+          "name": "Maenalius Cove",
+          "major": true
+        },
+        {
+          "name": "Pan's Villa",
+          "major": true
+        },
+        {
+          "name": "Reedhurst",
+          "major": true
+        },
+        {
+          "name": "Syrinx Pass",
+          "major": true
+        },
+        {
+          "name": "Balefire River",
+          "major": false
+        },
+        {
+          "name": "Fulgur Forelands",
+          "major": false
+        },
+        {
+          "name": "Hook and Crow",
+          "major": false
+        },
+        {
+          "name": "Levin Row",
+          "major": false
+        },
+        {
+          "name": "Nitid Mountains",
+          "major": false
+        },
+        {
+          "name": "Nomios Crossroads",
+          "major": false
+        },
+        {
+          "name": "The Cairn",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ReachingTrailHex",
+      "name": "Reaching Trail",
+      "regions": [
+        {
+          "name": "Brodytown",
+          "major": true
+        },
+        {
+          "name": "Dwyerstown",
+          "major": true
+        },
+        {
+          "name": "Elksford",
+          "major": true
+        },
+        {
+          "name": "Fort Mac Conaill",
+          "major": true
+        },
+        {
+          "name": "Harpy",
+          "major": true
+        },
+        {
+          "name": "Ice Ranch",
+          "major": true
+        },
+        {
+          "name": "Limestone Holdfast",
+          "major": true
+        },
+        {
+          "name": "Mousetrap",
+          "major": true
+        },
+        {
+          "name": "Nightchurch",
+          "major": true
+        },
+        {
+          "name": "Reprieve",
+          "major": true
+        },
+        {
+          "name": "The Ark",
+          "major": true
+        },
+        {
+          "name": "Camp Eos",
+          "major": false
+        },
+        {
+          "name": "Caragtais",
+          "major": false
+        },
+        {
+          "name": "Duffy's Farm",
+          "major": false
+        },
+        {
+          "name": "Dugan's Approach",
+          "major": false
+        },
+        {
+          "name": "Dwyersfield",
+          "major": false
+        },
+        {
+          "name": "Featherfield",
+          "major": false
+        },
+        {
+          "name": "Fisherman's Floe",
+          "major": false
+        },
+        {
+          "name": "Hookhall",
+          "major": false
+        },
+        {
+          "name": "Humidus",
+          "major": false
+        },
+        {
+          "name": "Mac Conaill's Pass",
+          "major": false
+        },
+        {
+          "name": "Pitfall",
+          "major": false
+        },
+        {
+          "name": "Puncta",
+          "major": false
+        },
+        {
+          "name": "Scorpion",
+          "major": false
+        },
+        {
+          "name": "The Bait",
+          "major": false
+        },
+        {
+          "name": "The Cairns",
+          "major": false
+        },
+        {
+          "name": "The Chicken Coop",
+          "major": false
+        },
+        {
+          "name": "The Deckard",
+          "major": false
+        },
+        {
+          "name": "The Knot",
+          "major": false
+        },
+        {
+          "name": "The Reaching Heights",
+          "major": false
+        },
+        {
+          "name": "The Rime Ledge",
+          "major": false
+        },
+        {
+          "name": "The Rousing Fields",
+          "major": false
+        },
+        {
+          "name": "The Scar",
+          "major": false
+        },
+        {
+          "name": "The Squeeze",
+          "major": false
+        },
+        {
+          "name": "Th\u00fdlak",
+          "major": false
+        },
+        {
+          "name": "Windy Way",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ReaversPassHex",
+      "name": "Reavers Pass",
+      "regions": [
+        {
+          "name": "Breakwater",
+          "major": true
+        },
+        {
+          "name": "Clay Coffer",
+          "major": true
+        },
+        {
+          "name": "Fort Rictus",
+          "major": true
+        },
+        {
+          "name": "Keelhaul",
+          "major": true
+        },
+        {
+          "name": "Scuttletown",
+          "major": true
+        },
+        {
+          "name": "The Bilge",
+          "major": true
+        },
+        {
+          "name": "Thimble Base",
+          "major": true
+        },
+        {
+          "name": "Billhook Reach",
+          "major": false
+        },
+        {
+          "name": "Binnacle Pitch",
+          "major": false
+        },
+        {
+          "name": "Blackjack Junction",
+          "major": false
+        },
+        {
+          "name": "Blissfin Beach",
+          "major": false
+        },
+        {
+          "name": "Cape Balderstone",
+          "major": false
+        },
+        {
+          "name": "Jeweller's Bay",
+          "major": false
+        },
+        {
+          "name": "Mount Haulwind",
+          "major": false
+        },
+        {
+          "name": "Privateer's Bounty",
+          "major": false
+        },
+        {
+          "name": "Sharkfin River",
+          "major": false
+        },
+        {
+          "name": "The Bustle",
+          "major": false
+        },
+        {
+          "name": "The Foreward Fathom",
+          "major": false
+        },
+        {
+          "name": "The Furl",
+          "major": false
+        },
+        {
+          "name": "The Whaler",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "RedRiverHex",
+      "name": "Red River",
+      "regions": [
+        {
+          "name": "Camp Upsilon",
+          "major": true
+        },
+        {
+          "name": "Cannonsmoke",
+          "major": true
+        },
+        {
+          "name": "Climb",
+          "major": true
+        },
+        {
+          "name": "Fort Matchwood",
+          "major": true
+        },
+        {
+          "name": "Judicium",
+          "major": true
+        },
+        {
+          "name": "Minos",
+          "major": true
+        },
+        {
+          "name": "Penance",
+          "major": true
+        },
+        {
+          "name": "Victoria Hill",
+          "major": true
+        },
+        {
+          "name": "Fragment Knolls",
+          "major": false
+        },
+        {
+          "name": "Gunpowder Lane",
+          "major": false
+        },
+        {
+          "name": "Perish",
+          "major": false
+        },
+        {
+          "name": "Red Crossing",
+          "major": false
+        },
+        {
+          "name": "The Red River",
+          "major": false
+        },
+        {
+          "name": "Twelve Drops",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "SableportHex",
+      "name": "Sableport",
+      "regions": [
+        {
+          "name": "Barronhome",
+          "major": true
+        },
+        {
+          "name": "Cinderwick",
+          "major": true
+        },
+        {
+          "name": "Light's End",
+          "major": true
+        },
+        {
+          "name": "Talonsfort",
+          "major": true
+        },
+        {
+          "name": "The Pendant",
+          "major": true
+        },
+        {
+          "name": "The Robin's Nest",
+          "major": true
+        },
+        {
+          "name": "The Whetstone",
+          "major": true
+        },
+        {
+          "name": "Aeyrie Bay",
+          "major": false
+        },
+        {
+          "name": "Creeping Drought",
+          "major": false
+        },
+        {
+          "name": "Glimmerhaven",
+          "major": false
+        },
+        {
+          "name": "Groggy Pinion",
+          "major": false
+        },
+        {
+          "name": "Lord's Cellar",
+          "major": false
+        },
+        {
+          "name": "Lye Fields",
+          "major": false
+        },
+        {
+          "name": "Riven Downs",
+          "major": false
+        },
+        {
+          "name": "Simmerset",
+          "major": false
+        },
+        {
+          "name": "Slumbering Meadow",
+          "major": false
+        },
+        {
+          "name": "Suture Lowlands",
+          "major": false
+        },
+        {
+          "name": "Waspwood",
+          "major": false
+        },
+        {
+          "name": "Wormskive",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ShackledChasmHex",
+      "name": "Shackled Chasm",
+      "regions": [
+        {
+          "name": "Firstmarch",
+          "major": true
+        },
+        {
+          "name": "Gorgon Grove",
+          "major": true
+        },
+        {
+          "name": "Limewood Holdfast",
+          "major": true
+        },
+        {
+          "name": "Reflection",
+          "major": true
+        },
+        {
+          "name": "Savages",
+          "major": true
+        },
+        {
+          "name": "Silk Farms",
+          "major": true
+        },
+        {
+          "name": "Simo's Run",
+          "major": true
+        },
+        {
+          "name": "The Bell Toll",
+          "major": true
+        },
+        {
+          "name": "The Grave of Erastos",
+          "major": true
+        },
+        {
+          "name": "The Vanguard",
+          "major": true
+        },
+        {
+          "name": "A Careless Net",
+          "major": false
+        },
+        {
+          "name": "A New Spring",
+          "major": false
+        },
+        {
+          "name": "Autumn Pyres",
+          "major": false
+        },
+        {
+          "name": "Final Step",
+          "major": false
+        },
+        {
+          "name": "Hades Ladder",
+          "major": false
+        },
+        {
+          "name": "Legion's Dawn",
+          "major": false
+        },
+        {
+          "name": "Manky Hills",
+          "major": false
+        },
+        {
+          "name": "Southreach",
+          "major": false
+        },
+        {
+          "name": "The Blue",
+          "major": false
+        },
+        {
+          "name": "The First Rung",
+          "major": false
+        },
+        {
+          "name": "The Foolish Maidens",
+          "major": false
+        },
+        {
+          "name": "The Plunging",
+          "major": false
+        },
+        {
+          "name": "Widow's Web",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "SpeakingWoodsHex",
+      "name": "Speaking Woods",
+      "regions": [
+        {
+          "name": "Fort Blather",
+          "major": true
+        },
+        {
+          "name": "Hush",
+          "major": true
+        },
+        {
+          "name": "Inari Base",
+          "major": true
+        },
+        {
+          "name": "Sotto Bank",
+          "major": true
+        },
+        {
+          "name": "Stem",
+          "major": true
+        },
+        {
+          "name": "The Filament",
+          "major": true
+        },
+        {
+          "name": "Tine",
+          "major": true
+        },
+        {
+          "name": "Wound",
+          "major": true
+        },
+        {
+          "name": "Calmland",
+          "major": false
+        },
+        {
+          "name": "Cursed Court",
+          "major": false
+        },
+        {
+          "name": "Mount Rell",
+          "major": false
+        },
+        {
+          "name": "Mute",
+          "major": false
+        },
+        {
+          "name": "Reaching River",
+          "major": false
+        },
+        {
+          "name": "Rell Foothills",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "StemaLandingHex",
+      "name": "Stema Landing",
+      "regions": [
+        {
+          "name": "Acies Overlook",
+          "major": true
+        },
+        {
+          "name": "Alchimio Estate",
+          "major": true
+        },
+        {
+          "name": "Base Ferveret",
+          "major": true
+        },
+        {
+          "name": "Base Sagitta",
+          "major": true
+        },
+        {
+          "name": "The Flair",
+          "major": true
+        },
+        {
+          "name": "The Spearhead",
+          "major": true
+        },
+        {
+          "name": "The Wane",
+          "major": true
+        },
+        {
+          "name": "Ustio",
+          "major": true
+        },
+        {
+          "name": "Verge Wing",
+          "major": true
+        },
+        {
+          "name": "Burnish Beach",
+          "major": false
+        },
+        {
+          "name": "Desolation Beach",
+          "major": false
+        },
+        {
+          "name": "Foreland",
+          "major": false
+        },
+        {
+          "name": "Isle of Eros",
+          "major": false
+        },
+        {
+          "name": "Stema Approach",
+          "major": false
+        },
+        {
+          "name": "The Coil",
+          "major": false
+        },
+        {
+          "name": "The North Wind",
+          "major": false
+        },
+        {
+          "name": "The Wending Tether",
+          "major": false
+        },
+        {
+          "name": "The West Line",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "StlicanShelfHex",
+      "name": "Stlican Shelf",
+      "regions": [
+        {
+          "name": "Breaker Town",
+          "major": true
+        },
+        {
+          "name": "Briar",
+          "major": true
+        },
+        {
+          "name": "Fort Hoarfrost",
+          "major": true
+        },
+        {
+          "name": "Port of Rime",
+          "major": true
+        },
+        {
+          "name": "The Old Mourn",
+          "major": true
+        },
+        {
+          "name": "The Pale House",
+          "major": true
+        },
+        {
+          "name": "The South Wind",
+          "major": true
+        },
+        {
+          "name": "Thornhold",
+          "major": true
+        },
+        {
+          "name": "Vulpine Watch",
+          "major": true
+        },
+        {
+          "name": "Broken Zephyr",
+          "major": false
+        },
+        {
+          "name": "Calving",
+          "major": false
+        },
+        {
+          "name": "Crystalfleet Inlet",
+          "major": false
+        },
+        {
+          "name": "Desiccated Front",
+          "major": false
+        },
+        {
+          "name": "Diarmaid's Plan",
+          "major": false
+        },
+        {
+          "name": "Glassy Flats",
+          "major": false
+        },
+        {
+          "name": "Revenant's Walk",
+          "major": false
+        },
+        {
+          "name": "Searing Blind",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "StonecradleHex",
+      "name": "Stonecradle",
+      "regions": [
+        {
+          "name": "Buckler Sound",
+          "major": true
+        },
+        {
+          "name": "Fading Lights",
+          "major": true
+        },
+        {
+          "name": "The Cord",
+          "major": true
+        },
+        {
+          "name": "The Dais",
+          "major": true
+        },
+        {
+          "name": "The Heir's Knife",
+          "major": true
+        },
+        {
+          "name": "The Long Fast",
+          "major": true
+        },
+        {
+          "name": "The Reach",
+          "major": true
+        },
+        {
+          "name": "Trammel Pool",
+          "major": true
+        },
+        {
+          "name": "World's End",
+          "major": true
+        },
+        {
+          "name": "Daihbi Point",
+          "major": false
+        },
+        {
+          "name": "Longing",
+          "major": false
+        },
+        {
+          "name": "The Loneliest Shore",
+          "major": false
+        },
+        {
+          "name": "The Pram",
+          "major": false
+        },
+        {
+          "name": "The Roiling Comets",
+          "major": false
+        },
+        {
+          "name": "The Whorl",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "TempestIslandHex",
+      "name": "Tempest Island",
+      "regions": [
+        {
+          "name": "Blackwatch",
+          "major": true
+        },
+        {
+          "name": "Isle of Psyche",
+          "major": true
+        },
+        {
+          "name": "Liar's Haven",
+          "major": true
+        },
+        {
+          "name": "Plana Fada",
+          "major": true
+        },
+        {
+          "name": "Reef",
+          "major": true
+        },
+        {
+          "name": "Surge Gate",
+          "major": true
+        },
+        {
+          "name": "The Gale",
+          "major": true
+        },
+        {
+          "name": "The Iris",
+          "major": true
+        },
+        {
+          "name": "The Rush",
+          "major": true
+        },
+        {
+          "name": "Anchor",
+          "major": false
+        },
+        {
+          "name": "Cirris Valve",
+          "major": false
+        },
+        {
+          "name": "Eros Lagoon",
+          "major": false
+        },
+        {
+          "name": "Liar's League",
+          "major": false
+        },
+        {
+          "name": "Lost Airchal",
+          "major": false
+        },
+        {
+          "name": "Pale Cnap",
+          "major": false
+        },
+        {
+          "name": "Sclera",
+          "major": false
+        },
+        {
+          "name": "Skodio Isle",
+          "major": false
+        },
+        {
+          "name": "Stratos Valve",
+          "major": false
+        },
+        {
+          "name": "Surge Field",
+          "major": false
+        },
+        {
+          "name": "Sweetworm",
+          "major": false
+        },
+        {
+          "name": "The Outwood",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "TerminusHex",
+      "name": "Terminus",
+      "regions": [
+        {
+          "name": "Bloody Palm Fort",
+          "major": true
+        },
+        {
+          "name": "Cerberus Wake",
+          "major": true
+        },
+        {
+          "name": "Theriz\u00f3",
+          "major": true
+        },
+        {
+          "name": "Thunderbolt",
+          "major": true
+        },
+        {
+          "name": "Warlord's Stead",
+          "major": true
+        },
+        {
+          "name": "Winding Bolas",
+          "major": true
+        },
+        {
+          "name": "Aspisa",
+          "major": false
+        },
+        {
+          "name": "Bay of the Ward",
+          "major": false
+        },
+        {
+          "name": "Dogbone",
+          "major": false
+        },
+        {
+          "name": "Martyr's Fang",
+          "major": false
+        },
+        {
+          "name": "Rising Loom",
+          "major": false
+        },
+        {
+          "name": "Sever",
+          "major": false
+        },
+        {
+          "name": "The Legion's Bounty",
+          "major": false
+        },
+        {
+          "name": "The Phalanx",
+          "major": false
+        },
+        {
+          "name": "The Respite",
+          "major": false
+        },
+        {
+          "name": "Three Siblings",
+          "major": false
+        },
+        {
+          "name": "Thunder Plains",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "TheFingersHex",
+      "name": "The Fingers",
+      "regions": [
+        {
+          "name": "Fort Barley",
+          "major": true
+        },
+        {
+          "name": "Headsman's Villa",
+          "major": true
+        },
+        {
+          "name": "Plankhouse",
+          "major": true
+        },
+        {
+          "name": "Second Man",
+          "major": true
+        },
+        {
+          "name": "Tethys Base",
+          "major": true
+        },
+        {
+          "name": "The Old Captain",
+          "major": true
+        },
+        {
+          "name": "Titancall",
+          "major": true
+        },
+        {
+          "name": "Captain's Dread",
+          "major": false
+        },
+        {
+          "name": "Cavitatis",
+          "major": false
+        },
+        {
+          "name": "Grapeshot Islands",
+          "major": false
+        },
+        {
+          "name": "Mount Talio",
+          "major": false
+        },
+        {
+          "name": "Rusty Anchor",
+          "major": false
+        },
+        {
+          "name": "Tears of Tethys",
+          "major": false
+        },
+        {
+          "name": "The Tusk",
+          "major": false
+        },
+        {
+          "name": "The Wary Nymphae",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "TyrantFoothillsHex",
+      "name": "Tyrant Foothills",
+      "regions": [
+        {
+          "name": "Azmar",
+          "major": true
+        },
+        {
+          "name": "Bandolier Base",
+          "major": true
+        },
+        {
+          "name": "Duelist's Scarp",
+          "major": true
+        },
+        {
+          "name": "Lugria",
+          "major": true
+        },
+        {
+          "name": "Northern Sky Hold",
+          "major": true
+        },
+        {
+          "name": "Onioncap",
+          "major": true
+        },
+        {
+          "name": "Scrapegrace",
+          "major": true
+        },
+        {
+          "name": "Epomisward",
+          "major": false
+        },
+        {
+          "name": "Harpe Balliwick",
+          "major": false
+        },
+        {
+          "name": "Sauroter Livery",
+          "major": false
+        },
+        {
+          "name": "Strigil Croft",
+          "major": false
+        },
+        {
+          "name": "The Thorax",
+          "major": false
+        },
+        {
+          "name": "Velia Grip",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "UmbralWildwoodHex",
+      "name": "Umbral Wildwood",
+      "regions": [
+        {
+          "name": "Amethyst",
+          "major": true
+        },
+        {
+          "name": "Atropos' Fate",
+          "major": true
+        },
+        {
+          "name": "Clotho's Refuge",
+          "major": true
+        },
+        {
+          "name": "Goldenroot Ranch",
+          "major": true
+        },
+        {
+          "name": "Hermit's Rest",
+          "major": true
+        },
+        {
+          "name": "Lachesis' Tally",
+          "major": true
+        },
+        {
+          "name": "Sentry",
+          "major": true
+        },
+        {
+          "name": "Stray",
+          "major": true
+        },
+        {
+          "name": "The Foundry",
+          "major": true
+        },
+        {
+          "name": "Thunderfoot",
+          "major": true
+        },
+        {
+          "name": "Vagrant Bastion",
+          "major": true
+        },
+        {
+          "name": "Adze Crossroads",
+          "major": false
+        },
+        {
+          "name": "Dredgefield",
+          "major": false
+        },
+        {
+          "name": "Golden Concourse",
+          "major": false
+        },
+        {
+          "name": "Leatherback Pathway",
+          "major": false
+        },
+        {
+          "name": "Steely Fields",
+          "major": false
+        },
+        {
+          "name": "Terrapin Woods",
+          "major": false
+        },
+        {
+          "name": "The Dredgewood",
+          "major": false
+        },
+        {
+          "name": "The Frontier",
+          "major": false
+        },
+        {
+          "name": "The Gap",
+          "major": false
+        },
+        {
+          "name": "The Strands",
+          "major": false
+        },
+        {
+          "name": "Thunder Row",
+          "major": false
+        },
+        {
+          "name": "Wasting Holt",
+          "major": false
+        },
+        {
+          "name": "Weaver's Trail",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "ViperPitHex",
+      "name": "Viper Pit",
+      "regions": [
+        {
+          "name": "Blackthroat",
+          "major": true
+        },
+        {
+          "name": "Earl Crowley",
+          "major": true
+        },
+        {
+          "name": "Fleck Crossing",
+          "major": true
+        },
+        {
+          "name": "Fort Viper",
+          "major": true
+        },
+        {
+          "name": "Kirknell",
+          "major": true
+        },
+        {
+          "name": "Moltworth",
+          "major": true
+        },
+        {
+          "name": "Serenity's Blight",
+          "major": true
+        },
+        {
+          "name": "The Friars",
+          "major": true
+        },
+        {
+          "name": "Afric's Approach",
+          "major": false
+        },
+        {
+          "name": "Austriaca River",
+          "major": false
+        },
+        {
+          "name": "Deadsteps",
+          "major": false
+        },
+        {
+          "name": "Earl's Welcome",
+          "major": false
+        },
+        {
+          "name": "Hardcaps",
+          "major": false
+        },
+        {
+          "name": "Lake Mioira",
+          "major": false
+        },
+        {
+          "name": "Path of the Charmed",
+          "major": false
+        },
+        {
+          "name": "Snakehead Lake",
+          "major": false
+        },
+        {
+          "name": "The Bloody Bowery",
+          "major": false
+        },
+        {
+          "name": "The Lady's Lake",
+          "major": false
+        },
+        {
+          "name": "The Rockaway",
+          "major": false
+        },
+        {
+          "name": "The Slithering Scales",
+          "major": false
+        },
+        {
+          "name": "The Tongue",
+          "major": false
+        },
+        {
+          "name": "Twin Fangs",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "WeatheredExpanseHex",
+      "name": "Weathered Expanse",
+      "regions": [
+        {
+          "name": "Crow's Nest",
+          "major": true
+        },
+        {
+          "name": "Foxcatcher",
+          "major": true
+        },
+        {
+          "name": "Frostmarch",
+          "major": true
+        },
+        {
+          "name": "Huntsfort",
+          "major": true
+        },
+        {
+          "name": "Necropolis",
+          "major": true
+        },
+        {
+          "name": "Shattered Advance",
+          "major": true
+        },
+        {
+          "name": "Spirit Watch",
+          "major": true
+        },
+        {
+          "name": "The Weathering Halls",
+          "major": true
+        },
+        {
+          "name": "Wightwalk",
+          "major": true
+        },
+        {
+          "name": "Barrowsfield",
+          "major": false
+        },
+        {
+          "name": "Dullahan's Crest",
+          "major": false
+        },
+        {
+          "name": "Eapoe",
+          "major": false
+        },
+        {
+          "name": "Kirkyard",
+          "major": false
+        },
+        {
+          "name": "Revenant's Path",
+          "major": false
+        },
+        {
+          "name": "Rime Wastes",
+          "major": false
+        },
+        {
+          "name": "Shadeport",
+          "major": false
+        },
+        {
+          "name": "The Ivory Bank",
+          "major": false
+        },
+        {
+          "name": "The Ivory Sea",
+          "major": false
+        },
+        {
+          "name": "The Spear",
+          "major": false
+        },
+        {
+          "name": "The Stand",
+          "major": false
+        },
+        {
+          "name": "The Weathered Wall",
+          "major": false
+        },
+        {
+          "name": "Wraith's Gate",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "WestgateHex",
+      "name": "Westgate",
+      "regions": [
+        {
+          "name": "Holdfast",
+          "major": true
+        },
+        {
+          "name": "Kingstone",
+          "major": true
+        },
+        {
+          "name": "Longstone",
+          "major": true
+        },
+        {
+          "name": "Lord's Mouth",
+          "major": true
+        },
+        {
+          "name": "Lost Partition",
+          "major": true
+        },
+        {
+          "name": "Rancher's Fast",
+          "major": true
+        },
+        {
+          "name": "The Gallows",
+          "major": true
+        },
+        {
+          "name": "Westgate Keep",
+          "major": true
+        },
+        {
+          "name": "Wyattwick",
+          "major": true
+        },
+        {
+          "name": "Zeus' Demise",
+          "major": true
+        },
+        {
+          "name": "Candle Hills",
+          "major": false
+        },
+        {
+          "name": "Cattle March",
+          "major": false
+        },
+        {
+          "name": "Ceo Highlands",
+          "major": false
+        },
+        {
+          "name": "Coasthill",
+          "major": false
+        },
+        {
+          "name": "Cobber's Lane",
+          "major": false
+        },
+        {
+          "name": "Fand's Chain",
+          "major": false
+        },
+        {
+          "name": "Fields of Badb",
+          "major": false
+        },
+        {
+          "name": "Flidais' Pasture",
+          "major": false
+        },
+        {
+          "name": "Handsome Hideaway",
+          "major": false
+        },
+        {
+          "name": "Hillcrest",
+          "major": false
+        },
+        {
+          "name": "Inkwell Lane",
+          "major": false
+        },
+        {
+          "name": "Kardia Road",
+          "major": false
+        },
+        {
+          "name": "Killian Quarter",
+          "major": false
+        },
+        {
+          "name": "Reaver's Cove",
+          "major": false
+        },
+        {
+          "name": "Sanctified Path",
+          "major": false
+        },
+        {
+          "name": "S\u00edoch\u00e1na Valley",
+          "major": false
+        },
+        {
+          "name": "Taswell Point",
+          "major": false
+        },
+        {
+          "name": "The Aging Ocean",
+          "major": false
+        },
+        {
+          "name": "The Bulwark",
+          "major": false
+        },
+        {
+          "name": "The Divide",
+          "major": false
+        },
+        {
+          "name": "The Hem",
+          "major": false
+        },
+        {
+          "name": "The King's Road",
+          "major": false
+        },
+        {
+          "name": "The Knight's Edge",
+          "major": false
+        },
+        {
+          "name": "Triton's Curse",
+          "major": false
+        },
+        {
+          "name": "Warden Walk",
+          "major": false
+        },
+        {
+          "name": "Western Heartlands",
+          "major": false
+        },
+        {
+          "name": "Wire Road",
+          "major": false
+        }
+      ]
+    },
+    {
+      "key": "WrestaHex",
+      "name": "Wresta",
+      "regions": [
+        {
+          "name": "Adripio",
+          "major": true
+        },
+        {
+          "name": "Argan Isle",
+          "major": true
+        },
+        {
+          "name": "Garion Slip",
+          "major": true
+        },
+        {
+          "name": "Latro Manor",
+          "major": true
+        },
+        {
+          "name": "Ratchet",
+          "major": true
+        },
+        {
+          "name": "Scallyhold",
+          "major": true
+        },
+        {
+          "name": "Toad's Plinth",
+          "major": true
+        },
+        {
+          "name": "Blue Jack Rut",
+          "major": false
+        },
+        {
+          "name": "Flintknap",
+          "major": false
+        },
+        {
+          "name": "Holystone Fell",
+          "major": false
+        },
+        {
+          "name": "The Capstan",
+          "major": false
+        },
+        {
+          "name": "Wyrd Bridge",
+          "major": false
+        },
+        {
+          "name": "Yeaning Hideaway",
+          "major": false
+        }
+      ]
+    }
+  ]
+}

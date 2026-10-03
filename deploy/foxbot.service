@@ -1,0 +1,19 @@
+[Unit]
+Description=Foxhole logistics Discord bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=foxbot
+WorkingDirectory=/opt/foxhole_bot
+ExecStart=/opt/foxhole_bot/.venv/bin/python -m foxbot
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/foxhole_bot/data
+
+[Install]
+WantedBy=multi-user.target

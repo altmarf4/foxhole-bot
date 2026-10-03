@@ -1,0 +1,4750 @@
+{
+ "sources": {
+  "foxhole_stockpiles": "https://raw.githubusercontent.com/xurxogr/foxhole-stockpiles/main/data/catalog.json",
+  "fir": "foxhole/airborne-63/catalog.json"
+ },
+ "items": [
+  {
+   "code": "AAAmmo",
+   "name": "950-70b Anti-Aircraft Shell",
+   "names": {
+    "de": "950-70b Luftabwehrgranate",
+    "en": "950-70b Anti-Aircraft Shell",
+    "fr": "Obus Antiaérien 950-70b",
+    "pt": "950-70b Projétil Antiaéreo",
+    "ru": "Зенитный снаряд 950-70b",
+    "zh": "950-70b防空炮弹"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "ATAmmo",
+   "name": "68mm",
+   "names": {
+    "en": "68mm",
+    "fr": "68 mm",
+    "ru": "68мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "ATGrenadeW",
+   "name": "BF5 White Ash Flask Grenade",
+   "names": {
+    "de": "BF5 White Ash Flaschengranate",
+    "en": "BF5 White Ash Flask Grenade",
+    "fr": "Grenade Flacon BF5 White Ash",
+    "pt": "Granada Flask BF5 White Ash",
+    "ru": "Граната BF5 White Ash Flask",
+    "zh": "BF5 White Ash烧瓶手榴弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 10
+  },
+  {
+   "code": "ATLargeAmmo",
+   "name": "94.5mm",
+   "names": {
+    "de": "94,5mm",
+    "en": "94.5mm",
+    "fr": "94,5 mm",
+    "ru": "94.5мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ATLaunchedGrenadeW",
+   "name": "B2 Varsi Anti-Tank Grenade",
+   "names": {
+    "en": "B2 Varsi Anti-Tank Grenade"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "ATRPGAmmo",
+   "name": "AP/RPG",
+   "names": {
+    "en": "AP/RPG",
+    "ru": "Бронебойный/РПГ",
+    "zh": "穿甲/火箭弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "ATRPGC",
+   "name": "Venom c.II 35",
+   "names": {
+    "en": "Venom c.II 35"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRPGHeavyC",
+   "name": "Bane 45",
+   "names": {
+    "en": "Bane 45"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRPGHeavyW",
+   "name": "Carnyx Anti-Tank Rocket Launcher",
+   "names": {
+    "de": "Carnyx Panzerabwehrraketenwerfer",
+    "en": "Carnyx Anti-Tank Rocket Launcher",
+    "fr": "Lance-Roquette Antichar Carnyx",
+    "pt": "Lançador de foguetes antitanque Carnyx",
+    "ru": "РПГ \"Carnyx\"",
+    "zh": "Carnyx反坦克火箭发射器"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRPGIndirectAmmo",
+   "name": "ARC/RPG",
+   "names": {
+    "en": "ARC/RPG",
+    "ru": "Бронебойный навесной/РПГ",
+    "zh": "曲射/火箭弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "ATRPGLightC",
+   "name": "Ignifist 30",
+   "names": {
+    "en": "Ignifist 30"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 10
+  },
+  {
+   "code": "ATRPGTW",
+   "name": "Mounted Bonesaw MK.3",
+   "names": {
+    "de": "Montierte Bonesaw MK.3",
+    "en": "Mounted Bonesaw MK.3",
+    "fr": "Bonesaw MK.3 Monté",
+    "pt": "Bonesaw MK.3 Montada",
+    "ru": "Станковый Bonesaw MK.3",
+    "zh": "架设式Bonesaw MK.3"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRPGW",
+   "name": "Bonesaw MK.3",
+   "names": {
+    "en": "Bonesaw MK.3"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRifleAmmo",
+   "name": "14.5mm",
+   "names": {
+    "en": "14.5mm"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "ATRifleAssaultW",
+   "name": "228 Satterley Heavy Storm Rifle",
+   "names": {
+    "en": "228 Satterley Heavy Storm Rifle"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRifleAutomaticW",
+   "name": "Booker Greyhound Model 910",
+   "names": {
+    "en": "Booker Greyhound Model 910"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "ATRifleLightC",
+   "name": "“Dawn” Ve.II",
+   "names": {
+    "en": "“Dawn” Ve.II"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "ATRifleSniperC",
+   "name": "“Quickhatch” Rt.I",
+   "names": {
+    "en": "“Quickhatch” Rt.I"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "ATRifleTC",
+   "name": "“Typhon” ra.XII",
+   "names": {
+    "en": "“Typhon” ra.XII"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "ATRifleW",
+   "name": "Neville Anti-Tank Rifle",
+   "names": {
+    "de": "Neville Panzerbüchse",
+    "en": "Neville Anti-Tank Rifle",
+    "fr": "Fusil Antichar Neville",
+    "pt": "Rifle anti-tanque Neville",
+    "ru": "Противотанковое ружье Neville ",
+    "zh": "Neville反坦克步枪"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "AirSirenT",
+   "name": "Air Raid Siren",
+   "names": {},
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "AircraftAmmo",
+   "name": "20mm",
+   "names": {
+    "en": "20mm",
+    "fr": "20 mm",
+    "pt": "20 mm",
+    "ru": "20мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "AircraftBomberC",
+   "name": "V-1 Tzykalia",
+   "names": {
+    "en": "V-1 Tzykalia"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftBomberW",
+   "name": "Tulka P4 Welkinrive",
+   "names": {
+    "en": "Tulka P4 Welkinrive"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftDiveC",
+   "name": "Mergo-4 “Myrmidon”",
+   "names": {
+    "de": "Mergo-4 \"Myrmidon\"",
+    "en": "Mergo-4 “Myrmidon”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftFighterC",
+   "name": "Toxot-902 “Blind Silver”",
+   "names": {
+    "en": "Toxot-902 “Blind Silver”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftFighterW",
+   "name": "Luminary Mk. II Harbinger",
+   "names": {
+    "en": "Luminary Mk. II Harbinger"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftParatrooperC",
+   "name": "V-5b Pegasus",
+   "names": {
+    "en": "V-5b Pegasus"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftParatrooperW",
+   "name": "Rinnspeir Mk. I Zealot",
+   "names": {
+    "en": "Rinnspeir Mk. I Zealot"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeEngineC",
+   "name": "Colonial Aircraft Engine (Large)",
+   "names": {
+    "de": "Colonial Flugzeugmotor (Groß)",
+    "en": "Colonial Aircraft Engine (Large)",
+    "fr": "Moteur d'Avion Colonial (Grand)",
+    "pt": "Motor de Aeronave Colonial (Grande)",
+    "ru": "Колониальный авиадвигатель (Большой)",
+    "zh": "Colonial飞行器引擎 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeEngineW",
+   "name": "Warden Aircraft Engine (Large)",
+   "names": {
+    "en": "Warden Aircraft Engine (Large)",
+    "fr": "Moteur d'Avion Warden (Grand)",
+    "pt": "Motor de Aeronave Warden (Grande)",
+    "ru": "Варденский авиадвигатель (Большой)",
+    "zh": "Warden飞行器引擎 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeEngineWreckedC",
+   "name": "Damaged Colonial Aircraft Engine (Large)",
+   "names": {
+    "en": "Damaged Colonial Aircraft Engine (Large)",
+    "fr": "Moteur d'Avion Colonial Endommagé (Grand)",
+    "pt": "Motor de Aeronave Colonial Danificado (Grande)",
+    "ru": "Повреждённый Колониальный авиадвигатель (Большой)",
+    "zh": "受损的Colonial飞行器引擎 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeEngineWreckedW",
+   "name": "Damaged Warden Aircraft Engine (Large)",
+   "names": {
+    "en": "Damaged Warden Aircraft Engine (Large)",
+    "fr": "Moteur d'Avion Warden Endommagé (Grand)",
+    "pt": "Motor de Aeronave Warden Danificado (Grande)",
+    "ru": "Повреждённый Варденский авиадвигатель (Большой)",
+    "zh": "受损的Warden飞行器引擎 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeMechanicalC",
+   "name": "Colonial Aircraft Mechanical Parts (Large)",
+   "names": {
+    "de": "Colonial mechanisches Flugzeugteil (Groß)",
+    "en": "Colonial Aircraft Mechanical Parts (Large)",
+    "fr": "Pièces Mécaniques d'Avion Colonial (Grand)",
+    "pt": "Peças Mecânicas de Aeronaves Coloniais (Grandes)",
+    "ru": "Авиационные детали Колонистов (Большие)",
+    "zh": "Colonial飞行器机械组件 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeMechanicalW",
+   "name": "Warden Aircraft Mechanical Parts (Large)",
+   "names": {
+    "de": "Warden mechanisches Flugzeugteil (Groß)",
+    "en": "Warden Aircraft Mechanical Parts (Large)",
+    "fr": "Pièces Mécaniques d'Avion Warden (Grand)",
+    "pt": "Peças Mecânicas para Aeronaves Warden (Grandes)",
+    "ru": "Авиационный двигатель Варденов (Большой)",
+    "zh": "Warden飞行器机械组件 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeMechanicalWreckedC",
+   "name": "Damaged Colonial Aircraft Mechanical Parts (Large)",
+   "names": {
+    "en": "Damaged Colonial Aircraft Mechanical Parts (Large)",
+    "fr": "Pièces Mécaniques d'Avion Colonial Endommagées (Grand)",
+    "pt": "Peças Mecânicas Danificadas de Aeronaves Coloniais (Grandes)",
+    "ru": "Повреждённые авиационные детали Колонистов (Большие)",
+    "zh": "受损的Colonial飞行器机械组件 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartLargeMechanicalWreckedW",
+   "name": "Damaged Warden Aircraft Mechanical Parts (Large)",
+   "names": {
+    "de": "Beschädigtes Warden mechanisches Flugzeugteil (Groß)",
+    "en": "Damaged Warden Aircraft Mechanical Parts (Large)",
+    "fr": "Pièces Mécaniques d'Avion Warden Endommagées (Grand)",
+    "pt": "Peças Mecânicas Danificadas da Aeronave Warden (Grandes)",
+    "ru": "Повреждённый авиационный двигатель Варденов (Большой)",
+    "zh": "受损的Warden飞行器机械组件 (大型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallEngineC",
+   "name": "Colonial Aircraft Engine (Small)",
+   "names": {
+    "de": "Colonial Flugzeugmotor (Klein)",
+    "en": "Colonial Aircraft Engine (Small)",
+    "fr": "Moteur d'Avion Colonial (Petit)",
+    "pt": "Motor de Aeronave Colonial (Pequeno)",
+    "ru": "Колониальный авиадвигатель (Малый)",
+    "zh": "Colonial飞行器引擎 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallEngineW",
+   "name": "Warden Aircraft Engine (Small)",
+   "names": {
+    "de": "Warden Flugzeugmotor (Klein)",
+    "en": "Warden Aircraft Engine (Small)",
+    "fr": "Moteur d'Avion Warden (Petit)",
+    "pt": "Motor de Aeronave Warden (Pequeno)",
+    "ru": "Варденский авиадвигатель (Малый)",
+    "zh": "Warden飞行器引擎 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallEngineWreckedC",
+   "name": "Damaged Colonial Aircraft Engine (Small)",
+   "names": {
+    "en": "Damaged Colonial Aircraft Engine (Small)",
+    "fr": "Moteur d'Avion Colonial Endommagé (Petit)",
+    "pt": "Motor de Aeronave Colonial Danificado (Pequeno)",
+    "ru": "Повреждённый Колониальный авиадвигатель (Малый)",
+    "zh": "受损的Colonial飞行器引擎 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallEngineWreckedW",
+   "name": "Damaged Warden Aircraft Engine (Small)",
+   "names": {
+    "de": "Beschädigter Warden Flugzeugmotor (klein)",
+    "en": "Damaged Warden Aircraft Engine (Small)",
+    "fr": "Moteur d'Avion Warden Endommagé (Petit)",
+    "pt": "Motor de Aeronave Warden Danificado (Pequeno)",
+    "ru": "Повреждённый авиационный двигатель Варденов (малый)",
+    "zh": "受损的Warden飞行器引擎 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallMechanicalC",
+   "name": "Colonial Aircraft Mechanical Parts (Small)",
+   "names": {
+    "en": "Colonial Aircraft Mechanical Parts (Small)",
+    "fr": "Pièces Mécaniques d'Avion Colonial (Petit)",
+    "pt": "Peças Mecânicas de Aeronaves Coloniais (Pequenas)",
+    "ru": "Авиационные детали Колонистов (Малые)",
+    "zh": "Colonial飞行器机械组件 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallMechanicalW",
+   "name": "Warden Aircraft Mechanical Parts (Small)",
+   "names": {
+    "en": "Warden Aircraft Mechanical Parts (Small)",
+    "fr": "Pièces Mécaniques d'Avion Warden (Petit)",
+    "pt": "Peças Mecânicas para Aeronaves Warden (Pequenas)",
+    "ru": "Авиационные детали Варденов (Малые)",
+    "zh": "Warden飞行器机械组件 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallMechanicalWreckedC",
+   "name": "Damaged Colonial Aircraft Mechanical Parts (Small)",
+   "names": {
+    "en": "Damaged Colonial Aircraft Mechanical Parts (Small)",
+    "fr": "Pièces Mécaniques d'Avion Colonial Endommagées (Petit)",
+    "pt": "Peças Mecânicas Danificadas de Aeronaves Coloniais (Pequenas)",
+    "ru": "Повреждённые авиационные детали Колонистов (Малые)",
+    "zh": "受损的Colonial飞行器机械组件 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftPartSmallMechanicalWreckedW",
+   "name": "Damaged Warden Aircraft Mechanical Parts (Small)",
+   "names": {
+    "en": "Damaged Warden Aircraft Mechanical Parts (Small)",
+    "fr": "Pièces Mécaniques d'Avion Warden Endommagées (Petit)",
+    "pt": "Peças Mecânicas Danificadas da Aeronave Warden (Pequenas)",
+    "ru": "Повреждённые авиационные детали Варденов (Малые)",
+    "zh": "受损的Warden飞行器机械组件 (小型)"
+   },
+   "category": "Aircraft Parts",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftScout2C",
+   "name": "A59 Venti “Perdix”",
+   "names": {
+    "en": "A59 Venti “Perdix”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftScout2W",
+   "name": "Luminary Mk. VI Emissary",
+   "names": {
+    "en": "Luminary Mk. VI Emissary"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftScoutC",
+   "name": "A51 Venti “Daedalus”",
+   "names": {
+    "en": "A51 Venti “Daedalus”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftScoutW",
+   "name": "Luminary Mk. IV Herald",
+   "names": {
+    "en": "Luminary Mk. IV Herald"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftTorpedoAmmo",
+   "name": "Tenta Torpedo",
+   "names": {
+    "en": "Tenta Torpedo",
+    "fr": "Torpille Tenta",
+    "ru": "Торпеда Tenta",
+    "zh": "Tenta鱼雷"
+   },
+   "category": "Heavy Ammunition",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftTorpedoW",
+   "name": "M925 Austringer Man-O-War",
+   "names": {
+    "en": "M925 Austringer Man-O-War"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AircraftWaterW",
+   "name": "Tulka I1.9 White Raven",
+   "names": {
+    "en": "Tulka I1.9 White Raven"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "Aluminum",
+   "name": "Aluminum",
+   "names": {
+    "de": "Aluminium",
+    "en": "Aluminum",
+    "fr": "Aluminium",
+    "pt": "Alumínio",
+    "ru": "Алюминий",
+    "zh": "铝"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "AluminumA",
+   "name": "Aluminum Alloy",
+   "names": {
+    "de": "Aluminiumlegierung",
+    "en": "Aluminum Alloy",
+    "fr": "Alliage d'Aluminium",
+    "pt": "Liga de alumínio",
+    "ru": "Алюминиевый сплав",
+    "zh": "铝合金"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "AmbulanceC",
+   "name": "R-12 - “Salus” Ambulance",
+   "names": {
+    "de": "R-12 - “Salus” Krankenwagen",
+    "en": "R-12 - “Salus” Ambulance",
+    "fr": "Ambulance R-12 - \"Salus\"",
+    "pt": "Ambulância R-12 - “Salus”",
+    "ru": "Скорая помощь R-12 - “Salus”",
+    "zh": "R-12 - “Salus”救护车"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "AmbulanceFlameC",
+   "name": "R-12b - “Salva” Flame Truck",
+   "names": {
+    "de": "R-12b - “Salva” Feuerwehrwagen",
+    "en": "R-12b - “Salva” Flame Truck",
+    "fr": "Camion d'incendie R-12b - \"Salva\"",
+    "pt": "R-12b - “Salva” Caminhão de Bombeiros",
+    "ru": "Пожарный автомобиль R-12b - “Salva”",
+    "zh": "R-12b - “Salva”消防车"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "AmbulanceFlameW",
+   "name": "Dunne Dousing Engine 3r",
+   "names": {
+    "en": "Dunne Dousing Engine 3r"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "AmbulanceW",
+   "name": "Dunne Responder 3e",
+   "names": {
+    "en": "Dunne Responder 3e"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "AmmoUniformW",
+   "name": "Specialist’s Overcoat",
+   "names": {
+    "de": "Spezialisten Mantel",
+    "en": "Specialist’s Overcoat",
+    "fr": "Manteau de Spécialiste",
+    "pt": "Uniforme Specialist’s Overcoat",
+    "ru": "Шинель специалиста",
+    "zh": "专业技术兵制服"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "ArmoredCar2LargeW",
+   "name": "O’Brien V.101 Freeman",
+   "names": {
+    "de": "O'Brien V.101 Freeman",
+    "en": "O’Brien V.101 Freeman"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCar2MultiW",
+   "name": "O’Brien v.200 Squire",
+   "names": {
+    "en": "O’Brien v.200 Squire"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCar2TwinW",
+   "name": "O’Brien V.190 Knave",
+   "names": {
+    "de": "O'Brien V.190 Knave",
+    "en": "O’Brien V.190 Knave",
+    "pt": "O’Brien v.190 Knave"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "ArmoredCarATW",
+   "name": "O’Brien V.113 Gravekeeper",
+   "names": {
+    "en": "O’Brien V.113 Gravekeeper"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCarC",
+   "name": "T3 “Xiphos”",
+   "names": {
+    "en": "T3 “Xiphos”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "ArmoredCarFlameW",
+   "name": "O’Brien V.130 Wild Jack",
+   "names": {
+    "en": "O’Brien V.130 Wild Jack"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCarMobilityW",
+   "name": "O’Brien V.121 Highlander",
+   "names": {
+    "en": "O’Brien V.121 Highlander"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCarOffensiveC",
+   "name": "T5 “Percutio”",
+   "names": {
+    "en": "T5 “Percutio”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCarTwinC",
+   "name": "T8 “Gemini”",
+   "names": {
+    "en": "T8 “Gemini”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "ArmoredCarW",
+   "name": "O’Brien V.110",
+   "names": {
+    "en": "O’Brien V.110"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "ArmourUniformC",
+   "name": "Velian Flak Vest",
+   "names": {
+    "de": "Velianische Splitterschutzweste",
+    "en": "Velian Flak Vest",
+    "fr": "Gilet pare-balles Velian",
+    "pt": "Uniforme Velian Flak Vest",
+    "ru": "Велианский бронежилет",
+    "zh": "Velian防弹背心"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 10
+  },
+  {
+   "code": "ArmourUniformW",
+   "name": "Gunner’s Breastplate",
+   "names": {
+    "de": "Grabenrüstung",
+    "en": "Gunner’s Breastplate",
+    "fr": "Cuirasse",
+    "pt": "Peitoral de Artilheiro",
+    "ru": "Стальная кираса",
+    "zh": "炮手胸甲"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "AssaultRifleAmmo",
+   "name": "7.92mm",
+   "names": {
+    "de": "7,92mm",
+    "en": "7.92mm",
+    "fr": "7,92 mm",
+    "ru": "7.92-мм"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 30
+  },
+  {
+   "code": "AssaultRifleC",
+   "name": "Catara mo.II",
+   "names": {
+    "en": "Catara mo.II"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "AssaultRifleHeavyC",
+   "name": "“Dusk” ce.III",
+   "names": {
+    "en": "“Dusk” ce.III"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "AssaultRifleHeavyW",
+   "name": "Booker Storm Rifle Model 838",
+   "names": {
+    "de": "Booker Sturmgewehr Modell 838",
+    "en": "Booker Storm Rifle Model 838",
+    "fr": "Fusil d'Assaut Booker Model 838",
+    "pt": "Booker Storm Rifle Modelo 838",
+    "ru": "Штурмовая винтовка Booker Model 838",
+    "zh": "Booker风暴步枪Model 838"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "AssaultRifleW",
+   "name": "Aalto Storm Rifle 24",
+   "names": {
+    "de": "Aalto Sturmgewehr 24",
+    "en": "Aalto Storm Rifle 24",
+    "fr": "Fusil d'Assaut Aalto 24",
+    "ru": "Штурмовая винтовка Aalto 24",
+    "zh": "Aalto风暴步枪24"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "Bandages",
+   "name": "Bandages",
+   "names": {
+    "de": "Verbände",
+    "en": "Bandages",
+    "pt": "Bandagens",
+    "ru": "Бинты",
+    "zh": "绷带"
+   },
+   "category": "Medical",
+   "faction": null,
+   "per_crate": 50
+  },
+  {
+   "code": "BannerTC",
+   "name": "Legion Vexillum",
+   "names": {
+    "en": "Legion Vexillum",
+    "fr": "Vexillum de Légion",
+    "pt": "Estandarte da Legião",
+    "ru": "Флаг Колонистов",
+    "zh": "军团旌旗"
+   },
+   "category": "Utility",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "BannerTW",
+   "name": "War Ensign",
+   "names": {
+    "de": "Standarte",
+    "en": "War Ensign",
+    "fr": "Étendard de Guerre",
+    "pt": "Estandarte de Guerra",
+    "ru": "Флаг Варденов",
+    "zh": "战旗"
+   },
+   "category": "Utility",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "BarbedWireMaterials",
+   "name": "Barbed Wire",
+   "names": {
+    "de": "Stacheldraht",
+    "en": "Barbed Wire",
+    "fr": "Fil Barbelé",
+    "pt": "Arame Farpado",
+    "ru": "Колючая проволока",
+    "zh": "铁丝网"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "Barge",
+   "name": "BMS - Aquatipper",
+   "names": {
+    "en": "BMS - Aquatipper"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "BattleTankAmmo",
+   "name": "75mm",
+   "names": {
+    "en": "75mm",
+    "fr": "75 mm",
+    "ru": "75-мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "Bayonet",
+   "name": "Buckhorn CCQ-18",
+   "names": {
+    "en": "Buckhorn CCQ-18"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "Binoculars",
+   "name": "Binoculars",
+   "names": {
+    "de": "Fernglas",
+    "en": "Binoculars",
+    "fr": "Jumelles",
+    "pt": "Binóculos",
+    "ru": "Бинокль",
+    "zh": "望远镜"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "BloodPlasma",
+   "name": "Blood Plasma",
+   "names": {
+    "de": "Blutplasma",
+    "en": "Blood Plasma",
+    "fr": "Plasma Sanguin",
+    "pt": "Plasma sanguíneo",
+    "ru": "Плазма",
+    "zh": "血浆"
+   },
+   "category": "Medical",
+   "faction": null,
+   "per_crate": 50
+  },
+  {
+   "code": "BomberAmmo",
+   "name": "Mark II Raidbreaker",
+   "names": {
+    "en": "Mark II Raidbreaker"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "BusC",
+   "name": "R-15 - “Chariot”",
+   "names": {
+    "en": "R-15 - “Chariot”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "BusW",
+   "name": "Dunne Caravaner 2f",
+   "names": {
+    "en": "Dunne Caravaner 2f"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "Cloth",
+   "name": "Basic Materials",
+   "names": {
+    "de": "Basis-Materialien",
+    "en": "Basic Materials",
+    "fr": "Matériaux Basiques",
+    "pt": "Materiais Básicos",
+    "ru": "Базовые материалы",
+    "zh": "基础材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "Coal",
+   "name": "Coal",
+   "names": {
+    "de": "Kohle",
+    "en": "Coal",
+    "fr": "Charbon",
+    "pt": "Carvão",
+    "ru": "Уголь",
+    "zh": "煤"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "Components",
+   "name": "Components",
+   "names": {
+    "de": "Komponenten",
+    "en": "Components",
+    "fr": "Composants",
+    "pt": "Componentes",
+    "ru": "Компоненты",
+    "zh": "螺母"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "Concrete",
+   "name": "Concrete Materials",
+   "names": {
+    "de": "Beton-Material",
+    "en": "Concrete Materials",
+    "fr": "Béton",
+    "pt": "Concreto",
+    "ru": "Бетон",
+    "zh": "混凝土材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ConcreteMixer",
+   "name": "Concrete Mixer",
+   "names": {
+    "de": "Betonmischer",
+    "en": "Concrete Mixer",
+    "fr": "Bétonnière",
+    "pt": "Betoneira",
+    "ru": "Бетономешалка",
+    "zh": "混凝土搅拌机"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "Construction",
+   "name": "BMS - Universal Assembly Rig",
+   "names": {
+    "en": "BMS - Universal Assembly Rig"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "ConstructionEquipment",
+   "name": "Construction Equipment",
+   "names": {
+    "de": "Baumaschine",
+    "en": "Construction Equipment",
+    "fr": "Équipement de Construction",
+    "pt": "Equipamentos de Construção",
+    "ru": "Строительное оборудование",
+    "zh": "施工设备"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "ConstructionUtility",
+   "name": "BMS - Fabricator",
+   "names": {
+    "en": "BMS - Fabricator"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "Copper",
+   "name": "Copper",
+   "names": {
+    "de": "Kupfer",
+    "en": "Copper",
+    "fr": "Cuivre",
+    "pt": "Cobre",
+    "ru": "Медь",
+    "zh": "铜"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "CopperA",
+   "name": "Copper Alloy",
+   "names": {
+    "de": "Kupferlegierung",
+    "en": "Copper Alloy",
+    "fr": "Alliage de Cuivre",
+    "pt": "Liga de Cobre",
+    "ru": "Медный сплав",
+    "zh": "铜合金"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "Crane",
+   "name": "BMS - Class 2 Mobile Auto-Crane",
+   "names": {
+    "de": "BMS - Klasse 2 Mobiler Auto-Kran",
+    "en": "BMS - Class 2 Mobile Auto-Crane",
+    "fr": "Grue Mobile BMS de Classe 2",
+    "pt": "BMS - Guindaste Autopropulsado Classe 2",
+    "ru": "Мобильный автокран БМС 2 класса",
+    "zh": "BMS -2型 移动式吊车"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "DemolitionRocketAmmo",
+   "name": "Shatter Missile",
+   "names": {
+    "en": "Shatter Missile",
+    "fr": "Missile Briseur",
+    "pt": "Míssil de Estilhaço",
+    "ru": "Разрушающая ракета",
+    "zh": "Shatter火箭弹"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "DepthChargeAmmo",
+   "name": "Model-7 “Evie”",
+   "names": {
+    "en": "Model-7 “Evie”"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "DestroyerTankFlameW",
+   "name": "Noble Firebrand Mk. XVII",
+   "names": {
+    "en": "Noble Firebrand Mk. XVII"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "DestroyerTankW",
+   "name": "Noble Widow MK. XIV",
+   "names": {
+    "en": "Noble Widow MK. XIV"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "Diesel",
+   "name": "Diesel",
+   "names": {
+    "en": "Diesel",
+    "ru": "Дизель",
+    "zh": "柴油"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "DiveBomberAmmo",
+   "name": "912 Shrike Rounds",
+   "names": {
+    "en": "912 Shrike Rounds"
+   },
+   "category": "Heavy Ammunition",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "EmplacedATLargeW",
+   "name": "Huber Starbreaker 94.5mm",
+   "names": {
+    "de": "Huber Starbreaker 94,5mm",
+    "en": "Huber Starbreaker 94.5mm",
+    "fr": "Huber Starbreaker 94,5 mm",
+    "ru": "Huber Starbreaker 94.5мм"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "EmplacedATW",
+   "name": "Leary Shellbore 68mm",
+   "names": {
+    "en": "Leary Shellbore 68mm",
+    "fr": "Leary Shellbore 68 mm",
+    "pt": "Leary Shellbore 68 mm",
+    "ru": "Leary Shellbore 68-мм"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedAircraftC",
+   "name": "DAE 5b “Zeal”",
+   "names": {
+    "en": "DAE 5b “Zeal”"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedAircraftW",
+   "name": "Leary AA-70 Bolas",
+   "names": {
+    "en": "Leary AA-70 Bolas"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedCannonLargeC",
+   "name": "DAE 2a-1 “Ruptura”",
+   "names": {
+    "en": "DAE 2a-1 “Ruptura”"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "EmplacedHeavyArtilleryC",
+   "name": "50-500 “Thunderbolt” Cannon",
+   "names": {
+    "en": "50-500 “Thunderbolt” Cannon"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedHeavyArtilleryW",
+   "name": "Huber Exalt 150mm",
+   "names": {
+    "en": "Huber Exalt 150mm"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedIndirectC",
+   "name": "DAE 1o-3 “Polybolos”",
+   "names": {
+    "en": "DAE 1o-3 “Polybolos”"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedInfantryC",
+   "name": "DAE 1b-2 “Serra”",
+   "names": {
+    "en": "DAE 1b-2 “Serra”"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedInfantryW",
+   "name": "Leary Snare Trap 20",
+   "names": {
+    "en": "Leary Snare Trap 20"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedLightArtilleryW",
+   "name": "Huber Lariat 120mm",
+   "names": {
+    "en": "Huber Lariat 120mm",
+    "fr": "Huber Lariat 120 mm",
+    "pt": "Huber Lariat 120 mm",
+    "ru": "Huber Lariat 120мм"
+   },
+   "category": "Shippables",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "EmplacedMultiC",
+   "name": "DAE 3b-2 “Hades’ Net”",
+   "names": {
+    "en": "DAE 3b-2 “Hades’ Net”"
+   },
+   "category": "Shippables",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "EngineerUniformC",
+   "name": "Fabri Rucksack",
+   "names": {
+    "en": "Fabri Rucksack",
+    "fr": "Sac à dos Fabri",
+    "pt": "Uniforme Fabri Rucksack",
+    "ru": "Рюкзак Fabri",
+    "zh": "Fabri背包"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "EngineerUniformW",
+   "name": "Sapper Gear",
+   "names": {
+    "de": "Pionierausrüstung",
+    "en": "Sapper Gear",
+    "fr": "Tenue de Sapeur",
+    "pt": "Uniforme Sapper Gear",
+    "ru": "Сапёрное снаряжение",
+    "zh": "工程兵制服"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "Explosive",
+   "name": "Explosive Powder",
+   "names": {
+    "de": "Explosives Pulver",
+    "en": "Explosive Powder",
+    "fr": "Poudre Explosive",
+    "pt": "Pó Explosivo",
+    "ru": "Порох",
+    "zh": "爆炸火药"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "ExplosiveLightC",
+   "name": "Hydra’s Whisper",
+   "names": {
+    "en": "Hydra’s Whisper"
+   },
+   "category": "Utility",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "ExplosiveTripod",
+   "name": "Havoc Charge",
+   "names": {
+    "de": "\"Havoc\" Explosivladung",
+    "en": "Havoc Charge",
+    "fr": "Charge Havoc",
+    "ru": "Хавок Заряд"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "FacilityCoal1",
+   "name": "Coke",
+   "names": {
+    "de": "Koks",
+    "en": "Coke",
+    "pt": "Coque",
+    "ru": "Коксовый уголь",
+    "zh": "焦炭"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityComponents1",
+   "name": "Damaged Components",
+   "names": {
+    "de": "Beschädigte Komponenten",
+    "en": "Damaged Components",
+    "fr": "Composants Endommagés",
+    "pt": "Componentes Danificados",
+    "ru": "Повреждённые компоненты",
+    "zh": "受损的零件"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "FacilityMaterials1",
+   "name": "Construction Materials",
+   "names": {
+    "de": "Konstruktionsmaterial",
+    "en": "Construction Materials",
+    "fr": "Matériaux de Construction",
+    "pt": "Materiais de Construção",
+    "ru": "Строительные материалы",
+    "zh": "建筑材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "FacilityMaterials10",
+   "name": "Unstable Substances",
+   "names": {
+    "de": "Instabile Substanzen",
+    "en": "Unstable Substances",
+    "fr": "Substances Instables",
+    "pt": "Substâncias instáveis",
+    "ru": "Нестабильные материалы",
+    "zh": "不稳定物质"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials11",
+   "name": "Thermal Shielding",
+   "names": {
+    "de": "Hitzeschild",
+    "en": "Thermal Shielding",
+    "fr": "Blindage Thermique",
+    "pt": "Proteção Térmica",
+    "ru": "Теплозащитные экраны",
+    "zh": "热屏蔽层"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials12",
+   "name": "Rare Materials",
+   "names": {
+    "de": "Seltene Materialien",
+    "en": "Rare Materials",
+    "fr": "Matériaux Rares",
+    "pt": "Materiais Raros",
+    "ru": "Редкие материалы",
+    "zh": "稀有材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials2",
+   "name": "Processed Construction Materials",
+   "names": {
+    "de": "Verarbeitetes Konstruktionsmaterial",
+    "en": "Processed Construction Materials",
+    "fr": "Matériaux de Construction Traités",
+    "pt": "Materiais de Construção Processados",
+    "ru": "Обработанные строительные материалы",
+    "zh": "精制建筑材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials3",
+   "name": "Steel Construction Materials",
+   "names": {
+    "de": "Stahl-Konstruktionsmaterial",
+    "en": "Steel Construction Materials",
+    "fr": "Matériaux de Construction en Acier",
+    "pt": "Materiais de construção em aço",
+    "ru": "Сталь",
+    "zh": "钢制建筑材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials4",
+   "name": "Assembly Materials I",
+   "names": {
+    "de": "Montagematerial I",
+    "en": "Assembly Materials I",
+    "fr": "Matériaux d'Assemblage I",
+    "pt": "Materiais de Montagem I",
+    "ru": "Сборочные материалы I",
+    "zh": "装配材料 I"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials5",
+   "name": "Assembly Materials II",
+   "names": {
+    "de": "Montagematerial II",
+    "en": "Assembly Materials II",
+    "fr": "Matériaux d'Assemblage II",
+    "pt": "Materiais de Montagem II",
+    "ru": "Сборочные материалы II",
+    "zh": "装配材料 II"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials6",
+   "name": "Assembly Materials III",
+   "names": {
+    "de": "Montagematerial III",
+    "en": "Assembly Materials III",
+    "fr": "Matériaux d'Assemblage III",
+    "pt": "Materiais de Montagem III",
+    "ru": "Сборочные материалы III",
+    "zh": "装配材料 III"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials7",
+   "name": "Assembly Materials IV",
+   "names": {
+    "de": "Montagematerial IV",
+    "en": "Assembly Materials IV",
+    "fr": "Matériaux d'Assemblage IV",
+    "pt": "Materiais de Montagem IV",
+    "ru": "Сборочные материалы IV",
+    "zh": "装配材料 IV"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials8",
+   "name": "Assembly Materials V",
+   "names": {
+    "de": "Montagematerial V",
+    "en": "Assembly Materials V",
+    "fr": "Matériaux d'Assemblage V",
+    "pt": "Materiais de Montagem V",
+    "ru": "Сборочные материалы V",
+    "zh": "装配材料 V"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityMaterials9",
+   "name": "Rare Alloys",
+   "names": {
+    "de": "Seltene Legierungen",
+    "en": "Rare Alloys",
+    "fr": "Alliages Rares",
+    "pt": "Ligas Raras",
+    "ru": "Редкие сплавы",
+    "zh": "稀有合金"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityOil1",
+   "name": "Heavy Oil",
+   "names": {
+    "de": "Schweröl",
+    "en": "Heavy Oil",
+    "fr": "Pétrole Lourd",
+    "pt": "Óleo pesado",
+    "ru": "Тяжелое топливо",
+    "zh": "重油"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FacilityOil2",
+   "name": "Enriched Oil",
+   "names": {
+    "de": "Angereichertes Öl",
+    "en": "Enriched Oil",
+    "fr": "Pétrole Enrichi",
+    "pt": "Óleo enriquecido",
+    "ru": "Обогащенное топливо",
+    "zh": "浓缩油"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FieldAT2C",
+   "name": "GA6 “Cestus”",
+   "names": {
+    "en": "GA6 “Cestus”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "FieldAT2W",
+   "name": "Duncan’s Coin 14.5mm",
+   "names": {
+    "en": "Duncan’s Coin 14.5mm"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "FieldATC",
+   "name": "AA-2 \"Battering Ram\"",
+   "names": {
+    "en": "AA-2 \"Battering Ram\""
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldATDamageW",
+   "name": "Balfour Rampart 68mm",
+   "names": {
+    "en": "Balfour Rampart 68mm",
+    "fr": "Balfour Rampart 68 mm",
+    "pt": "Balfour Rampart 68 mm",
+    "ru": "Balfour Rampart 68-мм"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "FieldATW",
+   "name": "Collins Cannon 68mm",
+   "names": {
+    "de": "Collins Geschütz 68mm",
+    "en": "Collins Cannon 68mm",
+    "fr": "Canon Collins de 68 mm",
+    "pt": "Arma de campo de 68 mm \"Collins\"",
+    "ru": "Collins орудие 68-мм"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldCannonDamageC",
+   "name": "40-45 “Smelter”",
+   "names": {
+    "en": "40-45 “Smelter”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "FieldCannonW",
+   "name": "Balfour Wolfhound 40mm",
+   "names": {
+    "en": "Balfour Wolfhound 40mm",
+    "fr": "Balfour Wolfhound 40 mm",
+    "pt": "Balfour Wolfhound 40 mm",
+    "ru": "Balfour Wolfhound 40мм"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldMGC",
+   "name": "G40 “Sagittarii”",
+   "names": {
+    "en": "G40 “Sagittarii”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldMGW",
+   "name": "Swallowtail 988/127-2",
+   "names": {
+    "en": "Swallowtail 988/127-2"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldMortarC",
+   "name": "30-250 “Tisiphone” Field Cannon",
+   "names": {
+    "de": "30-250 \"Tisiphone\" Feldkanone",
+    "en": "30-250 “Tisiphone” Field Cannon",
+    "fr": "Canon de Campagne 30-250 “Tisiphone”",
+    "pt": "30-250 Canhão de Campo “Tisiphone”",
+    "ru": "Полевая пушка 30-250 “Tisiphone”",
+    "zh": "30-250 “Tisiphone”野战炮"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "FieldMortarW",
+   "name": "Balfour Falconer 250mm",
+   "names": {
+    "en": "Balfour Falconer 250mm",
+    "ru": "Balfour Falconer 250-мм"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "FireRocketAmmo",
+   "name": "4C-Fire Rocket",
+   "names": {
+    "de": "4C-Feuer Rakete",
+    "en": "4C-Fire Rocket",
+    "fr": "Roquette Incendiaire 4C",
+    "pt": "Foguete Incendiário - 4C",
+    "ru": "4C-Зажигательная ракета",
+    "zh": "4C-燃烧火箭弹"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FirstAidKit",
+   "name": "First Aid Kit",
+   "names": {
+    "de": "Verbandskasten",
+    "en": "First Aid Kit",
+    "fr": "Trousse de Premiers Soins",
+    "pt": "Kit de primeiros-socorros",
+    "ru": "Набор Первой Помощи",
+    "zh": "医疗箱"
+   },
+   "category": "Medical",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "FlameAmmo",
+   "name": "Flame Ammo",
+   "names": {
+    "de": "Brennstoff",
+    "en": "Flame Ammo",
+    "fr": "Munitions Incendiaires",
+    "pt": "Munição de Incendiária",
+    "ru": "Огнемётное топливо",
+    "zh": "喷火器燃料"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FlameBackpackC",
+   "name": "“Molten Wind” v.II Ammo",
+   "names": {
+    "de": "“Molten Wind” v.II Brennstoff",
+    "en": "“Molten Wind” v.II Ammo",
+    "fr": "Munitions de \"Molten Wind\" v.II",
+    "pt": "Munição de Molten Wind v.II",
+    "ru": "Топливо “Molten Wind” v.II",
+    "zh": "“Molten Wind” v.II燃料"
+   },
+   "category": "Utility",
+   "faction": "colonial",
+   "per_crate": 10
+  },
+  {
+   "code": "FlameBackpackW",
+   "name": "Willow's Bane Ammo",
+   "names": {
+    "de": "Willow's Bane Munition",
+    "en": "Willow's Bane Ammo",
+    "fr": "Munition pour Willow's Bane",
+    "pt": "Munição da Willow's Bane",
+    "ru": "Топливо для Willow's Bane",
+    "zh": "Willow's Bane燃料"
+   },
+   "category": "Utility",
+   "faction": "warden",
+   "per_crate": 10
+  },
+  {
+   "code": "FlameTorchC",
+   "name": "“Molten Wind” v.II Flame Torch",
+   "names": {
+    "de": "“Molten Wind” v.II Flammenwerfer",
+    "en": "“Molten Wind” v.II Flame Torch",
+    "fr": "Torche \"Molten Wind\" v.II",
+    "ru": "Огнемет “Molten Wind” v.II",
+    "zh": "“Molten Wind” v.II火焰喷射器"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 10
+  },
+  {
+   "code": "FlameTorchW",
+   "name": "Willow’s Bane Model 845",
+   "names": {
+    "en": "Willow’s Bane Model 845"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 10
+  },
+  {
+   "code": "FlatbedTruck",
+   "name": "BMS - Packmule Flatbed",
+   "names": {
+    "de": "BMS - Packmule Schwerlasttransporter",
+    "en": "BMS - Packmule Flatbed",
+    "fr": "Camion Plateau BMS - Packmule",
+    "ru": "Бортовой грузовик BMS - Packmule",
+    "zh": "BMS - Packmule 平板卡车"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "FortConstructionPart",
+   "name": "Construction Parts",
+   "names": {
+    "de": "Konstruktions-Teilstücke",
+    "en": "Construction Parts",
+    "fr": "Pièces de Construction",
+    "pt": "Peças de Construção",
+    "ru": "Строительные детали",
+    "zh": "建筑部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortGarrisonStationPart",
+   "name": "Underground Fortress Parts",
+   "names": {
+    "de": "Untergrundfestung Teilstücke",
+    "en": "Underground Fortress Parts",
+    "fr": "Pièces de Forteresse Souterraine",
+    "pt": "Partes do Bunker Subterrâneo",
+    "ru": "Детали Саддама",
+    "zh": "地下要塞部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortIntelCenterPart",
+   "name": "Intelligence Center Parts",
+   "names": {
+    "de": "Aufklärungsstützpunktkomponenten",
+    "en": "Intelligence Center Parts",
+    "fr": "Pièces de Centre de renseignement",
+    "pt": "Peças do Centro de Inteligência",
+    "ru": "Разведывательный Центр",
+    "zh": "情报中心部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortLRArtilleryPart",
+   "name": "Storm Cannon Parts",
+   "names": {
+    "de": "Storm Cannon Teilstücke",
+    "en": "Storm Cannon Parts",
+    "fr": "Pièces de Canon Storm",
+    "pt": "Peças do Storm Cannon",
+    "ru": "Детали штормового орудия",
+    "zh": "风暴巨炮部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortLargeRadarPart",
+   "name": "Aircraft Radar Parts",
+   "names": {
+    "de": "Flugzeug-Radar Teile",
+    "en": "Aircraft Radar Parts",
+    "fr": "Pièces de Radar d'Avion",
+    "pt": "Peças de Radar Aéreo",
+    "ru": "Детали авиационного радара",
+    "zh": "飞行器雷达部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortStructurePart",
+   "name": "Structure Parts",
+   "names": {
+    "de": "Struktur Teilstücke",
+    "en": "Structure Parts",
+    "fr": "Pièces de Structure",
+    "pt": "Partes da Estrutura",
+    "ru": "Ящик с сооружениями",
+    "zh": "建筑部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "FortWeatherStationPart",
+   "name": "Weather Station Parts",
+   "names": {
+    "de": "Wetterstation Teilstücke",
+    "en": "Weather Station Parts",
+    "fr": "Pièces de Station Météo",
+    "pt": "Partes da Estação Meteorológica",
+    "ru": "Детали погодной станции",
+    "zh": "气象站部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "Freighter",
+   "name": "BMS - Ironship",
+   "names": {
+    "en": "BMS - Ironship"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "FreighterLight",
+   "name": "Das Krokodil by VAC",
+   "names": {
+    "de": "Das Krokodil von VAC",
+    "en": "Das Krokodil by VAC",
+    "fr": "Das Krokodil par VAC",
+    "pt": "VAC - Das Krokodil",
+    "zh": "VAC制造：Das Krokodil"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "GasMask",
+   "name": "Gas Mask",
+   "names": {
+    "de": "Gasmaske",
+    "en": "Gas Mask",
+    "fr": "Masque à gaz",
+    "pt": "Mascara de gás",
+    "ru": "Противогаз",
+    "zh": "防毒面具"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "GasMaskFilter",
+   "name": "Gas Mask Filter",
+   "names": {
+    "de": "Atemschutzfilter",
+    "en": "Gas Mask Filter",
+    "fr": "Filtre de Masque à Gaz",
+    "pt": "Filtro de Máscara de Gás",
+    "ru": "Фильтр для противогаза",
+    "zh": "防毒面具滤嘴"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "GreenAsh",
+   "name": "Green Ash Grenade",
+   "names": {
+    "de": "Green Ash Granate",
+    "en": "Green Ash Grenade",
+    "fr": "Grenade Green Ash",
+    "pt": "Grenada de Green Ash",
+    "ru": "Газовая граната",
+    "zh": "Green Ash手榴弹"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "GrenadeAdapter",
+   "name": "The Ospreay",
+   "names": {
+    "de": "Der Ospreay",
+    "en": "The Ospreay",
+    "fr": "L'Ospreay",
+    "pt": "O \"Ospreay\"",
+    "ru": "Подствольный гранатомёт",
+    "zh": "Ospreay枪榴弹发射器"
+   },
+   "category": "Utility",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "GrenadeC",
+   "name": "Bomastone Grenade",
+   "names": {
+    "de": "Bomastone Granate",
+    "en": "Bomastone Grenade",
+    "fr": "Grenade Bomastone",
+    "pt": "Granada de fragmentação Bomastone",
+    "ru": "Граната Bomastone",
+    "zh": "Bomastone手榴弹"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 25
+  },
+  {
+   "code": "GrenadeLauncherC",
+   "name": "KLG901-2 Lunaire F",
+   "names": {
+    "en": "KLG901-2 Lunaire F"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "GrenadeLauncherTC",
+   "name": "Mounted Fissura gd.I",
+   "names": {
+    "de": "Montierte Fissura gd.I",
+    "en": "Mounted Fissura gd.I",
+    "fr": "Fissura gd.I monté",
+    "pt": "Fissura gd.I Montada",
+    "ru": "Станковый Fissura gd.I",
+    "zh": "架设式Fissura gd.I"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "GrenadeUniformC",
+   "name": "Grenadier’s Baldric",
+   "names": {
+    "de": "Granatengurt",
+    "en": "Grenadier’s Baldric",
+    "fr": "Baudrier de Grenadiers",
+    "pt": "Uniforme Grenadier’s Baldric",
+    "ru": "Перевязь гренадера",
+    "zh": "掷弹兵专用肩带"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "GrenadeW",
+   "name": "A3 Harpa Fragmentation Grenade",
+   "names": {
+    "de": "A3 Harpa Splittergranate",
+    "en": "A3 Harpa Fragmentation Grenade",
+    "fr": "Grenade à Fragmentation A3 Harpa",
+    "pt": "Granada de Fragmentação A3 Harpa",
+    "ru": "Осколочная граната A3 Harpa",
+    "zh": "A3 Harpa破片手榴弹"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "GroundMaterials",
+   "name": "Gravel",
+   "names": {
+    "de": "Schotter/Kies",
+    "en": "Gravel",
+    "fr": "Gravier",
+    "pt": "Cascalho",
+    "ru": "Гравий",
+    "zh": "砂砾"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "Gunboat2C",
+   "name": "Type B - “Lucian”",
+   "names": {
+    "en": "Type B - “Lucian”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "Gunboat2W",
+   "name": "81f-f Ronan Blackguard",
+   "names": {
+    "en": "81f-f Ronan Blackguard"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "GunboatC",
+   "name": "Type C - “Charon”",
+   "names": {
+    "en": "Type C - “Charon”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "GunboatW",
+   "name": "74b-1 Ronan Gunship",
+   "names": {
+    "en": "74b-1 Ronan Gunship"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "HEGrenade",
+   "name": "Mammon 91-b",
+   "names": {
+    "en": "Mammon 91-b"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "HELaunchedGrenade",
+   "name": "Tremola Grenade GPb-1",
+   "names": {
+    "de": "Tremola Granate GPb-1",
+    "en": "Tremola Grenade GPb-1",
+    "fr": "Grenade Tremola GPb-1",
+    "pt": "Granada Tremola GPb-1",
+    "ru": "Граната Tremola Gpb-1",
+    "zh": "Tremola GPb-1高爆枪榴弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "HERocketAmmo",
+   "name": "3C-High Explosive Rocket",
+   "names": {
+    "de": "3C-Hochexplosiv Rakete",
+    "en": "3C-High Explosive Rocket",
+    "fr": "Roquette Explosif Lourd 3C",
+    "pt": "Foguete Altamente Explosivo-3C",
+    "ru": "3C-Фугасная ракета",
+    "zh": "3C-高爆火箭弹"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "HalfTrackArtilleryC",
+   "name": "HH-d “Peltast”",
+   "names": {
+    "en": "HH-d “Peltast”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "HalfTrackC",
+   "name": "HH-a “Javelin”",
+   "names": {
+    "en": "HH-a “Javelin”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "HalfTrackDefensiveC",
+   "name": "HH-b “Hoplite”",
+   "names": {
+    "en": "HH-b “Hoplite”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "HalfTrackOffensiveW",
+   "name": "Niska Mk. II Blinder",
+   "names": {
+    "en": "Niska Mk. II Blinder"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "HalfTrackTwinW",
+   "name": "Niska Mk. III Scar Twin",
+   "names": {
+    "en": "Niska Mk. III Scar Twin"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "HalfTrackW",
+   "name": "Niska Mk. I Gun Motor Carriage",
+   "names": {
+    "de": "Niska Mk. I motorisierter Waffenträger",
+    "en": "Niska Mk. I Gun Motor Carriage",
+    "fr": "Semi-chenillé Niska Mk. I",
+    "pt": "Transporte Armado Motorizado \"Niska\" Mk. I",
+    "ru": "Полугусеничный Бронетранспортер Niska Mk. I"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "HalftrackMultiW",
+   "name": "Niska-Rycker Mk. IX Skycaller",
+   "names": {
+    "en": "Niska-Rycker Mk. IX Skycaller"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "Harvester",
+   "name": "BMS - Scrap Hauler",
+   "names": {
+    "en": "BMS - Scrap Hauler"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "HeavyArtilleryAmmo",
+   "name": "150mm",
+   "names": {
+    "en": "150mm",
+    "fr": "150 mm",
+    "ru": "150-мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "HeavyExplosive",
+   "name": "Heavy Explosive Powder",
+   "names": {
+    "de": "Hochexplosives Pulver",
+    "en": "Heavy Explosive Powder",
+    "fr": "Poudre Explosive Lourde",
+    "pt": "Pólvora Explosiva Pesada",
+    "ru": "Тяжёлый порох",
+    "zh": "重型爆炸火药"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 30
+  },
+  {
+   "code": "HeavyTruckC",
+   "name": "AU-A150 Taurine Rigger",
+   "names": {
+    "en": "AU-A150 Taurine Rigger"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "HeavyTruckW",
+   "name": "Cnute Cliffwrest",
+   "names": {
+    "en": "Cnute Cliffwrest"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ISGTC",
+   "name": "Daucus isg.III",
+   "names": {
+    "en": "Daucus isg.III"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "InfantryMine",
+   "name": "Crow’s Foot Mine",
+   "names": {
+    "en": "Crow’s Foot Mine"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "Iron",
+   "name": "Iron",
+   "names": {
+    "de": "Eisen",
+    "en": "Iron",
+    "fr": "Fer",
+    "pt": "Ferro",
+    "ru": "Железо",
+    "zh": "铁"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "IronA",
+   "name": "Iron Alloy",
+   "names": {
+    "de": "Eisenlegierung",
+    "en": "Iron Alloy",
+    "fr": "Alliage de Fer",
+    "pt": "Liga de Ferro",
+    "ru": "Железный сплав",
+    "zh": "铁合金"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "LRArtilleryAmmo",
+   "name": "300mm",
+   "names": {
+    "en": "300mm",
+    "fr": "300 mm",
+    "ru": "300-мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "LandingCraftC",
+   "name": "AB-8 “Acheron”",
+   "names": {
+    "en": "AB-8 “Acheron”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "LandingCraftOffensiveC",
+   "name": "AB-11 “Doru”",
+   "names": {
+    "en": "AB-11 “Doru”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LandingCraftW",
+   "name": "Mulloy LPC",
+   "names": {
+    "en": "Mulloy LPC"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "LargeFieldATC",
+   "name": "945g “Stygian Bolt”",
+   "names": {
+    "en": "945g “Stygian Bolt”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LargeFieldCannonW",
+   "name": "Balfour Stockade 75mm",
+   "names": {
+    "en": "Balfour Stockade 75mm",
+    "fr": "Balfour Stockade 75 mm",
+    "pt": "Balfour Stockade 75 mm",
+    "ru": "Balfour Stockade 75-мм"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "LargeFieldLightArtilleryC",
+   "name": "120-68 “Koronides” Field Gun",
+   "names": {
+    "de": "120-68 “Koronides” Feldartillerie",
+    "en": "120-68 “Koronides” Field Gun",
+    "fr": "Canon de campagne 120-68 \"Koronides\"",
+    "pt": "Artilharia de Campo 120-68 \"Koronides\"",
+    "ru": "Артиллерийское орудие 120-68 “Koronides”",
+    "zh": "120-68 “Koronides”野战榴弹炮"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "LargeFieldMortarC",
+   "name": "40-250 “Alekto” Heavy Cannon",
+   "names": {
+    "en": "40-250 “Alekto” Heavy Cannon"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LargeFieldMultiW",
+   "name": "Rycker 4/3-F Wasp Nest",
+   "names": {
+    "en": "Rycker 4/3-F Wasp Nest"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "LightAAAmmo",
+   "name": "Absol Anti-Aircraft Rounds",
+   "names": {
+    "de": "Absol Flugabwehr Geschosse",
+    "en": "Absol Anti-Aircraft Rounds",
+    "fr": "Munitions Antiaériennes Absol",
+    "pt": "Munição Antiaérea Absol",
+    "ru": "Зенитный снаряд “Absol”",
+    "zh": "Absol防空炮弹"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "LightArtilleryAmmo",
+   "name": "120mm",
+   "names": {
+    "en": "120mm",
+    "fr": "120 mm",
+    "ru": "120-мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "LightBoatInfantryC",
+   "name": "K-81e “Sombre”",
+   "names": {
+    "en": "K-81e “Sombre”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "LightBoatInfantryW",
+   "name": "68A-4 Ronan Fathomer",
+   "names": {
+    "en": "68A-4 Ronan Fathomer"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "LightTank2InfantryC",
+   "name": "HC-2 “Scorpion”",
+   "names": {
+    "en": "HC-2 “Scorpion”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "LightTank3C",
+   "name": "HA-1 “Sagaris”",
+   "names": {
+    "en": "HA-1 “Sagaris”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTank3W",
+   "name": "Sharkey-Devitt Birdeater Mk. I",
+   "names": {
+    "en": "Sharkey-Devitt Birdeater Mk. I"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankAmmo",
+   "name": "40mm",
+   "names": {
+    "en": "40mm",
+    "fr": "40 mm",
+    "ru": "40-мм"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "LightTankArtilleryW",
+   "name": "Devitt-Caine Mk. IV MMR",
+   "names": {
+    "en": "Devitt-Caine Mk. IV MMR"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankC",
+   "name": "H-5 \"Hatchet\"",
+   "names": {
+    "en": "H-5 \"Hatchet\""
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "LightTankDefensiveW",
+   "name": "Devitt Ironhide Mk. IV",
+   "names": {
+    "en": "Devitt Ironhide Mk. IV"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankFlameC",
+   "name": "H-19 “Vulcan”",
+   "names": {
+    "en": "H-19 “Vulcan”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankMobilityC",
+   "name": "H-8 “Kranesca”",
+   "names": {
+    "en": "H-8 “Kranesca”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankOffensiveC",
+   "name": "H-10 “Pelekys”",
+   "names": {
+    "en": "H-10 “Pelekys”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "LightTankW",
+   "name": "Devitt Mk. III",
+   "names": {
+    "en": "Devitt Mk. III"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "LiquidContainer",
+   "name": "Liquid Container",
+   "names": {
+    "de": "Flüssigkeiten Container",
+    "en": "Liquid Container",
+    "fr": "Conteneur de Liquide",
+    "pt": "Recipiente de líquido",
+    "ru": "Жидкостный контейнер",
+    "zh": "液体罐"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "ListeningKit",
+   "name": "Listening Kit",
+   "names": {
+    "de": "Abhör Set",
+    "en": "Listening Kit",
+    "fr": "Kit d'écoute",
+    "pt": "Kit de Escuta",
+    "ru": "Набор для прослушивания",
+    "zh": "侦听设备"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "MGAmmo",
+   "name": "12.7mm",
+   "names": {
+    "de": "12,7mm",
+    "en": "12.7mm",
+    "fr": "12,7mm",
+    "ru": "12.7-мм"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "MGC",
+   "name": "KRN886-127 Gast Machine Gun",
+   "names": {
+    "en": "KRN886-127 Gast Machine Gun"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "MGTC",
+   "name": "Lamentum mm.IV",
+   "names": {
+    "en": "Lamentum mm.IV"
+   },
+   "category": "Heavy Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "MGTW",
+   "name": "Malone Ratcatcher MK.1",
+   "names": {
+    "en": "Malone Ratcatcher MK.1"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "MGW",
+   "name": "Malone MK.2",
+   "names": {
+    "en": "Malone MK.2"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "MaceW",
+   "name": "Falias Raiding Club",
+   "names": {
+    "en": "Falias Raiding Club"
+   },
+   "category": "Utility",
+   "faction": "warden",
+   "per_crate": 10
+  },
+  {
+   "code": "MaintenanceSupplies",
+   "name": "Maintenance Supplies",
+   "names": {
+    "de": "Wartungsausrüstung",
+    "en": "Maintenance Supplies",
+    "fr": "Fournitures de Maintenance",
+    "pt": "Suprimentos de Manutenção",
+    "ru": "Припасы Обслуживания",
+    "zh": "维护补给"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "MaterialPlatform",
+   "name": "Material Pallet",
+   "names": {
+    "de": "Materialpalette",
+    "en": "Material Pallet",
+    "fr": "Palette de matériaux",
+    "pt": "Palete",
+    "ru": "Поддон для материалов",
+    "zh": "材料运货板"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "MedicUniformC",
+   "name": "Medic Fatigues",
+   "names": {
+    "de": "Sanitäter Uniform",
+    "en": "Medic Fatigues",
+    "fr": "Tenue de Médecin",
+    "pt": "Uniforme Médico",
+    "ru": "Медицинская форма",
+    "zh": "医疗兵制服"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "MedicUniformW",
+   "name": "Physician’s Jacket",
+   "names": {
+    "de": "Sanitäter Uniform",
+    "en": "Physician’s Jacket",
+    "fr": "Veste de Médecin",
+    "pt": "Uniforme Médico Physician’s Jacket",
+    "ru": "Куртка врача",
+    "zh": "外科医生夹克"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "MediumBoatC",
+   "name": "Strider",
+   "names": {
+    "en": "Strider"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "MediumBoatW",
+   "name": "Rinnspeir Ornitier-Class Gunship",
+   "names": {
+    "en": "Rinnspeir Ornitier-Class Gunship"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "MediumTank2C",
+   "name": "86K-a “Bardiche”",
+   "names": {
+    "en": "86K-a “Bardiche”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "MediumTank2IndirectW",
+   "name": "Gallagher Thornfall Mk. VI",
+   "names": {
+    "en": "Gallagher Thornfall Mk. VI"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTank2MultiW",
+   "name": "Gallagher Highwayman Mk. III",
+   "names": {
+    "en": "Gallagher Highwayman Mk. III"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTank2RangeW",
+   "name": "Gallagher Outlaw Mk. II",
+   "names": {
+    "en": "Gallagher Outlaw Mk. II"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTank2TwinC",
+   "name": "86K-c “Ranseur”",
+   "names": {
+    "en": "86K-c “Ranseur”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTank2W",
+   "name": "Gallagher Brigand Mk. I",
+   "names": {
+    "en": "Gallagher Brigand Mk. I"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "MediumTank3C",
+   "name": "90T-v “Nemesis”",
+   "names": {
+    "en": "90T-v “Nemesis”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "MediumTankATW",
+   "name": "Silverhand Lordscar - Mk. X",
+   "names": {
+    "en": "Silverhand Lordscar - Mk. X"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTankC",
+   "name": "85K-b “Falchion”",
+   "names": {
+    "en": "85K-b “Falchion”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "MediumTankLargeC",
+   "name": "85V-g \"Talos\"",
+   "names": {
+    "en": "85V-g \"Talos\""
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTankOffensiveC",
+   "name": "85K-a “Spatha”",
+   "names": {
+    "en": "85K-a “Spatha”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTankSiegeW",
+   "name": "Silverhand Chieftain - Mk. VI",
+   "names": {
+    "en": "Silverhand Chieftain - Mk. VI"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "MediumTankW",
+   "name": "Silverhand - Mk. IV",
+   "names": {
+    "en": "Silverhand - Mk. IV"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "Metal",
+   "name": "Salvage",
+   "names": {
+    "de": "Schrott",
+    "en": "Salvage",
+    "fr": "Ferraille",
+    "pt": "Sucata",
+    "ru": "Металлолом",
+    "zh": "废料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "MetalBeamMaterials",
+   "name": "Metal Beam",
+   "names": {
+    "de": "Metallträger",
+    "en": "Metal Beam",
+    "fr": "Poutrelle Métallique",
+    "pt": "Viga de Metal",
+    "ru": "Металлическая балка",
+    "zh": "钢梁"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "MineBoat",
+   "name": "Bellweather by VAC",
+   "names": {
+    "en": "Bellweather by VAC"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "MiniTankAmmo",
+   "name": "30mm",
+   "names": {
+    "en": "30mm",
+    "fr": "30 mm",
+    "ru": "30мм"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "MiniTorpedoAmmo",
+   "name": "Quillback Torpedo",
+   "names": {
+    "en": "Quillback Torpedo",
+    "fr": "Torpille Quillback",
+    "pt": "Torpedo Quillback",
+    "ru": "Торпеда \"Квилбек\"",
+    "zh": "Quillback鱼雷"
+   },
+   "category": "Heavy Ammunition",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "Mortar",
+   "name": "Cremari Mortar",
+   "names": {
+    "de": "Cremari Mörser",
+    "en": "Cremari Mortar",
+    "fr": "Mortier Cremari",
+    "pt": "Morteiro Cremari",
+    "ru": "Миномёт Cremari",
+    "zh": "Cremari迫击炮"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "MortarAmmo",
+   "name": "Mortar Shell",
+   "names": {
+    "de": "Mörsergranate",
+    "en": "Mortar Shell",
+    "fr": "Obus de Mortier",
+    "pt": "Munição de Morteiro",
+    "ru": "Минометный Снаряд",
+    "zh": "迫击炮炮弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "MortarAmmoFL",
+   "name": "Flare Mortar Shell",
+   "names": {
+    "de": "Mörser Leuchtraketen-Geschoss",
+    "en": "Flare Mortar Shell",
+    "fr": "Obus de Mortier Éclairant",
+    "pt": "Munição Sinalizadora de Morteiro",
+    "ru": "Осветительный Минометный Снаряд",
+    "zh": "迫击炮照明弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "MortarAmmoFlame",
+   "name": "Incendiary Mortar Shell",
+   "names": {
+    "de": "Brand-Mörsermunition",
+    "en": "Incendiary Mortar Shell",
+    "fr": "Obus de Mortier Incendiaire",
+    "pt": "Munição de morteiro incendiário",
+    "ru": "Зажигательный минометный снаряд",
+    "zh": "迫击炮燃烧弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "MortarAmmoSH",
+   "name": "Shrapnel Mortar Shell",
+   "names": {
+    "de": "Mörser Schrapnellgranate",
+    "en": "Shrapnel Mortar Shell",
+    "fr": "Obus de Mortier à Fragmentation",
+    "pt": "Projétil Estilhaçante de Morteiro",
+    "ru": "Осколочный минометный снаряд",
+    "zh": "迫击炮破片弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "MortarTankAmmo",
+   "name": "250mm \"Purity\" Shell",
+   "names": {
+    "en": "250mm \"Purity\" Shell"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "MortarTankAmmoBR",
+   "name": "250mm \"Fury\" Shell",
+   "names": {
+    "en": "250mm \"Fury\" Shell"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "MortarTankC",
+   "name": "HC-7 \"Ballista\"",
+   "names": {
+    "en": "HC-7 \"Ballista\""
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "MotorcycleC",
+   "name": "03MM “Caster”",
+   "names": {
+    "en": "03MM “Caster”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "MotorcycleOffensiveC",
+   "name": "00MS “Stinger”",
+   "names": {
+    "en": "00MS “Stinger”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "MotorcycleW",
+   "name": "Kivela Power Wheel 80-1",
+   "names": {
+    "en": "Kivela Power Wheel 80-1"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "NavalUniformC",
+   "name": "Remex Garb",
+   "names": {
+    "en": "Remex Garb"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "NavalUniformW",
+   "name": "Gentleman’s Peacoat",
+   "names": {
+    "en": "Gentleman’s Peacoat"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "OfficerUniformC",
+   "name": "Officialis’ Attire",
+   "names": {
+    "en": "Officialis’ Attire",
+    "fr": "Tenue d'Officialis",
+    "pt": "Uniforme Officialis’ Attire",
+    "ru": "Наряд чиновника",
+    "zh": "军官的衣着"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "OfficerUniformW",
+   "name": "Officer’s Regalia",
+   "names": {
+    "de": "Offizieruniform",
+    "en": "Officer’s Regalia",
+    "fr": "Parure d'Officier",
+    "pt": "Uniforme Officer’s Regalia",
+    "ru": "Офицерская регалия",
+    "zh": "军官的制服"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "Oil",
+   "name": "Oil",
+   "names": {
+    "de": "Öl",
+    "en": "Oil",
+    "fr": "Pétrole",
+    "pt": "Óleo crú",
+    "ru": "Нефть",
+    "zh": "石油"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ParatrooperBackpack",
+   "name": "Paratrooper’s Ruck",
+   "names": {
+    "de": "Fallschirmjäger Rucksack",
+    "en": "Paratrooper’s Ruck",
+    "fr": "Sac de Parachutiste",
+    "pt": "Bolsa de Paraquedista",
+    "ru": "Рюкзак парашютиста",
+    "zh": "伞兵背包"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "ParatrooperUniformC",
+   "name": "Auster’s Harness",
+   "names": {
+    "de": "Auster’s Gurt",
+    "en": "Auster’s Harness",
+    "fr": "Harnais Auster",
+    "pt": "Uniforme Auster’s Harness",
+    "ru": "Сбруя Аустера",
+    "zh": "南风部队背带"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "ParatrooperUniformW",
+   "name": "Cloudrunner’s Vesture",
+   "names": {
+    "en": "Cloudrunner’s Vesture"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "Petrol",
+   "name": "Petrol",
+   "names": {
+    "de": "Benzin",
+    "en": "Petrol",
+    "fr": "Essence",
+    "pt": "Gasolina",
+    "ru": "Бензин",
+    "zh": "汽油"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "PilotMask",
+   "name": "Flight Mask",
+   "names": {},
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "PilotUniformC",
+   "name": "Lodesman’s Lorica",
+   "names": {
+    "en": "Lodesman’s Lorica"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "PilotUniformW",
+   "name": "Aviator’s Raiment",
+   "names": {
+    "de": "Fliegergewand",
+    "en": "Aviator’s Raiment",
+    "fr": "Vêtement d'Aviateur",
+    "pt": "Uniforme de Aviador",
+    "ru": "Одеяние авиатора",
+    "zh": "飞行员戎装"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "PipeMaterials",
+   "name": "Pipe",
+   "names": {
+    "de": "Rohr bzw. \"Pipe\"",
+    "en": "Pipe",
+    "fr": "Tuyau",
+    "pt": "Cano",
+    "ru": "Труба",
+    "zh": "管道"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 2
+  },
+  {
+   "code": "PistolAmmo",
+   "name": "8mm",
+   "names": {
+    "en": "8mm",
+    "fr": "8 mm",
+    "ru": "8-мм"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "PistolC",
+   "name": "Ferro 879",
+   "names": {
+    "en": "Ferro 879"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "PistolLightW",
+   "name": "Cascadier 873",
+   "names": {
+    "en": "Cascadier 873"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 40
+  },
+  {
+   "code": "PistolW",
+   "name": "Ahti Model 2",
+   "names": {
+    "en": "Ahti Model 2"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "RPGTW",
+   "name": "Cutler Foebreaker",
+   "names": {
+    "en": "Cutler Foebreaker"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "Radio",
+   "name": "Radio",
+   "names": {
+    "de": "Funkgerät",
+    "en": "Radio",
+    "pt": "Rádio",
+    "ru": "Рация",
+    "zh": "无线电"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "RadioAircraft",
+   "name": "Liaison Transmitter",
+   "names": {},
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "RadioBackpack",
+   "name": "Radio Backpack",
+   "names": {
+    "de": "Rucksack-Funkgerät",
+    "en": "Radio Backpack",
+    "fr": "Transmetteur Radio",
+    "pt": "Mochila de Rádio",
+    "ru": "Радиорюкзак",
+    "zh": "无线电背包"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "RainUniformC",
+   "name": "Legionary’s Oilcoat",
+   "names": {
+    "de": "Legionärs-Ölmantel",
+    "en": "Legionary’s Oilcoat",
+    "fr": "Ciré du Légionnaire",
+    "pt": "Uniforme Legionary’s Oilcoat",
+    "ru": "Легионерский дождевик",
+    "zh": "军团油布雨衣"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "RareMaterials",
+   "name": "Rare Materials",
+   "names": {
+    "en": "Rare Materials"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "RareMetal",
+   "name": "Rare Metal",
+   "names": {
+    "de": "Seltenes Metall",
+    "en": "Rare Metal",
+    "fr": "Métal Rare",
+    "pt": "Metal Raro",
+    "ru": "Редкий металл",
+    "zh": "稀有金属"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 2
+  },
+  {
+   "code": "RelicMaterials",
+   "name": "Relic Materials",
+   "names": {
+    "de": "Relikt-Materialien",
+    "en": "Relic Materials",
+    "fr": "Anciens Matériaux",
+    "pt": "Materiais Relíquia",
+    "ru": "Реликтовые материалы",
+    "zh": "遗迹材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "ResourceContainer",
+   "name": "Resource Container",
+   "names": {
+    "de": "Rohstoff Container",
+    "en": "Resource Container",
+    "fr": "Conteneur de ressources",
+    "pt": "Contêiner de recursos",
+    "ru": "Контейнер для ресурсов",
+    "zh": "资源集装箱"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "Revolver",
+   "name": "Cometa T2-9",
+   "names": {
+    "en": "Cometa T2-9"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 30
+  },
+  {
+   "code": "RevolverAmmo",
+   "name": ".44 Mag",
+   "names": {
+    "en": ".44 Mag",
+    "ru": ".44 Магнум",
+    "zh": ".44弹"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "RifleAmmo",
+   "name": "7.62mm",
+   "names": {
+    "de": "7,62mm",
+    "en": "7.62mm",
+    "fr": "7,62 mm",
+    "ru": "7.62-мм"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "RifleAutomaticC",
+   "name": "Catena rt.IV Auto-Rifle",
+   "names": {
+    "de": "Catena rt.IV Automatikgewehr",
+    "en": "Catena rt.IV Auto-Rifle",
+    "fr": "Fusil Auto Catena rt.IV",
+    "pt": "Rifle Automático Catena rt.IV",
+    "ru": "Автоматическая винтовка Catena rt.IV",
+    "zh": "Catena IV型自动步枪"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "RifleAutomaticW",
+   "name": "Sampo Auto-Rifle 77",
+   "names": {
+    "de": "Sampo Selbstladegewehr 77",
+    "en": "Sampo Auto-Rifle 77",
+    "fr": "Fusil Auto Sampo 77",
+    "pt": "Rifle Automático Sampo 77",
+    "ru": "Автоматическая винтовка Sampo 77",
+    "zh": "Sampo 77式自动步枪"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "RifleC",
+   "name": "Argenti r.II Rifle",
+   "names": {
+    "de": "Argenti r.II Gewehr",
+    "en": "Argenti r.II Rifle",
+    "fr": "Fusil Argenti r.II",
+    "pt": "Rifle Argenti r.II",
+    "ru": "Винтовка Argenti r.II",
+    "zh": "Argenti r.II步枪"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "RifleHeavyC",
+   "name": "Volta r.I Repeater",
+   "names": {
+    "en": "Volta r.I Repeater"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "RifleHeavyW",
+   "name": "The Hangman 757",
+   "names": {
+    "de": "Die Hangman 757",
+    "en": "The Hangman 757",
+    "fr": "Le Hangman 757",
+    "pt": "O Hangman 757",
+    "ru": "Хангман 757",
+    "zh": "Hangman 757式步枪"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "RifleLightC",
+   "name": "Fuscina pi.I",
+   "names": {
+    "en": "Fuscina pi.I"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "RifleLightW",
+   "name": "Blakerow 871",
+   "names": {
+    "en": "Blakerow 871"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "RifleLongC",
+   "name": "KRR2-790 Omen",
+   "names": {
+    "en": "KRR2-790 Omen"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "RifleLongW",
+   "name": "Clancy Cinder M3",
+   "names": {
+    "en": "Clancy Cinder M3"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "RifleShortW",
+   "name": "No.2B Hawthorne",
+   "names": {
+    "en": "No.2B Hawthorne"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "RifleW",
+   "name": "No.2 Loughcaster",
+   "names": {
+    "en": "No.2 Loughcaster"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "RocketPartBottom",
+   "name": "A0E-9 Rocket Booster",
+   "names": {
+    "de": "A0E-9 Raktenbooster",
+    "en": "A0E-9 Rocket Booster",
+    "fr": "Propulseur de Fusée A0E-9",
+    "pt": "Propulsor de Foguete A0E-9",
+    "ru": "A0E-9 Ракетный Ускоритель",
+    "zh": "A0E-9火箭助推器"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "RocketPartCenter",
+   "name": "A0E-9 Rocket Body",
+   "names": {
+    "de": "A0E-9 Raketenkörper",
+    "en": "A0E-9 Rocket Body",
+    "fr": "Corps de Fusée A0E-9",
+    "pt": "Chassi do Foguete A0E-9",
+    "ru": "Корпус ракеты A0E-9",
+    "zh": "A0E-9火箭箭体"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "RocketPartTop",
+   "name": "A0E-9 Rocket Warhead",
+   "names": {
+    "de": "A0E-9 Raketensprengkopf",
+    "en": "A0E-9 Rocket Warhead",
+    "fr": "Ogive de Fusée A0E-9",
+    "pt": "Ogiva de foguete A0E-9",
+    "ru": "A0E-9 Ракетная боеголовка",
+    "zh": "A0E-9火箭战斗部"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "RpgAmmo",
+   "name": "RPG",
+   "names": {
+    "en": "RPG",
+    "fr": "Roquette",
+    "pt": "Granada Lançada por Foguete",
+    "ru": "РПГ"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "RpgW",
+   "name": "Cutler Launcher 4",
+   "names": {
+    "en": "Cutler Launcher 4"
+   },
+   "category": "Heavy Weapons",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "SMGAmmo",
+   "name": "9mm",
+   "names": {
+    "en": "9mm",
+    "fr": "9 mm",
+    "ru": "9-мм"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "SMGC",
+   "name": "“The Pitch Gun” mc.V",
+   "names": {
+    "de": "Die \"Pitch Gun” mc.V",
+    "en": "“The Pitch Gun” mc.V",
+    "fr": "\"Le Pitch Gun\" mc.V",
+    "pt": "\"Le Pitch Gun\" mc.V",
+    "zh": "“The Pitch Gun” mc.V冲锋枪"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "SMGHeavyC",
+   "name": "“Lionclaw” mc.VIII",
+   "names": {
+    "en": "“Lionclaw” mc.VIII"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 20
+  },
+  {
+   "code": "SMGHeavyW",
+   "name": "No.1 “The Liar” Submachinegun",
+   "names": {
+    "de": "No.1 “The Liar” Maschinenpistole",
+    "en": "No.1 “The Liar” Submachinegun",
+    "fr": "Pistolet-mitrailleur No.1 \"The Liar\"",
+    "pt": "No.1 “The Liar” submetralhadora",
+    "ru": "Пистолет-пулемет No.1 “The Liar”",
+    "zh": "No.1 “The Liar”冲锋枪"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "SMGW",
+   "name": "Fiddler Submachine Gun Model 868",
+   "names": {
+    "de": "Fiddler Maschinenpistole Model 868",
+    "en": "Fiddler Submachine Gun Model 868",
+    "fr": "Pistolet-mitrailleur Fiddler Model 868",
+    "pt": "Submetralhadora Fiddler Modelo 868",
+    "ru": "Пистолет-пулемет Fiddler Model 868",
+    "zh": "Fiddler868型冲锋枪"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 20
+  },
+  {
+   "code": "SandbagMaterials",
+   "name": "Sandbag",
+   "names": {
+    "de": "Sandsack",
+    "en": "Sandbag",
+    "fr": "Sac de sable",
+    "pt": "Saco de Areia",
+    "ru": "Мешок с песком",
+    "zh": "沙袋"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "SatchelChargeT",
+   "name": "Havoc Charge Detonator",
+   "names": {
+    "de": "\"Havoc\" Ladung Zünder",
+    "en": "Havoc Charge Detonator",
+    "fr": "Détonateur de Charge Havoc",
+    "pt": "Detonador da Havoc Charge",
+    "ru": "Детонатор Хавок Заряда",
+    "zh": "Havoc Charge起爆器"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "SatchelChargeW",
+   "name": "Alligator Charge",
+   "names": {
+    "en": "Alligator Charge"
+   },
+   "category": "Utility",
+   "faction": "warden",
+   "per_crate": 5
+  },
+  {
+   "code": "ScoutTankMultiW",
+   "name": "King Jester Mk. I-1",
+   "names": {
+    "en": "King Jester Mk. I-1"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutTankOffensiveW",
+   "name": "King Gallant Mk. II",
+   "names": {
+    "en": "King Gallant Mk. II"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutTankW",
+   "name": "King Spire Mk. I",
+   "names": {
+    "en": "King Spire Mk. I"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "ScoutUniformC",
+   "name": "Recon Camo",
+   "names": {
+    "de": "Späher Tarnkleidung",
+    "en": "Recon Camo",
+    "fr": "Camouflage de Reconnaissance",
+    "pt": "Uniforme Recon",
+    "ru": "Камуфляж разведчика",
+    "zh": "侦察迷彩服"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "ScoutUniformW",
+   "name": "Outrider’s Mantle",
+   "names": {
+    "de": "Outriders Mantel",
+    "en": "Outrider’s Mantle",
+    "fr": "Manteau d'Éclaireur",
+    "pt": "Uniforme Outrider’s Mantle",
+    "ru": "Дозорная мантия",
+    "zh": "斥候斗篷"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "ScoutVehicleMobilityC",
+   "name": "UV-05a “Argonaut”",
+   "names": {
+    "en": "UV-05a “Argonaut”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "ScoutVehicleOffensiveC",
+   "name": "UV-24 “Icarus”",
+   "names": {
+    "en": "UV-24 “Icarus”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutVehicleOffensiveW",
+   "name": "Drummond Spitfire 100d",
+   "names": {
+    "en": "Drummond Spitfire 100d"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutVehicleUtilityC",
+   "name": "UV-5c “Odyssey”",
+   "names": {
+    "en": "UV-5c “Odyssey”"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutVehicleUtilityW",
+   "name": "Drummond Loscann 55c",
+   "names": {
+    "en": "Drummond Loscann 55c"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "ScoutVehicleW",
+   "name": "Drummond 100a",
+   "names": {
+    "en": "Drummond 100a"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "ShipPart1",
+   "name": "Naval Hull Segments",
+   "names": {
+    "de": "Schiffsrumpfsegmente",
+    "en": "Naval Hull Segments",
+    "fr": "Sections de Coque Navale",
+    "pt": "Segmentos Navais",
+    "ru": "Корабельный сегмент корпуса",
+    "zh": "军舰船体分段"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ShipPart2",
+   "name": "Naval Shell Plating",
+   "names": {
+    "de": "Marinepanzerung",
+    "en": "Naval Shell Plating",
+    "fr": "Placage de Coque Navale",
+    "pt": "Revestimento do casco do navio",
+    "ru": "Корабельная обшивка корпуса",
+    "zh": "军舰外壳覆层"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ShipPart3",
+   "name": "Naval Turbine Components",
+   "names": {
+    "de": "Marine Turbinen Komponenten",
+    "en": "Naval Turbine Components",
+    "fr": "Composants de Turbines Navales",
+    "pt": "Componentes de turbinas navais",
+    "ru": "Компоненты морских турбин",
+    "zh": "军舰涡轮部件"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "ShippingContainer",
+   "name": "Shipping Container",
+   "names": {
+    "de": "Frachtcontainer",
+    "en": "Shipping Container",
+    "fr": "Conteneur de transport",
+    "pt": "Contêiner de Transporte",
+    "ru": "Грузовой контейнер",
+    "zh": "货运集装箱"
+   },
+   "category": "Shippables",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "ShotgunAmmo",
+   "name": "Buckshot",
+   "names": {
+    "de": "Schrotmunition",
+    "en": "Buckshot",
+    "fr": "Chevrotines",
+    "pt": "Cartucho de Escopeta",
+    "ru": "Дробь",
+    "zh": "散弹"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 40
+  },
+  {
+   "code": "ShotgunC",
+   "name": "KRF1-750 Dragonfly",
+   "names": {
+    "en": "KRF1-750 Dragonfly"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "ShotgunW",
+   "name": "No.4 The Pillory Scattergun",
+   "names": {
+    "en": "No.4 The Pillory Scattergun"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "Shovel",
+   "name": "Shovel",
+   "names": {
+    "de": "Schaufel",
+    "en": "Shovel",
+    "fr": "Pelle",
+    "pt": "Pá",
+    "ru": "Лопата",
+    "zh": "铲子"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "SledgeHammer",
+   "name": "Sledge Hammer",
+   "names": {
+    "de": "Vorschlaghammer",
+    "en": "Sledge Hammer",
+    "fr": "Masse",
+    "pt": "Marreta",
+    "ru": "Кувалда",
+    "zh": "大锤"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "SmokeGrenade",
+   "name": "PT-815 Smoke Grenade",
+   "names": {
+    "de": "PT-815 Rauchgranate",
+    "en": "PT-815 Smoke Grenade",
+    "fr": "Grenade Fumigène PT-815",
+    "pt": "Granada de fumaça PT-815",
+    "ru": "Дымовая граната PT-815",
+    "zh": "PT-815烟雾弹"
+   },
+   "category": "Small Weapons",
+   "faction": null,
+   "per_crate": 15
+  },
+  {
+   "code": "SniperRifleC",
+   "name": "KRR3-792 Auger",
+   "names": {
+    "en": "KRR3-792 Auger"
+   },
+   "category": "Small Weapons",
+   "faction": "colonial",
+   "per_crate": 5
+  },
+  {
+   "code": "SniperRifleW",
+   "name": "Clancy-Raca M4",
+   "names": {
+    "en": "Clancy-Raca M4"
+   },
+   "category": "Small Weapons",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "SnowUniformC",
+   "name": "Heavy Topcoat",
+   "names": {
+    "de": "Schwerer Mantel",
+    "en": "Heavy Topcoat",
+    "fr": "Pardessus Épais",
+    "pt": "Uniforme Heavy Topcoat",
+    "ru": "Утеплённая шинель",
+    "zh": "厚重棉服"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "SnowUniformW",
+   "name": "Caoivish Parka",
+   "names": {
+    "de": "Caoivischer Parka",
+    "en": "Caoivish Parka",
+    "fr": "Parka Caoivienne",
+    "pt": "Uniforme Caoivish Parka",
+    "ru": "Парка Caoivish",
+    "zh": "Caoivish连帽大衣"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "SoldierSupplies",
+   "name": "Soldier Supplies",
+   "names": {
+    "de": "Soldatenausrüstung",
+    "en": "Soldier Supplies",
+    "fr": "Fournitures de Soldat",
+    "pt": "Camisas",
+    "ru": "Солдатское снаряжение",
+    "zh": "士兵补给"
+   },
+   "category": "Medical",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "SoldierUniformC",
+   "name": "Legionary Fatigues",
+   "names": {
+    "de": "Legionärkampfanzug",
+    "en": "Legionary Fatigues",
+    "fr": "Uniforme de légionnaire",
+    "pt": "Uniforme Legionary Fatigues",
+    "ru": "Одежда легионера",
+    "zh": "军团作战服"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "SoldierUniformW",
+   "name": "Infantry Battledress",
+   "names": {
+    "de": "Infanterie Kampfanzug",
+    "en": "Infantry Battledress",
+    "fr": "Tenue d'infanterie",
+    "pt": "Traje de Batalha de Infantaria",
+    "ru": "Пехотная униформа",
+    "zh": "步兵战斗服"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "StickyBomb",
+   "name": "Anti-Tank Sticky Bomb",
+   "names": {
+    "de": "Panzerabwehr-Haftgranate",
+    "en": "Anti-Tank Sticky Bomb",
+    "fr": "Bombe Collante Antichar",
+    "pt": "Sticky - Granada Adesiva Antitanque",
+    "ru": "Противотанковая липкая бомба",
+    "zh": "反坦克粘弹"
+   },
+   "category": "Heavy Weapons",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "Sulfur",
+   "name": "Sulfur",
+   "names": {
+    "de": "Schwefel",
+    "en": "Sulfur",
+    "fr": "Soufre",
+    "pt": "Enxofre",
+    "ru": "Сера",
+    "zh": "硫磺"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 100
+  },
+  {
+   "code": "SurfaceWaterMine",
+   "name": "E681-B Hullbreaker Mine",
+   "names": {
+    "en": "E681-B Hullbreaker Mine"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "SwordC",
+   "name": "Eleos Infantry Dagger",
+   "names": {
+    "en": "Eleos Infantry Dagger",
+    "pt": "Adaga de infantaria Eleos"
+   },
+   "category": "Utility",
+   "faction": "colonial",
+   "per_crate": 10
+  },
+  {
+   "code": "TankMine",
+   "name": "Abisme AT-99 Mine",
+   "names": {
+    "en": "Abisme AT-99 Mine"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "TankUniformC",
+   "name": "Tankman’s Coveralls",
+   "names": {
+    "de": "Panzerbesatzung-Overalls",
+    "en": "Tankman’s Coveralls",
+    "fr": "Combinaison de Tankiste",
+    "pt": "Uniforme Tankman’s Coveralls",
+    "ru": "Комбинезон танкиста",
+    "zh": "坦克兵作战服"
+   },
+   "category": "Uniforms",
+   "faction": "colonial",
+   "per_crate": 15
+  },
+  {
+   "code": "TankUniformW",
+   "name": "Padded Boiler Suit",
+   "names": {
+    "de": "Gepolsterter Maschinenraum-Anzug",
+    "en": "Padded Boiler Suit",
+    "fr": "Combinaison Rembourrée",
+    "pt": "Unforme Padded Boiler Suit",
+    "ru": "Стеганный Комбинезон",
+    "zh": "衬垫连体服"
+   },
+   "category": "Uniforms",
+   "faction": "warden",
+   "per_crate": 15
+  },
+  {
+   "code": "TanketteC",
+   "name": "T12 “Actaeon” Tankette",
+   "names": {
+    "en": "T12 “Actaeon” Tankette",
+    "fr": "Chenillette T12 \"Actaeon\"",
+    "pt": "T12 “Actaeon” Tanquete",
+    "zh": "T12 “Actaeon\"小坦克"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "TanketteFlameC",
+   "name": "T14 “Vesta” Tankette",
+   "names": {
+    "en": "T14 “Vesta” Tankette",
+    "fr": "Chenillette T14 \"Vesta\"",
+    "pt": "T14 “Vesta” Tanquete",
+    "ru": "Танкетка T14 “Vesta”",
+    "zh": "T14 “Vesta”小坦克"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TanketteMultiC",
+   "name": "T13 “Deioneus” Rocket Battery",
+   "names": {
+    "de": "T13 “Deioneus” Raketenbatterie",
+    "en": "T13 “Deioneus” Rocket Battery",
+    "fr": "Batterie de Roquette T13 \"Deioneus\"",
+    "pt": "Bateria de foguete “Deioneus” T13",
+    "ru": "Реактивный миномет T13 “Deioneus”",
+    "zh": "T13 “Deioneus”火箭炮车"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TanketteOffensiveC",
+   "name": "T20 “Ixion” Tankette",
+   "names": {
+    "en": "T20 “Ixion” Tankette",
+    "fr": "Chenillette T20 \"Ixion\"",
+    "pt": "T20 “Ixion” Tanquete 30 mm",
+    "ru": "Танкетка T20 “Ixion”",
+    "zh": "T20 “Ixion”小坦克"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TorpedoAmmo",
+   "name": "Moray Torpedo",
+   "names": {
+    "en": "Moray Torpedo",
+    "fr": "Torpille Moray",
+    "ru": "Торпеда Moray",
+    "zh": "Moray鱼雷"
+   },
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "TrailerLiquid",
+   "name": "Rooster - Lamploader",
+   "names": {
+    "en": "Rooster - Lamploader"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "TrailerMaterial",
+   "name": "Rooster - Tumblebox",
+   "names": {
+    "en": "Rooster - Tumblebox"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "TrailerResource",
+   "name": "Rooster - Junkwagon",
+   "names": {
+    "en": "Rooster - Junkwagon"
+   },
+   "category": "Vehicles",
+   "faction": null,
+   "per_crate": 3
+  },
+  {
+   "code": "TraumaKit",
+   "name": "Trauma Kit",
+   "names": {
+    "de": "Trauma Koffer",
+    "en": "Trauma Kit",
+    "fr": "Kit de Réanimation",
+    "pt": "Kit de Reanimação",
+    "ru": "Реанимационный набор",
+    "zh": "急救箱"
+   },
+   "category": "Medical",
+   "faction": null,
+   "per_crate": 10
+  },
+  {
+   "code": "Tripod",
+   "name": "Tripod",
+   "names": {
+    "de": "Dreibein",
+    "en": "Tripod",
+    "fr": "Trépied",
+    "pt": "Tripé",
+    "ru": "Тренога",
+    "zh": "三脚架"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "TruckC",
+   "name": "R-1 Hauler",
+   "names": {
+    "en": "R-1 Hauler"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "TruckDefensiveW",
+   "name": "Dunne Leatherback 2a",
+   "names": {
+    "en": "Dunne Leatherback 2a"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "TruckLiquidC",
+   "name": "RR-3 “Stolon” Tanker",
+   "names": {
+    "de": "RR-3 “Stolon” Tankwagen",
+    "en": "RR-3 “Stolon” Tanker",
+    "fr": "Camion-citerne RR-3 “Stolon”",
+    "pt": "RR-3 \"Stolon\" caminhão tanque",
+    "ru": "Танкер RR-3 “Stolon”",
+    "zh": "RR-3 “Stolon”油罐车"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "TruckLiquidW",
+   "name": "Dunne Fuelrunner 2d",
+   "names": {
+    "en": "Dunne Fuelrunner 2d"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "TruckMobilityC",
+   "name": "R-5b “Sisyphus” Hauler",
+   "names": {
+    "en": "R-5b “Sisyphus” Hauler"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TruckMobilityW",
+   "name": "Dunne Landrunner 12c",
+   "names": {
+    "en": "Dunne Landrunner 12c"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 1
+  },
+  {
+   "code": "TruckMultiC",
+   "name": "R-17 “Retiarius” Skirmisher",
+   "names": {
+    "en": "R-17 “Retiarius” Skirmisher"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TruckOffensiveC",
+   "name": "R-9 “Speartip” Escort",
+   "names": {
+    "en": "R-9 “Speartip” Escort"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 1
+  },
+  {
+   "code": "TruckResourceC",
+   "name": "R-5 “Atlas” Hauler",
+   "names": {
+    "en": "R-5 “Atlas” Hauler"
+   },
+   "category": "Vehicles",
+   "faction": "colonial",
+   "per_crate": 3
+  },
+  {
+   "code": "TruckResourceW",
+   "name": "Dunne Loadlugger 3c",
+   "names": {
+    "en": "Dunne Loadlugger 3c",
+    "pt": "Dunne Loadlugger 3C",
+    "ru": "Самосвал Dunne Loadlugger 3c"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "TruckW",
+   "name": "Dunne Transport",
+   "names": {
+    "en": "Dunne Transport"
+   },
+   "category": "Vehicles",
+   "faction": "warden",
+   "per_crate": 3
+  },
+  {
+   "code": "Water",
+   "name": "Water",
+   "names": {
+    "de": "Wasser",
+    "en": "Water",
+    "fr": "Eau",
+    "pt": "Água",
+    "ru": "Вода",
+    "zh": "水"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "WaterBucket",
+   "name": "Water Bucket",
+   "names": {
+    "de": "Wassereimer",
+    "en": "Water Bucket",
+    "fr": "Seau d'eau",
+    "pt": "Balde de Água",
+    "ru": "Ведро для воды",
+    "zh": "水桶"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 50
+  },
+  {
+   "code": "WaterMine",
+   "name": "E680-S Rudder Lock",
+   "names": {
+    "en": "E680-S Rudder Lock"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 1
+  },
+  {
+   "code": "WaterWallMaterials",
+   "name": "Naval Buoy",
+   "names": {},
+   "category": "Heavy Ammunition",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "WindsockT",
+   "name": "Wind Sock",
+   "names": {
+    "de": "Windsack",
+    "en": "Wind Sock",
+    "fr": "Manche à Air",
+    "pt": "Biruta de vento",
+    "ru": "Ветроуказатель",
+    "zh": "风向袋"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "Wood",
+   "name": "Refined Materials",
+   "names": {
+    "de": "Veredelte Materialien",
+    "en": "Refined Materials",
+    "fr": "Matériaux Raffinés",
+    "pt": "Materiais Refinados",
+    "ru": "Рафинированные материалы",
+    "zh": "精炼材料"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "WorkHammer",
+   "name": "Hammer",
+   "names": {
+    "en": "Hammer",
+    "fr": "Marteau",
+    "pt": "Martelo",
+    "ru": "Молоток",
+    "zh": "锤子"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 20
+  },
+  {
+   "code": "WorkWrench",
+   "name": "Wrench",
+   "names": {
+    "de": "Schraubenschlüssel",
+    "en": "Wrench",
+    "fr": "Clé à Molette",
+    "pt": "Chave inglesa",
+    "ru": "Гаечный ключ",
+    "zh": "扳手"
+   },
+   "category": "Utility",
+   "faction": null,
+   "per_crate": 5
+  },
+  {
+   "code": "Wreckage",
+   "name": "Wreckage",
+   "names": {
+    "de": "Wrack",
+    "en": "Wreckage",
+    "fr": "Débris",
+    "pt": "Destroços",
+    "ru": "Обломки",
+    "zh": "残骸"
+   },
+   "category": "Resources",
+   "faction": null,
+   "per_crate": 1
+  }
+ ]
+}
