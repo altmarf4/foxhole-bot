@@ -35,6 +35,9 @@ EXTENSIONS = [
     "foxbot.features.mine",
     "foxbot.features.moderation",
     "foxbot.features.opsec",
+    "foxbot.features.war",
+    "foxbot.features.logi",
+    "foxbot.features.facility",
     "foxbot.features.help",
 ]
 

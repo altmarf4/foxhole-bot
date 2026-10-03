@@ -10,6 +10,7 @@ from foxbot.core.alerts import crossed_thresholds
 from foxbot.core.catalog import Catalog
 from foxbot.core.locations import SEED_PATH, LocationService
 from foxbot.core.locpicker import split_evenly
+from foxbot.db import MIGRATIONS
 from foxbot.core.text import EMBED_TOTAL_LIMIT, chunk_lines, clip, fit_board_embeds
 from foxbot.db import Database
 
@@ -119,7 +120,7 @@ async def test_database_migrates_and_settings_roundtrip():
     store._cache.clear()
     assert await store.get(1, keys.ALERT_THRESHOLDS) == [3, 1, 24]
     version = await db.fetchval("PRAGMA user_version")
-    assert version == 1
+    assert version == len(MIGRATIONS)
     await db.close()
 
 

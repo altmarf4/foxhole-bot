@@ -52,7 +52,7 @@ VOICE_CHANNEL_TYPES = [discord.ChannelType.voice]
 SEND_PERMISSIONS = {"view_channel": "View Channel", "send_messages": "Send Messages", "embed_links": "Embed Links"}
 RENAME_PERMISSIONS = {"view_channel": "View Channel", "manage_channels": "Manage Channels"}
 
-ACCESS_GROUPS = ["stockpile", "ship", "msupps", "orders", "inventory", "rares"]
+ACCESS_GROUPS = ["stockpile", "ship", "msupps", "orders", "inventory", "rares", "logi", "facility"]
 
 SECTIONS = {
     "general": ("General", "Roles, alerts channel, reminder thresholds, faction, backups"),

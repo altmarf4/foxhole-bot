@@ -42,6 +42,18 @@ INTROS = {
         "Customer tickets for ordering services from the regiment. Each ticket gets a private channel; prices are "
         "in Rare Alloys and payments are added to the regiment's stock."
     ),
+    "war": (
+        "The current war from the official War API: war number and day, victory towns held by each side, "
+        "casualties and recent town captures. Admins can post a live war board and archive the previous war's data."
+    ),
+    "logi": (
+        "Logi run requests: ask for a delivery from one place to another, let a driver claim it and mark it "
+        "delivered. The logistics role is pinged once when a request is made."
+    ),
+    "facility": (
+        "A shared facility queue: what the regiment wants produced at its facilities, in order, who is working on "
+        "each entry and what is done."
+    ),
     "mine": "Everything you created or have access to across stockpiles, ships and bases, with their timers.",
     "settings": (
         "Admin panel: admin and logistics roles, alerts channel, reminder thresholds, faction, storage and ship "
@@ -76,6 +88,9 @@ ORDER = [
     "order",
     "rare",
     "ticket",
+    "logi",
+    "facility",
+    "war",
     "mine",
     "settings",
     "permissions",

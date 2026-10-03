@@ -25,6 +25,8 @@ RARES_LOG_CHANNEL = Setting("rares_log_channel_id", None)
 RARES_VOICE_CHANNEL = Setting("rares_voice_channel_id", None)
 FACTION = Setting("faction", None)
 ORDERS_CHANNEL = Setting("orders_channel_id", None)
+WAR_ALERT_MODE = Setting("war_alert_mode", "off")
+WAR_ALERT_CHANNEL = Setting("war_alert_channel_id", None)
 
 ALL_SETTINGS = [
     ADMIN_ROLE,
@@ -39,6 +41,8 @@ ALL_SETTINGS = [
     RARES_VOICE_CHANNEL,
     FACTION,
     ORDERS_CHANNEL,
+    WAR_ALERT_MODE,
+    WAR_ALERT_CHANNEL,
 ]
 
 

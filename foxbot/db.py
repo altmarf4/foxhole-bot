@@ -278,7 +278,89 @@ CREATE TABLE ticket_payments (
 CREATE INDEX idx_ticket_payments_ticket ON ticket_payments (guild_id, number);
 """
 
-MIGRATIONS: list[str] = [SCHEMA_V1]
+SCHEMA_V2 = """
+CREATE TABLE war_towns (
+    map_name TEXT NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    hex TEXT NOT NULL,
+    town TEXT NOT NULL,
+    icon_type INTEGER NOT NULL,
+    team TEXT NOT NULL,
+    flags INTEGER NOT NULL DEFAULT 0,
+    changed_at INTEGER NOT NULL,
+    PRIMARY KEY (map_name, x, y)
+);
+
+CREATE TABLE war_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    war_id TEXT NOT NULL,
+    map_name TEXT NOT NULL,
+    hex TEXT NOT NULL,
+    town TEXT NOT NULL,
+    old_team TEXT NOT NULL,
+    new_team TEXT NOT NULL,
+    victory INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL
+);
+CREATE INDEX idx_war_events_created ON war_events (war_id, created_at);
+
+CREATE TABLE war_archives (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    guild_id INTEGER NOT NULL,
+    war_number INTEGER,
+    archived_by INTEGER NOT NULL,
+    archived_at INTEGER NOT NULL,
+    summary TEXT NOT NULL
+);
+CREATE INDEX idx_war_archives_guild ON war_archives (guild_id, archived_at);
+
+CREATE TABLE logi_runs (
+    id TEXT PRIMARY KEY,
+    guild_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    cargo TEXT NOT NULL DEFAULT '',
+    pickup_hex TEXT NOT NULL DEFAULT '',
+    pickup_region TEXT NOT NULL DEFAULT '',
+    dest_hex TEXT NOT NULL DEFAULT '',
+    dest_region TEXT NOT NULL DEFAULT '',
+    priority TEXT NOT NULL,
+    notes TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL,
+    claimed_by INTEGER,
+    claimed_at INTEGER,
+    delivered_by INTEGER,
+    delivered_at INTEGER,
+    ping_channel_id INTEGER,
+    ping_message_id INTEGER,
+    created_by INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+);
+CREATE INDEX idx_logi_runs_guild ON logi_runs (guild_id, status);
+
+CREATE TABLE facility_queue (
+    id TEXT PRIMARY KEY,
+    guild_id INTEGER NOT NULL,
+    item TEXT NOT NULL,
+    item_code TEXT,
+    quantity INTEGER NOT NULL,
+    facility TEXT NOT NULL DEFAULT '',
+    notes TEXT NOT NULL DEFAULT '',
+    position INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    worker_id INTEGER,
+    started_at INTEGER,
+    done_by INTEGER,
+    done_at INTEGER,
+    requested_by INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+);
+CREATE INDEX idx_facility_queue_guild ON facility_queue (guild_id, status, position);
+"""
+
+MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2]
 
 
 class Transaction:

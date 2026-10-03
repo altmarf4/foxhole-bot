@@ -19,6 +19,8 @@ GROUPS: dict[str, str] = {
     "inventory": "Inventory",
     "rares": "Regiment rares",
     "tickets": "Ticket staff",
+    "logi": "Logi runs",
+    "facility": "Facility queue",
 }
 
 
