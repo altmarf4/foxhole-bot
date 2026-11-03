@@ -370,7 +370,29 @@ ALTER TABLE inventory_snapshots ADD COLUMN map_x REAL;
 ALTER TABLE inventory_snapshots ADD COLUMN map_y REAL;
 """
 
-MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3, SCHEMA_V4]
+SCHEMA_V5 = """
+CREATE TABLE retired_messages (
+    channel_id INTEGER NOT NULL,
+    message_id INTEGER NOT NULL,
+    PRIMARY KEY (channel_id, message_id)
+);
+INSERT OR IGNORE INTO retired_messages SELECT channel_id, message_id FROM boards WHERE kind IN ('logi', 'facility');
+INSERT OR IGNORE INTO retired_messages SELECT ping_channel_id, ping_message_id FROM logi_runs
+    WHERE ping_channel_id IS NOT NULL AND ping_message_id IS NOT NULL;
+INSERT OR IGNORE INTO retired_messages SELECT channel_id, message_id FROM alert_messages WHERE kind IN ('logi', 'facility');
+DELETE FROM boards WHERE kind IN ('logi', 'facility');
+DELETE FROM permission_roles WHERE grp IN ('logi', 'facility');
+DELETE FROM entry_access WHERE kind IN ('logi', 'facility');
+DELETE FROM entry_subscribers WHERE kind IN ('logi', 'facility');
+DELETE FROM entry_alert_roles WHERE kind IN ('logi', 'facility');
+DELETE FROM entry_screenshots WHERE kind IN ('logi', 'facility');
+DELETE FROM alert_state WHERE kind IN ('logi', 'facility');
+DELETE FROM alert_messages WHERE kind IN ('logi', 'facility');
+DROP TABLE logi_runs;
+DROP TABLE facility_queue;
+"""
+
+MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3, SCHEMA_V4, SCHEMA_V5]
 
 
 class Transaction:

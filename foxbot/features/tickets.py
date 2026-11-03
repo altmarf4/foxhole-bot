@@ -14,8 +14,9 @@ from discord.ext import commands
 from foxbot.constants import TICKET_QUANTITY_MAX, TICKET_STATUSES, Colour
 from foxbot.core import timeutil
 from foxbot.core import settings as keys
-from foxbot.core.permissions import check_group, interaction_member, resolve_member
-from foxbot.core.text import EMBED_FIELD_LIMIT, clip, md, paginate_embeds
+from foxbot.core.boards import BoardButton, BoardRender
+from foxbot.core.permissions import check_admin, check_group, interaction_member, resolve_member
+from foxbot.core.text import EMBED_FIELD_LIMIT, clip, md, paginate_embeds, plural
 from foxbot.core.ui import (
     BaseModal,
     BaseView,
@@ -288,6 +289,13 @@ async def staff_roles(bot: FoxBot, guild: discord.Guild) -> list[discord.Role]:
     return [role for role in roles if role is not None]
 
 
+async def ping_targets(bot: FoxBot, guild: discord.Guild) -> tuple[list[discord.Role], list[discord.Member]]:
+    stored = await bot.settings.get(guild.id, keys.TICKET_PINGS) or {}
+    roles = [guild.get_role(int(role_id)) for role_id in stored.get("roles", []) if int(role_id) != guild.id]
+    members = [guild.get_member(int(user_id)) for user_id in stored.get("users", [])]
+    return [role for role in roles if role is not None], [member for member in members if member is not None]
+
+
 async def access_roles(bot: FoxBot, guild: discord.Guild) -> list[discord.Role]:
     roles = await staff_roles(bot, guild)
     admin_role_id = await bot.settings.get(guild.id, keys.ADMIN_ROLE)
@@ -303,7 +311,7 @@ def owed_text(cost: int, paid: int, ordered: bool) -> str:
         return "Nothing ordered yet"
     if paid >= cost:
         return "Paid in full"
-    return f"{cost - paid} Rare Alloys"
+    return f"{cost - paid} Rares"
 
 
 def owed_phrase(cost: int, paid: int, ordered: bool) -> str:
@@ -311,11 +319,11 @@ def owed_phrase(cost: int, paid: int, ordered: bool) -> str:
         return "nothing ordered yet"
     if paid >= cost:
         return "paid in full"
-    return f"{cost - paid} Rare Alloys still owed"
+    return f"{cost - paid} Rares still owed"
 
 
 def item_line(row: dict) -> str:
-    return f"{row['quantity']}x {md(row['service'])} - {row['quantity'] * row['unit_cost']} Rare Alloys"
+    return f"{row['quantity']}x {md(row['service'])} - {row['quantity'] * row['unit_cost']} Rares"
 
 
 def fit_lines(lines: list[str], *, empty: str, limit: int = EMBED_FIELD_LIMIT) -> str:
@@ -326,9 +334,9 @@ def fit_lines(lines: list[str], *, empty: str, limit: int = EMBED_FIELD_LIMIT) -
     for index, line in enumerate(lines):
         line = clip(line, 200)
         remaining = len(lines) - index - 1
-        tail = len(f"\n... and {remaining} more line(s)") if remaining else 0
+        tail = len(f"\n... and {plural(remaining, 'more line')}") if remaining else 0
         if used + len(line) + 1 + tail > limit:
-            kept.append(f"... and {len(lines) - index} more line(s)")
+            kept.append(f"... and {plural(len(lines) - index, 'more line')}")
             break
         kept.append(line)
         used += len(line) + 1
@@ -353,8 +361,8 @@ def card_embed(summary: Summary) -> discord.Embed:
         inline=True,
     )
     embed.add_field(name="Services", value=services_text(summary.lines), inline=False)
-    embed.add_field(name="Total Cost", value=f"{summary.cost} Rare Alloys", inline=True)
-    embed.add_field(name="Rares Paid", value=f"{summary.paid} Rare Alloys", inline=True)
+    embed.add_field(name="Total Cost", value=f"{summary.cost} Rares", inline=True)
+    embed.add_field(name="Rares Paid", value=f"{summary.paid} Rares", inline=True)
     embed.add_field(name="Rares Owed", value=owed_text(summary.cost, summary.paid, summary.ordered), inline=True)
     if ticket["notes"]:
         embed.add_field(name="Notes", value=clip(md(ticket["notes"]), EMBED_FIELD_LIMIT), inline=False)
@@ -374,8 +382,8 @@ def closed_embed(summary: Summary, closed_by: int, closed_at: int) -> discord.Em
     embed.add_field(name="Final Status", value=ticket["status"], inline=True)
     embed.add_field(name="Closed By", value=f"<@{closed_by}>", inline=True)
     embed.add_field(name="Services", value=services_text(summary.lines), inline=False)
-    embed.add_field(name="Total Cost", value=f"{summary.cost} Rare Alloys", inline=True)
-    embed.add_field(name="Rares Paid", value=f"{summary.paid} Rare Alloys", inline=True)
+    embed.add_field(name="Total Cost", value=f"{summary.cost} Rares", inline=True)
+    embed.add_field(name="Rares Paid", value=f"{summary.paid} Rares", inline=True)
     embed.add_field(name="Rares Owed", value=owed_text(summary.cost, summary.paid, summary.ordered), inline=True)
     if ticket["notes"]:
         embed.add_field(name="Notes", value=clip(md(ticket["notes"]), EMBED_FIELD_LIMIT), inline=False)
@@ -422,14 +430,14 @@ def transcript_header(summary: Summary, guild: discord.Guild | None, closed_by: 
     ]
     if summary.lines:
         lines += [
-            f"  {row['quantity']}x {row['service']} - {row['quantity'] * row['unit_cost']} Rare Alloys ({row['unit_cost']} each)"
+            f"  {row['quantity']}x {row['service']} - {row['quantity'] * row['unit_cost']} Rares ({row['unit_cost']} each)"
             for row in summary.lines
         ]
     else:
         lines.append("  Nothing ordered")
     lines += [
-        f"Total cost: {summary.cost} Rare Alloys",
-        f"Rares paid: {summary.paid} Rare Alloys",
+        f"Total cost: {summary.cost} Rares",
+        f"Rares paid: {summary.paid} Rares",
         f"Rares owed: {owed_text(summary.cost, summary.paid, summary.ordered)}",
     ]
     if ticket["notes"]:
@@ -616,6 +624,9 @@ async def ticket_overwrites(bot: FoxBot, guild: discord.Guild, opener: discord.a
     overwrites = {guild.default_role: hidden_overwrite(), opener: member_overwrite()}
     for role in await access_roles(bot, guild):
         overwrites[role] = member_overwrite()
+    ping_roles, ping_members = await ping_targets(bot, guild)
+    for target in [*ping_roles, *ping_members]:
+        overwrites.setdefault(target, member_overwrite())
     if guild.me is not None:
         overwrites[guild.me] = member_overwrite()
     return overwrites
@@ -657,14 +668,14 @@ async def open_ticket(bot: FoxBot, interaction: discord.Interaction, *, regiment
         await discard(bot, guild.id, number)
         await reply(interaction, f"Discord refused to create your ticket channel: {error.text or error}")
         return
-    pings = await staff_roles(bot, guild)
+    ping_roles, ping_members = await ping_targets(bot, guild)
     summary = await summarize(bot, ticket)
     try:
         message = await channel.send(
-            content=" ".join(role.mention for role in pings) or None,
+            content=" ".join(target.mention for target in [*ping_roles, *ping_members]) or None,
             embed=card_embed(summary),
             view=ticket_view(guild.id, number),
-            allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=pings),
+            allowed_mentions=discord.AllowedMentions(everyone=False, users=ping_members or False, roles=ping_roles or False),
         )
     except discord.HTTPException:
         log.warning("Could not post the card of ticket %s in guild %s", number, guild.id, exc_info=True)
@@ -791,14 +802,14 @@ class AssignPicker(BaseView):
         await refresh_card(self.bot, self.guild_id, self.number)
 
 
-class PaymentModal(BaseModal, title="Log Rare Alloys Payment"):
+class PaymentModal(BaseModal, title="Log Rares Payment"):
     def __init__(self, bot: FoxBot, guild_id: int, number: int):
         super().__init__()
         self.bot = bot
         self.guild_id = guild_id
         self.number = number
         self.amount_field = text_field(
-            "Rare Alloys received",
+            "Rares received",
             placeholder="e.g. 200 (a negative number corrects a mistake)",
             max_length=12,
         )
@@ -819,7 +830,7 @@ class PaymentModal(BaseModal, title="Log Rare Alloys Payment"):
         if paid + amount < 0:
             await deny(
                 interaction,
-                f"That correction would take the total paid below zero. Only **{paid}** Rare Alloys are recorded as paid on this ticket.",
+                f"That correction would take the total paid below zero. Only **{paid}** Rares are recorded as paid on this ticket.",
             )
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -837,15 +848,15 @@ class PaymentModal(BaseModal, title="Log Rare Alloys Payment"):
                     note=f"Ticket {ticket_label(self.number)} - {ticket['regiment']}",
                     ticket_number=self.number,
                 )
-                stock = f"\nRegiment stock: {old} -> {new} Rare Alloys."
+                stock = f"\nRegiment stock: {old} -> {new} Rares."
             except Exception:
                 log.exception("Could not add the payment of ticket %s to the regiment stock", self.number)
-                stock = "\nThe regiment Rare Alloys stock could not be updated. Check the Rare Alloys board."
+                stock = "\nThe regiment Rares stock could not be updated. Check the Rares board."
         summary = await summarize(self.bot, ticket)
         await reply(
             interaction,
-            f"Logged **{amount:+d}** Rare Alloys on ticket **{ticket_label(self.number)}**. "
-            f"Total paid: **{summary.paid}** Rare Alloys - {owed_phrase(summary.cost, summary.paid, summary.ordered)}.{stock}",
+            f"Logged **{amount:+d}** Rares on ticket **{ticket_label(self.number)}**. "
+            f"Total paid: **{summary.paid}** Rares - {owed_phrase(summary.cost, summary.paid, summary.ordered)}.{stock}",
         )
         await refresh_card(self.bot, self.guild_id, self.number)
 
@@ -892,7 +903,7 @@ class OrderServiceView(BaseView):
         self.service_select = discord.ui.Select(
             placeholder="Pick a service...",
             options=[
-                option(service["name"], str(index), f"{service['cost']} Rare Alloys each", default=index == self.service_index)
+                option(service["name"], str(index), f"{service['cost']} Rares each", default=index == self.service_index)
                 for index, service in enumerate(self.services)
             ],
             row=0,
@@ -925,11 +936,11 @@ class OrderServiceView(BaseView):
         elif service is None:
             lines.append(f"Quantity: **{self.quantity}**. Now pick a service.")
         elif self.quantity is None:
-            lines.append(f"**{md(service['name'])}** - {service['cost']} Rare Alloys each.\nNow pick a quantity.")
+            lines.append(f"**{md(service['name'])}** - {service['cost']} Rares each.\nNow pick a quantity.")
         else:
             lines.append(
                 f"**{self.quantity}x {md(service['name'])}**\n"
-                f"{service['cost']} Rare Alloys each - **{service['cost'] * self.quantity} Rare Alloys** total.\n"
+                f"{service['cost']} Rares each - **{service['cost'] * self.quantity} Rares** total.\n"
                 "Press **Confirm** to add this to the order."
             )
         if self.truncated:
@@ -979,7 +990,7 @@ class OrderServiceView(BaseView):
         if int(current["cost"]) != int(service["cost"]):
             service["cost"] = int(current["cost"])
             self.notice = (
-                f"The price of **{md(service['name'])}** changed to **{service['cost']}** Rare Alloys each. "
+                f"The price of **{md(service['name'])}** changed to **{service['cost']}** Rares each. "
                 "Check the total and press **Confirm** again."
             )
             await self._redraw(interaction)
@@ -989,8 +1000,8 @@ class OrderServiceView(BaseView):
         self.service_index = None
         self.quantity = None
         self.notice = (
-            f"Added **{quantity}x {md(service['name'])}** ({quantity * service['cost']} Rare Alloys). "
-            f"Order total is now **{summary.cost} Rare Alloys**.\nPick another service to keep ordering, or dismiss this message."
+            f"Added **{quantity}x {md(service['name'])}** ({quantity * service['cost']} Rares). "
+            f"Order total is now **{summary.cost} Rares**.\nPick another service to keep ordering, or dismiss this message."
         )
         await self._redraw(interaction)
         await refresh_card(self.bot, self.guild_id, self.number)
@@ -1010,7 +1021,7 @@ class RemoveServiceView(BaseView):
                 option(
                     f"{line['quantity']}x {line['service']}",
                     str(index),
-                    f"{line['quantity'] * line['unit_cost']} Rare Alloys ({line['unit_cost']} each)",
+                    f"{line['quantity'] * line['unit_cost']} Rares ({line['unit_cost']} each)",
                 )
                 for index, line in enumerate(self.lines)
             ],
@@ -1032,7 +1043,7 @@ class RemoveServiceView(BaseView):
             interaction,
             content=(
                 f"Removed **{removed['quantity']}x {md(removed['service'])}** from the order.\n"
-                f"Order total is now **{summary.cost} Rare Alloys**."
+                f"Order total is now **{summary.cost} Rares**."
             ),
             view=None,
         )
@@ -1175,7 +1186,7 @@ def overview_lines(rows: list[dict]) -> list[str]:
         for row in group:
             channel = f" - <#{row['channel_id']}>" if row["channel_id"] else ""
             lines.append(
-                f"`{ticket_label(row['number'])}` **{md(row['regiment'])}** - {row['cost']} Rare Alloys - {assigned_text(row)}{channel}"
+                f"`{ticket_label(row['number'])}` **{md(row['regiment'])}** - {row['cost']} Rares - {assigned_text(row)}{channel}"
             )
     return lines
 
@@ -1187,7 +1198,7 @@ def overview_embeds(rows: list[dict]) -> list[discord.Embed]:
         overview_lines(rows),
         colour=Colour.INFO,
         empty="No open tickets.",
-        footer=f"{len(rows)} open ticket(s) - {total} Rare Alloys total",
+        footer=f"{plural(len(rows), 'open ticket')} - {total} Rares total",
     )
 
 
@@ -1207,16 +1218,16 @@ def rares_embeds(rows: list[dict], closed: int) -> list[discord.Embed]:
     paid = sum(row["paid"] for row in rows)
     owed = sum(max(0, row["cost"] - row["paid"]) for row in rows)
     embeds = paginate_embeds(
-        "Rare Alloys - Paid and Owed",
+        "Rares - Paid and Owed",
         [rares_line(row) for row in rows],
         colour=Colour.PRIVATE,
         empty="No open tickets.",
-        footer=f"{len(rows)} open ticket(s) - {closed} closed",
+        footer=f"{plural(len(rows), 'open ticket')} - {closed} closed",
     )
     for embed in embeds:
-        embed.add_field(name="Total Billed", value=f"{billed} Rare Alloys", inline=True)
-        embed.add_field(name="Total Paid", value=f"{paid} Rare Alloys", inline=True)
-        embed.add_field(name="Total Owed", value=f"{owed} Rare Alloys" if owed else "Nothing outstanding", inline=True)
+        embed.add_field(name="Total Billed", value=f"{billed} Rares", inline=True)
+        embed.add_field(name="Total Paid", value=f"{paid} Rares", inline=True)
+        embed.add_field(name="Total Owed", value=f"{owed} Rares" if owed else "Nothing outstanding", inline=True)
     return embeds
 
 
@@ -1231,9 +1242,9 @@ def leaderboard_ranking(rows: list[dict]) -> list[dict]:
 
 def leaderboard_embeds(rows: list[dict]) -> list[discord.Embed]:
     ranking = leaderboard_ranking(rows)
-    lines = [f"{position}. {md(entry['name'])} - {entry['paid']} Rare Alloys" for position, entry in enumerate(ranking, start=1)]
+    lines = [f"{position}. {md(entry['name'])} - {entry['paid']} Rares" for position, entry in enumerate(ranking, start=1)]
     embeds = paginate_embeds(
-        "Regiment Leaderboard - Rare Alloys Spent",
+        "Regiment Leaderboard - Rares Spent",
         lines,
         colour=Colour.GOLD,
         empty="No tickets on record yet.",
@@ -1241,7 +1252,7 @@ def leaderboard_embeds(rows: list[dict]) -> list[discord.Embed]:
     total = sum(entry["paid"] for entry in ranking)
     for embed in embeds:
         embed.add_field(name="Regiments", value=str(len(ranking)), inline=True)
-        embed.add_field(name="Total Spent", value=f"{total} Rare Alloys", inline=True)
+        embed.add_field(name="Total Spent", value=f"{total} Rares", inline=True)
     return embeds
 
 
@@ -1255,7 +1266,7 @@ def mine_lines(rows: list[dict]) -> list[str]:
             channel = f" - <#{row['channel_id']}>" if row["channel_id"] else ""
             lines.append(
                 f"`{ticket_label(row['number'])}` **{md(row['regiment'])}** - {row['status']} - cost {row['cost']}, "
-                f"paid {row['paid']}, owed {max(0, row['cost'] - row['paid'])} Rare Alloys{channel}"
+                f"paid {row['paid']}, owed {max(0, row['cost'] - row['paid'])} Rares{channel}"
             )
     if closed_rows:
         if lines:
@@ -1264,9 +1275,39 @@ def mine_lines(rows: list[dict]) -> list[str]:
         for row in reversed(closed_rows):
             lines.append(
                 f"`{ticket_label(row['number'])}` **{md(row['regiment'])}** - closed {timeutil.short_date(row['closed_at'])} - "
-                f"cost {row['cost']}, paid {row['paid']}, owed {max(0, row['cost'] - row['paid'])} Rare Alloys"
+                f"cost {row['cost']}, paid {row['paid']}, owed {max(0, row['cost'] - row['paid'])} Rares"
             )
     return lines
+
+
+class TicketBoard:
+    kind = KIND
+    title = "Tickets"
+
+    def __init__(self, bot: FoxBot):
+        self.bot = bot
+
+    async def render(self, guild: discord.Guild) -> BoardRender:
+        services = await list_services(self.bot, guild.id)
+        if services:
+            prices = "\n".join(f"**{md(row['name'])}** - {row['cost']:,} Rares" for row in services)
+            description = f"Press **Open Ticket** to order. You get a private channel with the staff.\n\n{prices}"
+        else:
+            description = "No services are on offer right now."
+        embed = discord.Embed(title="Order Services", description=clip(description, 4096), colour=Colour.INFO)
+        return BoardRender(embeds=[embed], buttons=[BoardButton("open", "Open Ticket", discord.ButtonStyle.success)])
+
+    async def on_button(self, interaction: discord.Interaction, action: str) -> None:
+        if action != "open":
+            await deny(interaction, "That button is no longer supported.")
+            return
+        if not await list_services(self.bot, interaction.guild_id):
+            await deny(interaction, NO_SERVICES)
+            return
+        await interaction.response.send_modal(OpenTicketModal(self.bot))
+
+    async def on_pick(self, interaction: discord.Interaction, value: str) -> None:
+        await deny(interaction, "That menu is no longer supported.")
 
 
 class Tickets(commands.Cog):
@@ -1310,6 +1351,18 @@ class Tickets(commands.Cog):
             return
         await interaction.response.send_modal(OpenTicketModal(self.bot))
 
+    @group.command(name="board", description="Admin: post the Open Ticket button and price list in this channel.")
+    async def board(self, interaction: discord.Interaction) -> None:
+        if not await check_admin(interaction):
+            return
+        await interaction.response.defer(ephemeral=True)
+        try:
+            await self.bot.boards.post(interaction.guild, KIND, interaction.channel)
+        except discord.HTTPException as error:
+            await reply(interaction, f"Could not post the board here: {error.text or error}")
+            return
+        await reply(interaction, "Ticket board posted. It lists the services and updates when they change.")
+
     @group.command(name="overview", description="Staff: every open ticket grouped by status (only you see it).")
     async def overview(self, interaction: discord.Interaction) -> None:
         if not await check_group(interaction, GROUP):
@@ -1317,7 +1370,7 @@ class Tickets(commands.Cog):
         rows = await ticket_rows(self.bot, interaction.guild_id, open_only=True)
         await EmbedPaginator(overview_embeds(rows), owner_id=interaction.user.id).start(interaction)
 
-    @group.command(name="rares", description="Staff: Rare Alloys paid and owed on open tickets (only you see it).")
+    @group.command(name="rares", description="Staff: Rares paid and owed on open tickets (only you see it).")
     async def rares(self, interaction: discord.Interaction) -> None:
         if not await check_group(interaction, GROUP):
             return
@@ -1325,7 +1378,7 @@ class Tickets(commands.Cog):
         closed = await closed_count(self.bot, interaction.guild_id)
         await EmbedPaginator(rares_embeds(rows, closed), owner_id=interaction.user.id).start(interaction)
 
-    @group.command(name="leaderboard", description="Staff: regiments ranked by Rare Alloys spent (only you see it).")
+    @group.command(name="leaderboard", description="Staff: regiments ranked by Rares spent (only you see it).")
     async def leaderboard(self, interaction: discord.Interaction) -> None:
         if not await check_group(interaction, GROUP):
             return
@@ -1343,11 +1396,12 @@ class Tickets(commands.Cog):
             mine_lines(rows),
             colour=Colour.INFO,
             empty="You have not opened any tickets yet. Use `/ticket open` to order services.",
-            footer=f"{len(rows)} ticket(s)",
+            footer=plural(len(rows), "ticket"),
         )
         await EmbedPaginator(embeds, owner_id=interaction.user.id).start(interaction)
 
 
 async def setup(bot: FoxBot) -> None:
+    bot.boards.register(TicketBoard(bot))
     bot.add_dynamic_items(TicketButton)
     await bot.add_cog(Tickets(bot))

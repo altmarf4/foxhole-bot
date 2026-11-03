@@ -27,6 +27,10 @@ FACTION = Setting("faction", None)
 ORDERS_CHANNEL = Setting("orders_channel_id", None)
 WAR_ALERT_MODE = Setting("war_alert_mode", "off")
 WAR_ALERT_CHANNEL = Setting("war_alert_channel_id", None)
+STOCKPILE_HOURS = Setting("stockpile_hours", constants.STOCKPILE_LIFETIME_HOURS)
+SHIP_HOURS = Setting("ship_hours", constants.SHIP_LIFETIME_HOURS)
+RARES_LEVELS = Setting("rares_levels", constants.DEFAULT_RARES_LEVELS)
+TICKET_PINGS = Setting("ticket_pings", {"roles": [], "users": []})
 
 ALL_SETTINGS = [
     ADMIN_ROLE,
@@ -43,6 +47,10 @@ ALL_SETTINGS = [
     ORDERS_CHANNEL,
     WAR_ALERT_MODE,
     WAR_ALERT_CHANNEL,
+    STOCKPILE_HOURS,
+    SHIP_HOURS,
+    RARES_LEVELS,
+    TICKET_PINGS,
 ]
 
 

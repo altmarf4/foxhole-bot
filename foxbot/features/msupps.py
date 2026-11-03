@@ -16,7 +16,7 @@ from foxbot.core.boards import BoardButton, BoardRender
 from foxbot.core.locations import Location
 from foxbot.core.locpicker import LocationPicker
 from foxbot.core.permissions import check_admin, check_group, interaction_member
-from foxbot.core.text import clip, fit_board_embeds, md, paginate_embeds
+from foxbot.core.text import clip, fit_board_embeds, md, paginate_embeds, plural
 from foxbot.core.ui import (
     BaseModal,
     BaseView,
@@ -206,7 +206,7 @@ def status_text(entry: dict, now: int | None = None) -> str:
 
 
 def board_line(entry: dict, now: int | None = None) -> str:
-    return f"**{md(entry['name'])}** {status_text(entry, now)} - <@{measured_by(entry)}>"
+    return f"**{md(entry['name'])}** {status_text(entry, now)} - measured by <@{measured_by(entry)}>"
 
 
 def option_description(entry: dict, now: int) -> str:
@@ -250,20 +250,16 @@ def card_embed(entry: dict, *, alert_role_ids: list[int], now: int | None = None
     elif deadline <= now:
         runs_out = f"**OUT OF MSUPPS** since {timeutil.relative(deadline)}"
     else:
-        runs_out = f"{timeutil.relative(deadline)} ({timeutil.full(deadline)})"
-    embed.add_field(name="Runs out", value=runs_out, inline=False)
+        runs_out = f"{timeutil.relative(deadline)}\n{timeutil.full(deadline)}"
+    embed.add_field(name="Runs out", value=runs_out, inline=True)
     embed.add_field(
         name="Last measured",
         value=f"{entry['msupps']:,} msupps by <@{measured_by(entry)}> {timeutil.relative(entry['measured_at'])}",
-        inline=False,
+        inline=True,
     )
-    embed.add_field(
-        name="Reminder pings",
-        value=", ".join(f"<@&{rid}>" for rid in alert_role_ids) if alert_role_ids else "Logistics role only",
-        inline=False,
-    )
-    embed.add_field(name="Added by", value=f"<@{entry['created_by']}> {timeutil.relative(entry['created_at'])}", inline=False)
-    embed.set_footer(text=f"ID {entry['id']}")
+    embed.add_field(name="Added by", value=f"<@{entry['created_by']}> {timeutil.relative(entry['created_at'])}", inline=True)
+    if alert_role_ids:
+        embed.add_field(name="Reminder roles", value=", ".join(f"<@&{rid}>" for rid in alert_role_ids), inline=False)
     return embed
 
 
@@ -418,8 +414,8 @@ class AlertRolesModal(BaseModal, title="Reminder Pings"):
         super().__init__()
         self.panel = panel
         self.roles = discord.ui.Label(
-            text="Extra roles to ping",
-            description="Pinged together with the logistics role when this base runs low on msupps.",
+            text="Extra roles to remind",
+            description="Everyone in these roles gets a DM when this base runs low on msupps.",
             component=discord.ui.RoleSelect(
                 min_values=0,
                 max_values=10,
@@ -435,7 +431,7 @@ class AlertRolesModal(BaseModal, title="Reminder Pings"):
             return
         role_ids = [role.id for role in self.roles.component.values]
         await entries.set_alert_roles(self.panel.bot.db, KIND, entry["id"], role_ids)
-        await self.panel.show(interaction, notice="Reminder pings updated.")
+        await self.panel.show(interaction, notice="Reminder roles updated.")
 
 
 class MsuppsPanel(BaseView):
@@ -459,12 +455,12 @@ class MsuppsPanel(BaseView):
     async def _build(self, entry: dict, member: discord.Member | None) -> None:
         self.clear_items()
         self._button("Add Msupps", discord.ButtonStyle.success, self._add, row=0)
-        self._button("Set Msupps", discord.ButtonStyle.primary, self._set, row=0)
-        self._button("Change Rate", discord.ButtonStyle.secondary, self._rate, row=0)
-        self._button("Edit", discord.ButtonStyle.secondary, self._edit, row=0)
-        self._button("Reminder Pings", discord.ButtonStyle.secondary, self._alert_roles, row=1)
+        self._button("Set Msupps", discord.ButtonStyle.secondary, self._set, row=0)
         subscribed = member is not None and await entries.is_subscribed(self.bot.db, KIND, entry["id"], member.id)
-        self._button("Stop Notifying Me" if subscribed else "Notify Me", discord.ButtonStyle.secondary, self._notify, row=1)
+        self._button("Stop Notifying Me" if subscribed else "Notify Me", discord.ButtonStyle.secondary, self._notify, row=0)
+        self._button("Change Rate", discord.ButtonStyle.secondary, self._rate, row=1)
+        self._button("Edit", discord.ButtonStyle.secondary, self._edit, row=1)
+        self._button("Reminder Pings", discord.ButtonStyle.secondary, self._alert_roles, row=1)
         self._button("Delete", discord.ButtonStyle.danger, self._delete, row=1)
 
     def _button(self, label: str, style: discord.ButtonStyle, callback, *, row: int) -> None:
@@ -656,7 +652,7 @@ async def show_all(bot: FoxBot, interaction: discord.Interaction) -> None:
         await open_panel(bot, pick_interaction, value)
 
     view = PickerView(picker_options(rows, timeutil.now()), picked, owner_id=interaction.user.id, placeholder="Pick a base to manage...")
-    await reply(interaction, f"{len(rows)} base(s), sorted by location.", view=view)
+    await reply(interaction, f"{plural(len(rows), 'base')}, sorted by location.", view=view)
 
 
 class MsuppsBoard:
@@ -675,7 +671,7 @@ class MsuppsBoard:
             lines,
             colour=Colour.INFO,
             empty="No bases are tracked yet. Press **Add Base** to add one.",
-            footer=f"{len(rows)} base(s) | Estimates update automatically",
+            footer=f"{plural(len(rows), 'base')} | Msupps are estimated from the consumption rate",
             overflow_hint="Too many to show here. Use All Bases or /msupps list.",
         )
         options = [option(f"{row['name']} - {location_of(row)}", row["id"], option_description(row, now)) for row in rows[:25]]
@@ -722,7 +718,10 @@ class MsuppsAlerts:
         return await entries.alert_roles(self.bot.db, KIND, entry.entry_id)
 
     async def recipients(self, entry: TimedEntry) -> set[int]:
-        return set()
+        row = await fetch(self.bot, entry.guild_id, entry.entry_id)
+        if row is None:
+            return set()
+        return {row["created_by"], measured_by(row)}
 
     async def can_notify(self, entry: TimedEntry, member: discord.Member) -> bool:
         return await self.bot.perms.has(member, GROUP)
@@ -858,7 +857,7 @@ class Msupps(commands.Cog):
             entries.grouped_lines(rows, lambda e: board_line(e, now), sort_key=sort_key),
             colour=Colour.INFO,
             empty="No bases are tracked yet.",
-            footer=f"{len(rows)} base(s)",
+            footer=plural(len(rows), "base"),
         )
         await EmbedPaginator(embeds, owner_id=interaction.user.id).start(interaction)
 
@@ -873,7 +872,7 @@ class Msupps(commands.Cog):
             await reply(interaction, f"Could not post the board here: {error.text or error}")
             return
         alert_channel = await self.bot.settings.get(interaction.guild_id, keys.ALERT_CHANNEL)
-        hint = "" if alert_channel else " Reminders will be posted in this channel until an alerts channel is set in `/settings`."
+        hint = "" if alert_channel else " Reminders go by DM. One nobody can receive is posted here until an alerts channel is set in `/settings`."
         await reply(interaction, f"Msupps board posted.{hint}")
 
 

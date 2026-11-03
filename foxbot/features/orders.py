@@ -13,9 +13,9 @@ from foxbot.constants import Colour
 from foxbot.core import entries, ids, timeutil
 from foxbot.core import settings as keys
 from foxbot.core.boards import BoardButton, BoardRender
-from foxbot.core.catalog import Catalog, Item, name_key, search_key
+from foxbot.core.catalog import name_key
 from foxbot.core.locations import Location
-from foxbot.core.locpicker import LocationPicker, recent_hexes
+from foxbot.core.locpicker import LocationPicker
 from foxbot.core.permissions import check_admin, check_group, interaction_member
 from foxbot.core.text import EMBED_FIELD_LIMIT, EMBED_TOTAL_LIMIT, chunk_lines, clip, fit_board_embeds, md, plural
 from foxbot.core.ui import (
@@ -53,13 +53,6 @@ ORDER_TYPE_HINTS = {
     "Transport": "Goods to haul to a destination",
     "Scrap": "Salvage and other resources to gather",
 }
-FACTION_ALIASES = {
-    "warden": "warden",
-    "wardens": "warden",
-    "colonial": "colonial",
-    "colonials": "colonial",
-}
-
 MAX_LINES = 20
 MAX_TARGET = 1_000_000
 DONE_CEILING = 100 * MAX_TARGET
@@ -93,134 +86,88 @@ CARD_FAILED = (
 
 BULLET = re.compile(r"^[-*•]\s+")
 NEGATIVE = re.compile(r"^-\s*\d")
-AMOUNT_FIRST = re.compile(r"^(?P<amount>\d[\d,]*)(?:\s*[x×*]\s+|\s+)(?P<item>\S.*)$", re.IGNORECASE)
-AMOUNT_LAST = re.compile(r"^(?P<item>.*?\S)(?:\s*[:=*×-]\s*|\s+x\s*|\s+)(?P<amount>\d[\d,]*)$", re.IGNORECASE)
+LEADING_AMOUNT = re.compile(r"^(?P<number>\d[\d,]*(?:\.\d+)?)(?P<thousands>k(?![a-z]))?", re.IGNORECASE)
 WHOLE_NUMBER = re.compile(r"[+-]?\d+")
 
 
 @dataclass
 class ParsedLine:
-    item_code: str | None
-    item_name: str
+    text: str
     target: int
-    typed: str
 
 
 @dataclass
 class ParseResult:
     lines: list[ParsedLine] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
-    unmatched: list[str] = field(default_factory=list)
-    guessed: list[tuple[str, str]] = field(default_factory=list)
-    merged: list[str] = field(default_factory=list)
 
 
-def catalog_faction(value) -> str | None:
-    if not value:
+def leading_amount(text: str) -> tuple[int, str] | None:
+    match = LEADING_AMOUNT.match(text)
+    if match is None:
         return None
-    return FACTION_ALIASES.get(str(value).strip().casefold())
+    number = float(match["number"].replace(",", ""))
+    amount = round(number * 1000) if match["thousands"] else int(number)
+    return amount, text[match.end() :].strip()
 
 
-async def guild_faction(bot: FoxBot, guild_id: int) -> str | None:
-    return catalog_faction(await bot.settings.get(guild_id, keys.FACTION))
+def line_key(text: str) -> str:
+    found = leading_amount(text)
+    return name_key(found[1] if found else text)
 
 
-def match_item(catalog: Catalog, typed: str, faction: str | None) -> tuple[Item | None, bool]:
-    item, _ = catalog.resolve_line(typed, faction)
-    if item is not None:
-        return item, True
-    folded = typed.casefold()
-    for code, candidate in catalog.items.items():
-        if code.casefold() == folded:
-            return candidate, True
-    key = search_key(typed)
-    if len(key) < 3:
-        return None, False
-    variants = [key]
-    if key.endswith("s") and len(key) > 3:
-        variants.append(key[:-1])
-    for variant in variants:
-        for hit in catalog.search(variant, faction, limit=10):
-            hit_key = search_key(hit.name)
-            if hit_key.startswith(variant) or (variant in hit_key and len(variant) * 2 >= len(hit_key)):
-                return hit, False
-    return None, False
-
-
-def parse_lines(catalog: Catalog, text: str, faction: str | None) -> ParseResult:
+def parse_lines(text: str) -> ParseResult:
     result = ParseResult()
-    by_key: dict[str, ParsedLine] = {}
     for number, raw in enumerate((text or "").splitlines(), start=1):
-        line = BULLET.sub("", raw.strip()).strip()
+        line = " ".join(BULLET.sub("", raw.strip()).split())
         if not line:
             continue
         shown = md(clip(line, 40))
         if NEGATIVE.match(line):
-            result.errors.append(f"Line {number} ({shown}): amounts must be positive whole numbers.")
+            result.errors.append(f"Line {number} ({shown}): amounts cannot be negative.")
             continue
-        match = AMOUNT_FIRST.match(line) or AMOUNT_LAST.match(line)
-        if match is None:
-            result.errors.append(f"Line {number} ({shown}): write an amount and an item, e.g. 50 Basic Materials.")
+        found = leading_amount(line)
+        if found is None:
+            result.errors.append(f"Line {number} ({shown}): start the line with the amount, e.g. 50k Scrap or 20c Mortar Shell.")
             continue
-        amount = int(match["amount"].replace(",", ""))
-        typed = " ".join(match["item"].split())
+        amount, rest = found
+        if not rest:
+            result.errors.append(f"Line {number} ({shown}): write what is needed after the amount.")
+            continue
         if amount <= 0:
             result.errors.append(f"Line {number} ({shown}): the amount must be at least 1.")
             continue
         if amount > MAX_TARGET:
             result.errors.append(f"Line {number} ({shown}): the most one line can ask for is {MAX_TARGET:,}.")
             continue
-        item, exact = match_item(catalog, typed, faction)
-        name = item.name if item is not None else typed
-        if len(name) > ITEM_NAME_MAX:
-            result.errors.append(f"Line {number} ({shown}): item names can be at most {ITEM_NAME_MAX} characters.")
+        if len(line) > ITEM_NAME_MAX:
+            result.errors.append(f"Line {number} ({shown}): a line can be at most {ITEM_NAME_MAX} characters.")
             continue
-        key = item.code if item is not None else "text:" + name_key(name)
-        existing = by_key.get(key)
-        if existing is not None:
-            existing.target += amount
-            if name not in result.merged:
-                result.merged.append(name)
-            continue
-        parsed = ParsedLine(item.code if item is not None else None, name, amount, typed)
-        by_key[key] = parsed
-        result.lines.append(parsed)
-        if item is None:
-            result.unmatched.append(name)
-        elif not exact and search_key(typed) != search_key(item.name):
-            result.guessed.append((typed, item.name))
-    for parsed in result.lines:
-        if parsed.target > MAX_TARGET:
-            result.errors.append(f"{md(parsed.item_name)}: repeated lines add up to more than {MAX_TARGET:,}.")
+        result.lines.append(ParsedLine(line, amount))
     if len(result.lines) > MAX_LINES:
         result.errors.append(f"An order can have at most {MAX_LINES} lines; this one has {len(result.lines)}.")
     if not result.lines and not result.errors:
-        result.errors.append("Add at least one line, e.g. 50 Basic Materials.")
+        result.errors.append("Add at least one line, e.g. 50k Scrap.")
     return result
 
 
+def line_text(line: dict) -> str:
+    found = leading_amount(line["item_name"])
+    if found is not None and found[0] == line["target"]:
+        return line["item_name"]
+    return f"{line['target']} {line['item_name']}"
+
+
 def lines_to_text(lines: list[dict]) -> str:
-    return "\n".join(f"{line['target']} {line['item_name']}" for line in lines)
-
-
-def parse_report(result: ParseResult) -> list[str]:
-    report = []
-    if result.guessed:
-        pairs = ", ".join(f"{md(typed)} -> {md(name)}" for typed, name in result.guessed)
-        report.append(clip(f"Matched to the item catalog: {pairs}.", 600))
-    if result.unmatched:
-        report.append(clip(f"Kept as typed (not found in the item catalog): {', '.join(md(n) for n in result.unmatched)}.", 600))
-    if result.merged:
-        report.append(clip(f"Repeated items were added together: {', '.join(md(n) for n in result.merged)}.", 400))
-    return report
+    return "\n".join(line_text(line) for line in lines)
 
 
 def errors_text(result: ParseResult) -> str:
     shown = result.errors[:ERRORS_SHOWN]
     text = "The order was not saved:\n" + "\n".join(f"- {error}" for error in shown)
     if len(result.errors) > len(shown):
-        text += f"\n- and {len(result.errors) - len(shown)} more problem(s)"
-    text += "\nPress **Fix and Try Again** to correct it. One line per item, e.g. `50 Basic Materials` or `20 x Mortar Shell`."
+        text += f"\n- and {plural(len(result.errors) - len(shown), 'more problem')}"
+    text += "\nPress **Fix and Try Again** to correct it. One line each, starting with the amount, e.g. `50k Scrap` or `20c Mortar Shell`."
     return clip(text, MESSAGE_LIMIT)
 
 
@@ -300,7 +247,7 @@ async def create(
         )
         await tx.executemany(
             "INSERT INTO order_lines (order_id, position, item_code, item_name, target, done) VALUES (?, ?, ?, ?, ?, 0)",
-            [(order_id, position, line.item_code, line.item_name, line.target) for position, line in enumerate(lines)],
+            [(order_id, position, None, line.text, line.target) for position, line in enumerate(lines)],
         )
     bot.boards.request_refresh(guild_id, KIND)
     return await fetch(bot, guild_id, order_id)
@@ -320,23 +267,23 @@ async def update(bot: FoxBot, order: dict, **fields) -> dict | None:
 async def replace_lines(bot: FoxBot, order_id: str, lines: list[ParsedLine]) -> None:
     async with bot.db.transaction() as tx:
         existing = await tx.fetchall("SELECT * FROM order_lines WHERE order_id = ? ORDER BY position, id", (order_id,))
-        by_code = {row["item_code"]: row for row in existing if row["item_code"]}
-        by_name = {name_key(row["item_name"]): row for row in reversed(existing)}
+        by_text = {name_key(line_text(row)): row for row in reversed(existing)}
+        by_key = {line_key(line_text(row)): row for row in reversed(existing)}
         used: set[int] = set()
         for position, line in enumerate(lines):
-            match = by_code.get(line.item_code) if line.item_code else None
+            match = by_text.get(name_key(line.text))
             if match is None or match["id"] in used:
-                match = by_name.get(name_key(line.item_name))
+                match = by_key.get(line_key(line.text))
             if match is not None and match["id"] not in used:
                 used.add(match["id"])
                 await tx.execute(
-                    "UPDATE order_lines SET position = ?, item_code = ?, item_name = ?, target = ? WHERE id = ?",
-                    (position, line.item_code, line.item_name, line.target, match["id"]),
+                    "UPDATE order_lines SET position = ?, item_code = NULL, item_name = ?, target = ? WHERE id = ?",
+                    (position, line.text, line.target, match["id"]),
                 )
             else:
                 await tx.execute(
-                    "INSERT INTO order_lines (order_id, position, item_code, item_name, target, done) VALUES (?, ?, ?, ?, ?, 0)",
-                    (order_id, position, line.item_code, line.item_name, line.target),
+                    "INSERT INTO order_lines (order_id, position, item_code, item_name, target, done) VALUES (?, ?, NULL, ?, ?, 0)",
+                    (order_id, position, line.text, line.target),
                 )
         for row in existing:
             if row["id"] not in used:
@@ -676,8 +623,8 @@ class OrderModal(BaseModal):
         self.lines_field = text_field(
             "Lines",
             default=lines_text or None,
-            placeholder="50 Basic Materials\n20 x Mortar Shell\n10 Soldier Supplies",
-            description=f"One item per line: amount, then item name. At most {MAX_LINES} lines.",
+            placeholder="50k Scrap\n20c Mortar Shell\n10 Soldier Supplies",
+            description=f"One per line, amount first. 50k counts as 50,000. At most {MAX_LINES} lines.",
             paragraph=True,
             max_length=LINES_TEXT_MAX,
         )
@@ -734,7 +681,7 @@ class OrderModal(BaseModal):
         if not title:
             await reply(interaction, "The order needs a title.", view=RetryView(self, interaction.user.id))
             return
-        result = parse_lines(self.bot.catalog, text_value(self.lines_field), await guild_faction(self.bot, self.guild_id))
+        result = parse_lines(text_value(self.lines_field))
         if result.errors:
             await reply(interaction, errors_text(result), view=RetryView(self, interaction.user.id))
             return
@@ -767,7 +714,6 @@ class OrderModal(BaseModal):
             parts.append(CARD_FAILED)
         if location is not None:
             parts.append(location_feedback(location))
-        parts.extend(parse_report(result))
         await self._respond(interaction, "\n".join(parts))
 
     async def _update(self, interaction: discord.Interaction, current: dict, title: str, notes: str, result: ParseResult) -> None:
@@ -786,7 +732,6 @@ class OrderModal(BaseModal):
             parts.append(location_feedback(location))
         elif location is not None:
             parts.append("The destination was removed.")
-        parts.extend(parse_report(result))
         await self._respond(interaction, "\n".join(parts))
 
 
@@ -1182,14 +1127,14 @@ class OrderLineSelectItem(discord.ui.DynamicItem[discord.ui.Select], template=r"
 
 
 class DestinationPicker(LocationPicker):
-    def __init__(self, bot: FoxBot, owner_id: int, on_picked, on_skip, *, prompt: str, recent: list[str]):
+    def __init__(self, bot: FoxBot, owner_id: int, on_picked, on_skip, *, prompt: str):
         self.on_skip = on_skip
-        super().__init__(bot, owner_id, on_picked, prompt=prompt, recent=recent)
+        super().__init__(bot, owner_id, on_picked, prompt=prompt)
 
     def _build(self) -> None:
         super()._build()
         if self.stage == "hex":
-            self._add_button("No Destination", discord.ButtonStyle.primary, self._skip, row=4)
+            self._add_button("No Destination", discord.ButtonStyle.success, self._skip, row=2)
 
     async def _skip(self, interaction: discord.Interaction) -> None:
         await self.on_skip(interaction)
@@ -1236,7 +1181,6 @@ class NewOrderView(BaseView):
             picked,
             skipped,
             prompt=f"**New {order_type} order**\nThe destination is optional. Press **No Destination** to skip it.",
-            recent=await recent_hexes(bot, guild_id),
         )
         await edit(interaction, content=picker.content(), view=picker)
 
@@ -1420,7 +1364,7 @@ class OrderBoard:
             lines,
             colour=Colour.INFO,
             empty="No open orders. Press **New Order** to create one.",
-            footer=f"{len(rows)} open order(s) | Updates automatically",
+            footer=plural(len(rows), "open order"),
             overflow_hint="Too many to show here. Use All Orders or /order list.",
         )
         options = [option(row["title"], row["id"], option_description(row, progress.get(row["id"]))) for row in rows[:25]]

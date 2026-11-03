@@ -109,6 +109,6 @@ def fit_board_embeds(
     tail = footer
     if hidden:
         embeds[-1].description = (embeds[-1].description or "") + f"\n\n*{overflow_hint}*"
-        tail = f"{footer} | {hidden} more line(s) not shown"
+        tail = f"{footer} | {plural(hidden, 'more line')} not shown"
     embeds[-1].set_footer(text=tail)
     return embeds

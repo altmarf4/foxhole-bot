@@ -266,9 +266,8 @@ class AlertService:
         await self.clear_messages(entry.kind, entry.entry_id)
         embed = self._embed(provider, entry, expired)
         view = alert_view(entry.kind, entry.guild_id, entry.entry_id, provider.action_label)
-        direct = await self._dm_targets(provider, entry)
-        await self._send_dms(entry, embed, view, direct)
-        if entry.private:
+        delivered = await self._send_dms(entry, embed, view, await self._dm_targets(provider, entry))
+        if delivered or entry.private:
             return
         guild = self.bot.get_guild(entry.guild_id)
         if guild is None:
@@ -301,38 +300,33 @@ class AlertService:
             return
         await self._remember(entry, message)
 
-    async def _dm_targets(self, provider: AlertProvider, entry: TimedEntry) -> set[int]:
-        targets = set(await provider.recipients(entry)) if entry.private else set()
+    async def _dm_targets(self, provider: AlertProvider, entry: TimedEntry) -> list[discord.Member]:
         guild = self.bot.get_guild(entry.guild_id)
         if guild is None:
-            return targets
-        for user_id in await entries.subscribers(self.bot.db, entry.kind, entry.entry_id):
-            if user_id in targets:
-                continue
+            return []
+        user_ids = set(await provider.recipients(entry))
+        user_ids.update(await entries.subscribers(self.bot.db, entry.kind, entry.entry_id))
+        for role_id in await provider.alert_roles(entry):
+            role = guild.get_role(role_id)
+            if role is not None:
+                user_ids.update(member.id for member in role.members)
+        targets = []
+        for user_id in sorted(user_ids):
             member = guild.get_member(user_id)
-            if member is not None and await provider.can_notify(entry, member):
-                targets.add(user_id)
+            if member is not None and not member.bot and await provider.can_notify(entry, member):
+                targets.append(member)
         return targets
 
-    async def _send_dms(self, entry: TimedEntry, embed: discord.Embed, view: discord.ui.View, user_ids: set[int]) -> None:
-        if not user_ids:
-            return
-        guild = self.bot.get_guild(entry.guild_id)
-        dm_embed = embed.copy()
-        if guild is not None:
-            dm_embed.set_author(name=guild.name)
-        for user_id in sorted(user_ids):
-            user = self.bot.get_user(user_id)
-            if user is None:
-                try:
-                    user = await self.bot.fetch_user(user_id)
-                except discord.HTTPException:
-                    continue
-            if user.bot:
-                continue
+    async def _send_dms(self, entry: TimedEntry, embed: discord.Embed, view: discord.ui.View, members: list[discord.Member]) -> int:
+        delivered = 0
+        for member in members:
+            dm_embed = embed.copy()
+            dm_embed.set_author(name=member.guild.name)
             try:
-                message = await user.send(embed=dm_embed, view=view)
+                message = await member.send(embed=dm_embed, view=view)
             except discord.HTTPException:
-                log.info("Could not DM user %s a %s reminder", user_id, entry.kind)
+                log.info("Could not DM user %s a %s reminder", member.id, entry.kind)
                 continue
             await self._remember(entry, message)
+            delivered += 1
+        return delivered

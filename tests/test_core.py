@@ -10,7 +10,7 @@ from foxbot.core import settings as keys
 from foxbot.core.alerts import crossed_thresholds
 from foxbot.core.catalog import Catalog
 from foxbot.core.locations import SEED_PATH, LocationService
-from foxbot.core.locpicker import split_evenly
+from foxbot.core.locpicker import group_label, letter_groups
 from foxbot.core.text import EMBED_TOTAL_LIMIT, chunk_lines, clip, fit_board_embeds
 from foxbot.db import MIGRATIONS, Database
 
@@ -66,12 +66,15 @@ def test_hex_choices_limit(locations):
     assert [c.value for c in locations.hex_choices("piper")] == ["Piper's Enclave"]
 
 
-def test_split_evenly_never_exceeds_25():
-    names = [f"Hex {i:02d}" for i in range(53)]
-    groups = split_evenly(names)
-    assert len(groups) == 3
+def test_letter_groups_keep_letters_together_and_fit_a_select(locations):
+    groups = letter_groups(locations.hex_names())
+    assert [group_label(g) for g in groups] == ["A-H", "K-R", "S-W"]
     assert all(len(g) <= 25 for g in groups)
-    assert sum(len(g) for g in groups) == 53
+    assert sum(len(g) for g in groups) == len(locations.hex_names())
+    crowded = [f"S{i:02d}" for i in range(30)] + ["T1"]
+    assert all(len(g) <= 25 for g in letter_groups(crowded))
+    assert sum(len(g) for g in letter_groups(crowded)) == 31
+    assert letter_groups([]) == []
 
 
 def test_catalog_resolves_crates_quotes_and_locales():
@@ -124,15 +127,28 @@ async def test_database_migrates_and_settings_roundtrip():
     await db.close()
 
 
-async def test_database_from_schema_v2_gains_logi_cancel_columns(tmp_path):
+async def test_database_from_schema_v4_drops_logi_runs_and_facility_queue(tmp_path):
     path = tmp_path / "old.db"
     raw = await aiosqlite.connect(path)
-    await raw.executescript(f"BEGIN;\n{MIGRATIONS[0]}\n{MIGRATIONS[1]}\nPRAGMA user_version = 2;\nCOMMIT;")
+    await raw.executescript("BEGIN;\n" + "\n".join(MIGRATIONS[:4]) + "\nPRAGMA user_version = 4;\nCOMMIT;")
+    await raw.executescript(
+        "INSERT INTO boards (guild_id, kind, channel_id, message_id) VALUES (1, 'logi', 10, 100), (1, 'facility', 10, 101), (1, 'orders', 10, 102);"
+        "INSERT INTO logi_runs (id, guild_id, title, priority, status, ping_channel_id, ping_message_id, created_by, created_at, updated_at) "
+        "VALUES ('A', 1, 'Run', 'High', 'open', 11, 103, 5, 1, 1);"
+        "INSERT INTO permission_roles (guild_id, grp, role_id) VALUES (1, 'logi', 7), (1, 'orders', 7);"
+        "INSERT INTO entry_subscribers (kind, entry_id, user_id) VALUES ('logi', 'A', 7);"
+    )
+    await raw.commit()
     await raw.close()
     db = Database(path)
     await db.connect()
-    columns = {row["name"] for row in await db.fetchall("PRAGMA table_info(logi_runs)")}
-    assert {"cancelled_by", "cancelled_at"} <= columns
+    tables = {row["name"] for row in await db.fetchall("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    assert not {"logi_runs", "facility_queue"} & tables
+    retired = await db.fetchall("SELECT channel_id, message_id FROM retired_messages ORDER BY message_id")
+    assert [(row["channel_id"], row["message_id"]) for row in retired] == [(10, 100), (10, 101), (11, 103)]
+    assert [row["kind"] for row in await db.fetchall("SELECT kind FROM boards")] == ["orders"]
+    assert [row["grp"] for row in await db.fetchall("SELECT grp FROM permission_roles")] == ["orders"]
+    assert await db.fetchval("SELECT COUNT(*) FROM entry_subscribers") == 0
     assert await db.fetchval("PRAGMA user_version") == len(MIGRATIONS)
     await db.close()
 
@@ -212,3 +228,64 @@ async def test_unknown_interaction_is_logged_as_warning(caplog):
     assert any(record.levelname == "WARNING" and "another copy of the bot" in record.getMessage() for record in caplog.records)
     assert not any(record.levelname == "ERROR" for record in caplog.records)
     interaction.response.send_message.assert_not_awaited()
+
+
+async def test_command_sync_signature_matches_discord_round_trip():
+    import discord as discord_module
+
+    from foxbot.bot import EXTENSIONS, command_signature, discord_payload
+
+    bot = await make_bot(EXTENSIONS)
+    local = bot.command_payload()
+    remote = discord_payload(
+        [
+            discord_module.app_commands.AppCommand(
+                data=dict(command, id=str(9000 + index), application_id="1", version="1"), state=None
+            )
+            for index, command in enumerate(local)
+        ]
+    )
+    assert command_signature(remote) == command_signature(local)
+    assert command_signature(remote[1:]) != command_signature(local)
+    changed = [dict(local[0], description="Something else"), *local[1:]]
+    assert command_signature(changed) != command_signature(local)
+    await bot.db.close()
+
+
+def test_instance_lock_blocks_a_second_copy(tmp_path):
+    from foxbot.core.instancelock import InstanceLock
+
+    first = InstanceLock(tmp_path / "foxbot.lock")
+    second = InstanceLock(tmp_path / "foxbot.lock")
+    assert first.acquire()
+    assert not second.acquire()
+    first.release()
+    assert second.acquire()
+    second.release()
+
+
+async def test_board_refresh_skips_unchanged_boards():
+    from unittest.mock import AsyncMock, MagicMock
+
+    from fakes import make_channel
+
+    bot = await make_bot(["foxbot.features.stockpiles"])
+    guild = make_guild(owner_id=1)
+    bot.get_guild = MagicMock(return_value=guild)
+    channel = make_channel(guild)
+    await bot.boards.post(guild, "stockpile", channel)
+    edit = AsyncMock()
+    partial = MagicMock()
+    partial.get_partial_message.return_value = MagicMock(edit=edit)
+    bot.get_partial_messageable = MagicMock(return_value=partial)
+    await bot.boards.refresh(guild.id, "stockpile")
+    assert edit.await_count == 0
+    stockpiles = bot.extensions["foxbot.features.stockpiles"]
+    await stockpiles.create(
+        bot, guild.id, name="KM1", hex_name="Onyx", region="The Brink", store_type="Seaport",
+        priority="High", access_code="123456", private=False, user_id=5,
+    )
+    await bot.boards.refresh(guild.id, "stockpile")
+    await bot.boards.refresh(guild.id, "stockpile")
+    assert edit.await_count == 1
+    await bot.db.close()

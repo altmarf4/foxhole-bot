@@ -12,7 +12,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from foxbot.constants import RARES_STATUS, RARES_STOCKED, Colour
+from foxbot.constants import DEFAULT_RARES_LEVELS, RARES_STATUS, RARES_STOCKED, Colour
 from foxbot.core import timeutil
 from foxbot.core import settings as keys
 from foxbot.core.boards import BoardButton, BoardRender
@@ -43,9 +43,9 @@ ACTION_COLOURS = {
     "payment": Colour.INFO,
 }
 MODAL_TITLES = {
-    "add": "Add Rare Alloys",
-    "remove": "Remove Rare Alloys",
-    "set": "Set Rare Alloys Count",
+    "add": "Add Rares",
+    "remove": "Remove Rares",
+    "set": "Set Rares Count",
 }
 
 
@@ -123,11 +123,16 @@ async def apply_change(
     return old, new
 
 
-def status_for(count: int) -> tuple[str, int]:
-    for threshold, label, colour in RARES_STATUS:
+def status_for(count: int, levels=DEFAULT_RARES_LEVELS) -> tuple[str, int]:
+    low, moderate = levels
+    for threshold, (label, colour) in zip((0, low, moderate), RARES_STATUS):
         if count <= threshold:
             return label, colour
     return RARES_STOCKED
+
+
+async def guild_levels(bot: FoxBot, guild_id: int) -> list[int]:
+    return list(await bot.settings.get(guild_id, keys.RARES_LEVELS))
 
 
 def ticket_label(number: int) -> str:
@@ -136,17 +141,17 @@ def ticket_label(number: int) -> str:
 
 def change_text(action: str, amount: int) -> str:
     if action == "add":
-        return f"added **{amount}** Rare Alloys"
+        return f"added **{amount}** Rares"
     if action == "remove":
-        return f"removed **{amount}** Rare Alloys"
+        return f"removed **{amount}** Rares"
     if action == "set":
-        return f"set the count to **{amount}** Rare Alloys"
+        return f"set the count to **{amount}** Rares"
     if action == "reset":
         return "reset the count to **0**"
     if action == "payment":
         if amount < 0:
-            return f"corrected a ticket payment by **{amount}** Rare Alloys"
-        return f"logged a ticket payment of **{amount}** Rare Alloys"
+            return f"corrected a ticket payment by **{amount}** Rares"
+        return f"logged a ticket payment of **{amount}** Rares"
     return f"changed the count ({md(action)} {amount})"
 
 
@@ -164,7 +169,7 @@ def log_line(row: dict, *, note_limit: int = 120) -> str:
 
 def change_embed(row: dict) -> discord.Embed:
     embed = discord.Embed(
-        title="Rare Alloys",
+        title="Rares",
         description=f"<@{row['user_id']}> {change_text(row['action'], row['amount'])}\n**{row['old_count']} -> {row['new_count']}**",
         colour=ACTION_COLOURS.get(row["action"], Colour.INFO),
         timestamp=datetime.fromtimestamp(row["created_at"], tz=timezone.utc),
@@ -176,17 +181,17 @@ def change_embed(row: dict) -> discord.Embed:
     return embed
 
 
-def count_embed(count: int, *, title: str = "Regiment Rare Alloys") -> discord.Embed:
-    label, colour = status_for(count)
+def count_embed(count: int, *, title: str = "Regiment Rares", levels=DEFAULT_RARES_LEVELS) -> discord.Embed:
+    label, colour = status_for(count, levels)
     embed = discord.Embed(title=title, colour=colour)
-    embed.add_field(name="Count", value=f"**{count}** Rare Alloys", inline=True)
+    embed.add_field(name="Count", value=f"**{count}** Rares", inline=True)
     embed.add_field(name="Status", value=label, inline=True)
     return embed
 
 
-def board_embed(count: int, rows: list[dict]) -> discord.Embed:
-    label, colour = status_for(count)
-    header = f"## {count} Rare Alloys\nStatus: **{label}**\n\n**Recent changes**\n"
+def board_embed(count: int, rows: list[dict], levels=DEFAULT_RARES_LEVELS) -> discord.Embed:
+    label, colour = status_for(count, levels)
+    header = f"## {count} Rares\nStatus: **{label}**\n\n**Recent changes**\n"
     body_limit = EMBED_DESCRIPTION_LIMIT - len(header) - 50
     lines: list[str] = []
     used = 0
@@ -197,14 +202,14 @@ def board_embed(count: int, rows: list[dict]) -> discord.Embed:
         lines.append(line)
         used += len(line) + 1
     body = "\n".join(lines) if lines else "No changes recorded yet."
-    embed = discord.Embed(title="Regiment Rare Alloys", description=header + body, colour=colour)
+    embed = discord.Embed(title="Regiment Rares", description=header + body, colour=colour)
     embed.set_footer(text="Updates automatically | Log shows the full history")
     return embed
 
 
 def log_embeds(rows: list[dict]) -> list[discord.Embed]:
     return paginate_embeds(
-        "Rare Alloys Log",
+        "Rares Log",
         [log_line(row, note_limit=200) for row in rows],
         colour=Colour.INFO,
         empty="No changes recorded yet.",
@@ -220,16 +225,16 @@ async def post_log(bot: FoxBot, guild_id: int, row: dict) -> None:
     guild = bot.get_guild(guild_id)
     channel = guild.get_channel_or_thread(int(channel_id)) if guild is not None else None
     if channel is None:
-        log.info("Rare Alloys log channel %s not found in guild %s", channel_id, guild_id)
+        log.info("Rares log channel %s not found in guild %s", channel_id, guild_id)
         return
     try:
         await channel.send(embed=change_embed(row), allowed_mentions=discord.AllowedMentions.none())
     except discord.HTTPException:
-        log.warning("Could not post to the Rare Alloys log channel %s", channel_id, exc_info=True)
+        log.warning("Could not post to the Rares log channel %s", channel_id, exc_info=True)
 
 
 def voice_name(count: int) -> str:
-    return f"Rare Alloys: {count}"
+    return f"Rares: {count}"
 
 
 async def schedule_voice_update(bot: FoxBot, guild_id: int) -> None:
@@ -293,7 +298,7 @@ class ChangeModal(BaseModal):
             user_id=interaction.user.id,
             note=text_value(self.note_field),
         )
-        message = f"Rare Alloys updated: **{old} -> {new}**."
+        message = f"Rares updated: **{old} -> {new}**."
         if self.action == "remove" and amount > old:
             message += f" Only {old} were in stock, so the count stopped at zero."
         await reply(interaction, message)
@@ -312,7 +317,7 @@ async def show_log(bot: FoxBot, interaction: discord.Interaction) -> None:
 
 class RaresBoard:
     kind = KIND
-    title = "Rare Alloys"
+    title = "Rares"
 
     def __init__(self, bot: FoxBot):
         self.bot = bot
@@ -321,7 +326,7 @@ class RaresBoard:
         count = await get_count(self.bot, guild.id)
         rows = await log_rows(self.bot, guild.id, BOARD_LOG_LINES)
         return BoardRender(
-            embeds=[board_embed(count, rows)],
+            embeds=[board_embed(count, rows, await guild_levels(self.bot, guild.id))],
             buttons=[
                 BoardButton("add", "Add", discord.ButtonStyle.success),
                 BoardButton("remove", "Remove", discord.ButtonStyle.danger),
@@ -343,7 +348,7 @@ class RaresBoard:
 
 
 class Rares(commands.Cog, name=COG_NAME):
-    group = app_commands.Group(name="rare", description="The regiment's Rare Alloys stock.", guild_only=True)
+    group = app_commands.Group(name="rare", description="The regiment's Rares stock.", guild_only=True)
 
     def __init__(self, bot: FoxBot):
         self.bot = bot
@@ -381,7 +386,7 @@ class Rares(commands.Cog, name=COG_NAME):
         except asyncio.CancelledError:
             raise
         except Exception:
-            log.exception("Rare Alloys voice channel update failed in guild %s", guild_id)
+            log.exception("Rares voice channel update failed in guild %s", guild_id)
         finally:
             self._voice_tasks.pop(guild_id, None)
 
@@ -392,31 +397,31 @@ class Rares(commands.Cog, name=COG_NAME):
             return False
         channel = guild.get_channel(int(channel_id))
         if channel is None:
-            log.info("Rare Alloys voice channel %s not found in guild %s", channel_id, guild_id)
+            log.info("Rares voice channel %s not found in guild %s", channel_id, guild_id)
             return False
         name = voice_name(await get_count(self.bot, guild_id))
         if channel.name == name:
             return False
         try:
-            await channel.edit(name=name, reason="Rare Alloys count changed")
+            await channel.edit(name=name, reason="Rares count changed")
         except discord.HTTPException:
-            log.warning("Could not rename the Rare Alloys voice channel in guild %s", guild_id, exc_info=True)
+            log.warning("Could not rename the Rares voice channel in guild %s", guild_id, exc_info=True)
             return False
         return True
 
-    @group.command(name="count", description="Show the regiment's Rare Alloys count in this channel.")
+    @group.command(name="count", description="Show the regiment's Rares count in this channel.")
     async def count(self, interaction: discord.Interaction) -> None:
         if await interaction_member(interaction) is None:
             await deny(interaction, "This only works inside the server.")
             return
         value = await get_count(self.bot, interaction.guild_id)
-        await reply(interaction, embed=count_embed(value), ephemeral=False)
+        await reply(interaction, embed=count_embed(value, levels=await guild_levels(self.bot, interaction.guild_id)), ephemeral=False)
 
-    @group.command(name="log", description="Show the full Rare Alloys change log (only you see it).")
+    @group.command(name="log", description="Show the full Rares change log (only you see it).")
     async def log_command(self, interaction: discord.Interaction) -> None:
         await show_log(self.bot, interaction)
 
-    @group.command(name="board", description="Admin: post the live Rare Alloys board in this channel (moves it if it exists).")
+    @group.command(name="board", description="Admin: post the live Rares board in this channel (moves it if it exists).")
     async def board(self, interaction: discord.Interaction) -> None:
         if not await check_admin(interaction):
             return
@@ -426,7 +431,7 @@ class Rares(commands.Cog, name=COG_NAME):
         except discord.HTTPException as error:
             await reply(interaction, f"Could not post the board here: {error.text or error}")
             return
-        await reply(interaction, "Rare Alloys board posted.")
+        await reply(interaction, "Rares board posted.")
 
 
 async def setup(bot: FoxBot) -> None:

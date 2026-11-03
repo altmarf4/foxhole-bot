@@ -1,6 +1,6 @@
 # Foxhole Logistics Bot 2.0
 
-A Discord bot for a Foxhole regiment: reserved stockpiles (public and private) with expiry reminders, large-ship squad locks, base maintenance supplies, stockpile inventory from the in-game "Copy to Clipboard" export, orders (production / transport / scrap), the regiment's Rare Alloys stock, a customer ticket system priced in Rare Alloys, logi run requests, a shared facility queue, a live war board with town capture alerts, and moderation helpers.
+A Discord bot for a Foxhole regiment: reserved stockpiles (public and private) with expiry reminders, large-ship squad locks, base maintenance supplies, stockpile inventory from the in-game "Copy to Clipboard" export, orders (production / transport / scrap), the regiment's Rares stock, a customer ticket system priced in Rares, a live war board with town capture alerts, and moderation helpers.
 
 Everything the regiment decided about how it should work is in [SPEC.md](SPEC.md).
 
@@ -49,9 +49,9 @@ journalctl -u foxbot -f
 
 ## 4. First-time setup in Discord
 
-Run `/setup` as the server owner or an Administrator. It walks through the admin role, the logistics ping role, the alerts channel, the faction, ticket staff, who may use each feature (including logi runs and the facility queue), and posting the live boards. Everything can be changed later with `/settings` and `/permissions`.
+Run `/setup` as the server owner or an Administrator. It walks through the admin role, the logistics ping role, the alerts channel, the faction, ticket staff, who may use each feature, and posting the live boards. Everything can be changed later in the one `/settings` menu.
 
-Town capture alerts are off until an admin turns them on in `/settings` under War (our faction only, or all changes). When a new war starts the bot posts a notice; set the faction for the new war in `/settings`, and press **Archive Previous War** (or run `/war archive`) to clear the last war's stockpiles, ships, bases, inventories, orders, logi runs and facility queue after a backup.
+Town capture alerts are off until an admin turns them on in `/settings` under Faction & War (our faction only, or all changes). When a new war starts the bot posts a notice; set the faction for the new war in `/settings`, and press **Archive Previous War** (on the notice, in `/settings` under Data & Backups, or with `/war archive`) to clear the last war's stockpiles, ships, bases, inventories and orders after a backup.
 
 ## Data and backups
 

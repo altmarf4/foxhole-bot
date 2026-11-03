@@ -82,7 +82,7 @@ WAR_FIELDS = (
     "required_victory_towns",
 )
 
-KEPT_TEXT = "Settings, permissions, boards, Rare Alloys and tickets are kept."
+KEPT_TEXT = "Settings, permissions, boards, Rares and tickets are kept."
 NO_DATA_TEXT = "No War API data yet. The bot checks the War API every 5 minutes and this updates on its own."
 
 
@@ -101,11 +101,9 @@ WAR_TABLES = [
     WarTable("msupps_bases", "msupps base", "msupps bases", "foxbot.features.msupps", "msupps"),
     WarTable("inventory_snapshots", "inventory snapshot", "inventory snapshots"),
     WarTable("orders", "order", "orders", "foxbot.features.orders", "orders"),
-    WarTable("logi_runs", "logi run", "logi runs", "foxbot.features.logi", "logi"),
-    WarTable("facility_queue", "facility queue entry", "facility queue entries", "foxbot.features.facility", "facility"),
 ]
 TABLES_BY_NAME = {spec.table: spec for spec in WAR_TABLES}
-DELETE_ORDER = ["inventory_snapshots", "orders", "stockpiles", "ships", "msupps_bases", "logi_runs", "facility_queue"]
+DELETE_ORDER = ["inventory_snapshots", "orders", "stockpiles", "ships", "msupps_bases"]
 ENTRY_TABLES = ("entry_access", "entry_subscribers", "entry_alert_roles", "entry_screenshots", "alert_state", "alert_messages")
 CHILD_ROWS = {
     "inventory_snapshots": (
@@ -118,7 +116,6 @@ CHILD_ROWS = {
 }
 MESSAGE_COLUMNS = {
     "orders": ("channel_id", "message_id"),
-    "logi_runs": ("ping_channel_id", "ping_message_id"),
 }
 
 _archive_locks: defaultdict[int, asyncio.Lock] = defaultdict(asyncio.Lock)
@@ -454,8 +451,8 @@ def new_war_embed(state: dict) -> discord.Embed:
     description = (
         f"{started} Town tracking was reset for the new war.\n\n"
         f"Admins can press **Archive Previous War** to clean up {previous_text}: the bot saves a backup copy of its "
-        "database, then deletes this server's stockpiles, ships, msupps bases, inventory snapshots, orders, logi runs "
-        f"and facility queue. {KEPT_TEXT}\n\n"
+        "database, then deletes this server's stockpiles, ships, msupps bases, inventory snapshots and orders. "
+        f"{KEPT_TEXT}\n\n"
         "Remember to check this server's faction in `/settings` for the new war."
     )
     embed = discord.Embed(title="A New War Has Started", description=description, colour=Colour.INFO)
@@ -1226,7 +1223,7 @@ class War(commands.Cog, name=COG_NAME):
             await reply(interaction, f"Could not post the board here: {error.text or error}")
             return
         mode = await alert_mode(self.bot, interaction.guild_id)
-        hint = " Town change alerts are off; turn them on in `/settings` under War." if mode == ALERT_OFF else ""
+        hint = " Town change alerts are off; turn them on in `/settings` under Faction & War." if mode == ALERT_OFF else ""
         await reply(interaction, f"War board posted.{hint}")
 
     @group.command(name="archive", description="Admin: back up, then delete this server's data from the previous war.")

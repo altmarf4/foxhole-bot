@@ -13,12 +13,6 @@ from foxbot.core.catalog import Catalog, Item, name_key
 CLIPBOARD = "clipboard"
 FIR = "fir"
 APP = "app"
-SOURCE_LABELS = {
-    CLIPBOARD: "in-game Copy to Clipboard text",
-    FIR: "FIR export",
-    APP: "Foxhole Stockpiles app export",
-}
-
 FACTIONS = ("warden", "colonial")
 UNKNOWN_PREFIX = "unknown:"
 CLIPBOARD_TIME_FORMAT = "%Y.%m.%d-%H.%M.%S"
@@ -177,10 +171,6 @@ def parse_app_time(text: str | None) -> int | None:
     if moment.tzinfo is None:
         moment = moment.replace(tzinfo=dt.UTC)
     return int(moment.timestamp())
-
-
-def format_game_time(timestamp: int) -> str:
-    return dt.datetime.fromtimestamp(int(timestamp), dt.UTC).strftime("%Y-%m-%d %H:%M")
 
 
 def split_crate_suffix(name: str) -> tuple[str, bool]:

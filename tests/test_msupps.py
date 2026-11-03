@@ -214,10 +214,10 @@ async def test_panel_add_msupps_rebaselines(world):
     assert [b.label for b in panel.children] == [
         "Add Msupps",
         "Set Msupps",
+        "Notify Me",
         "Change Rate",
         "Edit",
         "Reminder Pings",
-        "Notify Me",
         "Delete",
     ]
     click = make_interaction(bot, member, channel=channel)
@@ -364,26 +364,26 @@ async def test_notify_roles_and_delete(world):
 async def test_alerts_post_reminder_and_expiry(world):
     bot, guild, member, outsider, channel = world
     bot.boards.channel_id_for = AsyncMock(return_value=channel.id)
-    bot.get_user = MagicMock(side_effect=lambda uid: guild._members.get(uid))
     row = await create(bot, guild, member, msupps=2000, rate=100)
     await create(bot, guild, member, name="Idle", msupps=50, rate=0)
     await entries.toggle_subscription(bot.db, "msupps", row["id"], member.id)
     await entries.toggle_subscription(bot.db, "msupps", row["id"], outsider.id)
     start = row["measured_at"]
     await bot.alerts.check(now=start + 9 * 3600)
-    assert len(channel.sent) == 1
-    embed = channel.sent[0]["embed"]
+    assert channel.sent == []
+    assert member.send.await_count == 1 and outsider.send.await_count == 0
+    embed = member.send.await_args.kwargs["embed"]
     assert embed.title == "Base maintenance supplies reminder"
     assert "runs out of maintenance supplies" in embed.description
-    assert member.send.await_count == 1 and outsider.send.await_count == 0
-    view = channel.sent[0]["view"]
+    view = member.send.await_args.kwargs["view"]
     assert any(getattr(item, "label", None) == "Add Msupps" for item in view.children)
     await bot.alerts.check(now=start + 9 * 3600 + 60)
-    assert len(channel.sent) == 1
+    assert member.send.await_count == 1
     await bot.alerts.check(now=start + 21 * 3600)
-    assert len(channel.sent) == 2
-    assert channel.sent[1]["embed"].title == "Base maintenance supplies expired"
-    assert "has run out" in channel.sent[1]["embed"].description
+    assert member.send.await_count == 2
+    expired = member.send.await_args.kwargs["embed"]
+    assert expired.title == "Base maintenance supplies expired"
+    assert "has run out" in expired.description
 
 
 async def test_alert_action_opens_modal_and_resets(world):
@@ -391,7 +391,7 @@ async def test_alert_action_opens_modal_and_resets(world):
     bot.boards.channel_id_for = AsyncMock(return_value=channel.id)
     row = await create(bot, guild, member, msupps=500, rate=100)
     await bot.alerts.check(now=row["measured_at"] + 4 * 3600 + 1800)
-    assert len(channel.sent) == 1
+    assert member.send.await_count == 1
     assert await bot.db.fetchval("SELECT COUNT(*) FROM alert_messages WHERE entry_id = ?", (row["id"],)) == 1
     provider = bot.alerts.providers["msupps"]
     assert provider.action_label == "Add Msupps"

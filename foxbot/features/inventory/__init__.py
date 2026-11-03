@@ -36,12 +36,10 @@ from foxbot.core.ui import (
 )
 from foxbot.features.inventory.parsers import (
     FACTIONS,
-    SOURCE_LABELS,
     ParsedStock,
     ParseError,
     canonical_store_type,
     decode_upload,
-    format_game_time,
     normalise,
     parse_inventory,
     stock_key,
@@ -63,7 +61,19 @@ MAX_STOCKS_PER_IMPORT = 25
 TAB_INVENTORY = "inventory"
 TAB_CHANGES = "changes"
 TAB_MAP = "map"
-TAB_LABELS = {TAB_INVENTORY: "Inventory", TAB_CHANGES: "Changes", TAB_MAP: "Map"}
+TAB_STOCKPILES = "stockpiles"
+TAB_RESULTS = "results"
+TAB_LABELS = {
+    TAB_INVENTORY: "Inventory",
+    TAB_CHANGES: "Changes",
+    TAB_STOCKPILES: "Stockpiles",
+    TAB_MAP: "Map",
+    TAB_RESULTS: "Results",
+}
+TOTAL_TABS = [TAB_INVENTORY, TAB_CHANGES, TAB_STOCKPILES, TAB_MAP]
+FIND_TABS = [TAB_RESULTS, TAB_MAP]
+STALE_SECONDS = 24 * 3600
+PICKS_PER_PART = 25
 MAP_HEX = "hex"
 MAP_WORLD = "world"
 TAB_PAGE_BUDGET = 3000
@@ -71,6 +81,7 @@ NAME_WIDTH = 24
 TABLE_HEADER = f"{'Item':<{NAME_WIDTH}} {'Crates':>6} {'Loose':>6} {'Total':>9}"
 UNRECOGNISED = "Unrecognised"
 GRID_FILENAME = "inventory.png"
+CARDS_FILENAME = "find.png"
 MAP_FILENAME = "map.jpg"
 ICON_FILENAME = "item.png"
 CATEGORIES = [*CATEGORY_ORDER, UNRECOGNISED]
@@ -92,17 +103,15 @@ EXPORT_COLUMNS = [
     "Imported By",
 ]
 CSV_STOCKPILE_HELP = (
-    "In game, open the stockpile, press **Copy to Clipboard** and paste it below. The name, hex, town and storage type "
-    "are read from the first line. The reserve code is not part of the export, so type it here."
+    "Open the stockpile in game, press **Copy to Clipboard** and paste it below. "
+    "The name and location come from the first line, so only the reserve code is typed here."
 )
 PASTE_HELP = (
-    "In game, open the stockpile, press **Copy to Clipboard**, then paste here.\n"
-    "FIR and Foxhole Stockpiles app exports work too. For long lists use `/inventory upload` with a file."
+    "Open the stockpile in game, press **Copy to Clipboard** and paste it here. FIR and Foxhole Stockpiles exports work too.\n"
+    "Too long to paste? Use `/inventory upload` with a file."
 )
-BOARD_HELP = (
-    "Press **Import Contents** and paste a stockpile's in-game **Copy to Clipboard** text, or upload a FIR / "
-    "Foxhole Stockpiles export with `/inventory upload`. **Find Item**, **Totals** and **Export CSV** answer only you."
-)
+BOARD_HELP = "Press **Import Contents** and paste a stockpile's in-game **Copy to Clipboard** text."
+DELTA_LEGEND = "Green and red numbers show the change since the previous import. Grey icons ran out."
 
 
 @dataclass
@@ -451,9 +460,9 @@ def display_location(snapshot: dict, stockpile: dict | None) -> str:
     return entries.location_label(display_hex(snapshot, stockpile), display_region(snapshot, stockpile))
 
 
-def describe(snapshot: dict, stockpile: dict | None) -> str:
+def describe(snapshot: dict, stockpile: dict | None, *, with_type: bool = True) -> str:
     prefix = "[Private] " if stockpile is not None and stockpile["private"] else ""
-    kind = display_type(snapshot, stockpile)
+    kind = display_type(snapshot, stockpile) if with_type else ""
     suffix = f" ({md(kind)})" if kind else ""
     return f"{prefix}**{md(display_name(snapshot, stockpile))}** - {md(display_location(snapshot, stockpile))}{suffix}"
 
@@ -480,12 +489,13 @@ def row_units(row: dict) -> int:
     return row["quantity"] * row["per_crate"] if row["crated"] else row["quantity"]
 
 
-def amount_text(crates: int, loose: int, units: int) -> str:
-    if crates and loose:
-        return f"{plural(crates, 'crate')} + {loose} loose = **{units}** units"
+def amount_text(crates: int, loose: int) -> str:
+    parts = []
     if crates:
-        return f"{plural(crates, 'crate')} = **{units}** units"
-    return f"**{loose}** loose"
+        parts.append(f"**{crates:,}** {'crate' if crates == 1 else 'crates'}")
+    if loose or not crates:
+        parts.append(f"**{loose:,}** loose")
+    return " + ".join(parts)
 
 
 def holdings(rows: list[dict], marker: int = 0) -> dict[str, Holding]:
@@ -639,33 +649,19 @@ def numbers_pages(rows: list[dict]) -> list[str]:
 
 def change_line(change: Change) -> str:
     unit = "crates" if change.crated else "loose"
-    return f"{md(change.name)} ({unit}): {change.old:,} -> **{change.new:,}**"
-
-
-def import_label(snapshot: dict) -> str:
-    return f"import by <@{snapshot['imported_by']}> {timeutil.relative(snapshot['imported_at'])}"
+    return f"{md(change.name)}: {change.old:,} -> **{change.new:,}** {unit}"
 
 
 def changes_pages(rows: list[dict], previous_rows: list[dict] | None, previous: dict | None, current: dict) -> list[str]:
     if previous_rows is None or previous is None:
-        return ["This is the first import of this stockpile, so there is nothing to compare yet."]
-    lines = [f"**Before:** {import_label(previous)}", f"**After:** {import_label(current)}"]
+        return ["This is the first import, so there is nothing to compare yet."]
+    lines = [f"Compared with the import from {timeutil.relative(previous['imported_at'])}."]
     changes = diff_items(previous_rows, rows)
     if not changes:
         return ["\n".join(lines) + "\n\nNothing changed."]
     lines.append("")
     lines.extend(change_line(change) for change in changes)
     return [page.strip() for page in chunk_lines(lines, TAB_PAGE_BUDGET)]
-
-
-def image_body(rows: list[dict], previous_rows: list[dict] | None) -> str:
-    text = stock_totals(rows)
-    if previous_rows is not None:
-        text += (
-            "\nGreen and red numbers on the icons show what changed since the import before, and greyed icons ran out. "
-            "See **Changes** for before and after."
-        )
-    return text
 
 
 @dataclass
@@ -701,17 +697,13 @@ async def map_spot(bot: FoxBot, snapshot: dict, stockpile: dict | None) -> MapSp
 
 
 def map_body(spot: MapSpot) -> str:
-    where = f"**{md(entries.location_label(spot.hex, spot.region))}**"
     if spot.source == "export":
-        return f"{where}\nExact spot from the in-game export (X {spot.x:.3f}, Y {spot.y:.3f})."
+        return "Exact position from the in-game export."
     if spot.source == "town":
-        return (
-            f"{where}\nApproximate: the map marker of {md(spot.region)}. "
-            "Import the in-game Copy to Clipboard text to get the exact spot."
-        )
+        return f"Approximate position: the map marker of {md(spot.region)}. The in-game export gives the exact spot."
     if spot.source == "hex":
-        return f"{where}\nOnly the hex is known, so no dot is shown."
-    return f"{where}\nThis location is not on the war map, so there is no map to show."
+        return "Only the hex is known, so there is no dot."
+    return "This place is not on the war map."
 
 
 async def render_map(bot: FoxBot, spot: MapSpot, mode: str, label: str) -> bytes | None:
@@ -723,7 +715,11 @@ async def render_map(bot: FoxBot, spot: MapSpot, mode: str, label: str) -> bytes
         return await asyncio.to_thread(
             mapimages.render_world, spot.key, spot.x, spot.y, label=label, approximate=approximate, names=names
         )
-    return await asyncio.to_thread(mapimages.render_hex, spot.key, spot.x, spot.y, label=label, approximate=approximate)
+    hex_ = bot.locations.find_hex(spot.hex)
+    towns = [(region.name, region.x, region.y) for region in hex_.regions if region.major and region.x is not None] if hex_ else []
+    return await asyncio.to_thread(
+        mapimages.render_hex, spot.key, spot.x, spot.y, label=label, approximate=approximate, towns=towns
+    )
 
 
 async def tab_pages(
@@ -745,7 +741,7 @@ async def tab_pages(
         return TAB_MAP, [map_body(spot)], image, MAP_FILENAME
     image = await render_grid(grid_sections(rows, previous_rows))
     if image is not None:
-        return TAB_INVENTORY, [image_body(rows, previous_rows)], image, GRID_FILENAME
+        return TAB_INVENTORY, [stock_totals(rows)], image, GRID_FILENAME
     return TAB_INVENTORY, numbers_pages(rows), None, ""
 
 
@@ -753,16 +749,16 @@ def import_notes(outcome: ImportOutcome) -> list[str]:
     notes = []
     if outcome.unknown:
         names = ", ".join(md(name) for name in outcome.unknown)
-        notes.append(clip(f"Unrecognised ({len(outcome.unknown)}): {names}. Saved under the pasted names.", 700))
+        notes.append(clip(f"Not recognised, kept as pasted: {names}.", 700))
     if (outcome.hex or outcome.region) and not outcome.known_location:
-        notes.append("The location was not found on the war map and was saved as written in the export.")
+        notes.append("The location is not on the war map, so it was saved as written.")
     if outcome.warning:
         notes.append(outcome.warning)
     return notes
 
 
 def add_map_switch(view: discord.ui.View, mode: str, factory, row: int) -> None:
-    for value, label in ((MAP_HEX, "Hex map"), (MAP_WORLD, "World map")):
+    for value, label in ((MAP_HEX, "Hex Map"), (MAP_WORLD, "World Map")):
         button = discord.ui.Button(
             label=label,
             style=discord.ButtonStyle.primary if value == mode else discord.ButtonStyle.secondary,
@@ -773,8 +769,8 @@ def add_map_switch(view: discord.ui.View, mode: str, factory, row: int) -> None:
         view.add_item(button)
 
 
-def add_tab_buttons(view: discord.ui.View, current: str, factory, row: int) -> None:
-    for tab in available_tabs():
+def add_tab_buttons(view: discord.ui.View, current: str, factory, row: int, tabs: list[str] | None = None) -> None:
+    for tab in tabs or available_tabs():
         button = discord.ui.Button(
             label=TAB_LABELS[tab],
             style=discord.ButtonStyle.primary if tab == current else discord.ButtonStyle.secondary,
@@ -788,11 +784,11 @@ def add_tab_buttons(view: discord.ui.View, current: str, factory, row: int) -> N
 def add_page_buttons(view: discord.ui.View, page: int, count: int, previous, following, row: int) -> None:
     if count <= 1:
         return
-    back = discord.ui.Button(label="Previous part", style=discord.ButtonStyle.secondary, row=row, disabled=page == 0)
+    back = discord.ui.Button(label="Previous Part", style=discord.ButtonStyle.secondary, row=row, disabled=page == 0)
     back.callback = previous
     view.add_item(back)
     view.add_item(discord.ui.Button(label=f"Part {page + 1}/{count}", style=discord.ButtonStyle.secondary, row=row, disabled=True))
-    forward = discord.ui.Button(label="Next part", style=discord.ButtonStyle.secondary, row=row, disabled=page >= count - 1)
+    forward = discord.ui.Button(label="Next Part", style=discord.ButtonStyle.secondary, row=row, disabled=page >= count - 1)
     forward.callback = following
     view.add_item(forward)
 
@@ -804,7 +800,7 @@ def summary_embed(
     rows: list[dict],
     *,
     body: str,
-    tab_label: str,
+    part: str,
     index: int,
     total: int,
 ) -> discord.Embed:
@@ -819,35 +815,28 @@ def summary_embed(
     elif outcome.kept:
         where = f"Not tracked (kept unlinked): {md(stock_label(outcome))}"
     else:
-        where = f"Not tracked: {md(stock_label(outcome))}\nTrack it as a stockpile, link it to an existing one, or keep it unlinked."
+        where = f"Not tracked: {md(stock_label(outcome))}\nTrack it, link it to an existing stockpile, or keep it unlinked."
     embed.add_field(name="Stockpile", value=clip(where, 1024), inline=False)
-    held = holdings(rows)
-    crates = sum(h.crates for h in held.values())
-    loose = sum(h.loose for h in held.values())
-    embed.add_field(name="Items", value=f"{plural(len(held), 'item type')}: {crates} crates, {loose} loose", inline=True)
+    embed.add_field(name="Items", value=stock_totals(rows), inline=False)
     if outcome.unknown:
         names = ", ".join(md(name) for name in outcome.unknown)
-        embed.add_field(
-            name=f"Unrecognised ({len(outcome.unknown)})",
-            value=clip(f"{names}\nSaved under the pasted names.", 800),
-            inline=False,
-        )
+        embed.add_field(name="Not recognised, kept as pasted", value=clip(names, 800), inline=False)
     if (outcome.hex or outcome.region) and not outcome.known_location:
-        embed.add_field(name="Location", value="Not found on the war map, saved as written in the export.", inline=False)
+        embed.add_field(name="Location", value="Not on the war map, so it was saved as written.", inline=False)
     if outcome.warning:
         embed.add_field(name="Warning", value=clip(outcome.warning, 1024), inline=False)
-    embed.set_footer(text=f"{tab_label} | Snapshot {snapshot['id']} | {SOURCE_LABELS.get(snapshot['source'], snapshot['source'])}")
+    if part:
+        embed.set_footer(text=part)
     return embed
 
 
-def contents_header(snapshot: dict, stockpile: dict | None) -> list[str]:
-    source = SOURCE_LABELS.get(snapshot["source"], snapshot["source"])
-    head = [
-        describe(snapshot, stockpile),
-        f"Imported by <@{snapshot['imported_by']}> {timeutil.relative(snapshot['imported_at'])} from the {source}",
-    ]
-    if snapshot["game_time"]:
-        head.append(f"Game clock when copied: {format_game_time(snapshot['game_time'])}")
+def contents_header(snapshot: dict, stockpile: dict | None, *, older: bool = False) -> list[str]:
+    kind = display_type(snapshot, stockpile)
+    where = md(display_location(snapshot, stockpile))
+    private = "Private " if stockpile is not None and stockpile["private"] else ""
+    head = [f"{private}{md(kind)} - {where}" if kind else f"{private}{where}"]
+    when = timeutil.relative(snapshot["imported_at"])
+    head.append(f"{'Older import' if older else 'Imported'} {when} by <@{snapshot['imported_by']}>")
     if stockpile is None:
         head.append("Not linked to a tracked stockpile.")
     return head
@@ -857,8 +846,7 @@ def empty_contents_embed(stockpile: dict | None) -> discord.Embed:
     name = stockpile["name"] if stockpile is not None else "Stockpile"
     return discord.Embed(
         title=clip(f"Inventory: {name}", 256),
-        description="No contents have been imported for this stockpile yet. Press **Import new contents** and paste "
-        "the in-game **Copy to Clipboard** text.",
+        description="Nothing imported yet. Press **Import** and paste the in-game **Copy to Clipboard** text.",
         colour=Colour.PRIVATE if stockpile is not None and stockpile["private"] else Colour.INFO,
     )
 
@@ -871,10 +859,12 @@ def resolve_query(catalog: Catalog, query: str, faction: str | None) -> Item | N
     key = search_key(query)
     if not key:
         return None
-    for candidate in catalog.search(query, faction, limit=5):
-        if key in search_key(candidate.name) or any(key in search_key(name) for name in candidate.names.values()):
-            return candidate
-    return None
+    matches = [
+        candidate
+        for candidate in catalog.search(query, faction)
+        if key in search_key(candidate.name) or any(key in search_key(name) for name in candidate.names.values())
+    ]
+    return matches[0] if len(matches) == 1 else None
 
 
 async def run_import(
@@ -957,7 +947,7 @@ async def run_import(
             )
         )
     bot.boards.request_refresh(guild_id, KIND)
-    notes = [f"Imported {plural(len(outcomes), 'stockpile')} from the {SOURCE_LABELS[result.source]}."]
+    notes = [f"Imported {plural(len(outcomes), 'stockpile')}."]
     if result.skipped:
         notes.append(f"{plural(result.skipped, 'line')} could not be read and {'was' if result.skipped == 1 else 'were'} skipped.")
     intro = "\n".join(notes)
@@ -1046,10 +1036,10 @@ class ImportActions:
         if outcome is None or outcome.kept or snapshot["stockpile_id"] is not None:
             return
         if stockpiles_module(self.bot) is not None:
-            self._button("Track as stockpile", discord.ButtonStyle.success, self._track_public, row=row)
-            self._button("Track as private stockpile", discord.ButtonStyle.primary, self._track_private, row=row)
-        self._button("Link to existing", discord.ButtonStyle.primary, self._link, row=row)
-        self._button("Keep unlinked", discord.ButtonStyle.secondary, self._keep, row=row)
+            self._button("Track as Stockpile", discord.ButtonStyle.success, self._track_public, row=row)
+            self._button("Track as Private", discord.ButtonStyle.secondary, self._track_private, row=row)
+        self._button("Link to Existing", discord.ButtonStyle.secondary, self._link, row=row)
+        self._button("Keep Unlinked", discord.ButtonStyle.secondary, self._keep, row=row)
 
     async def _allowed(self, interaction: discord.Interaction) -> bool:
         return await check_group(interaction, GROUP, self.guild_id)
@@ -1234,14 +1224,13 @@ class ImportResultView(ImportActions, BaseView):
         else:
             add_page_buttons(self, self.tab_page, len(pages), self._previous_page, self._next_page, row=2)
         self.add_import_actions(snapshot, row=3)
-        part_text = f" part {self.tab_page + 1}/{len(pages)}" if len(pages) > 1 else ""
         embed = summary_embed(
             self.current,
             snapshot,
             stockpile,
             rows,
             body=pages[self.tab_page],
-            tab_label=f"{TAB_LABELS[self.tab]}{part_text}",
+            part=f"Part {self.tab_page + 1}/{len(pages)}" if len(pages) > 1 else "",
             index=self.page + 1,
             total=len(self.outcomes),
         )
@@ -1368,7 +1357,7 @@ class ContentsView(ImportActions, BaseView):
         self.linked = stockpile is not None
         if latest is None:
             self.history_ids = []
-            self._button("Import new contents", discord.ButtonStyle.success, self._import, row=2)
+            self._button("Import", discord.ButtonStyle.success, self._import, row=2)
             return None, empty_contents_embed(stockpile)
         history = await snapshot_history(self.bot, latest)
         self.history_ids = [snapshot["id"] for snapshot in history]
@@ -1378,10 +1367,12 @@ class ContentsView(ImportActions, BaseView):
         previous = history[index + 1] if index + 1 < len(history) else None
         rows = await fetch_items(self.bot, snapshot["id"])
         previous_rows = await fetch_items(self.bot, previous["id"]) if previous is not None else None
+        on_map = self.tab == TAB_MAP
+        shown = history[0] if on_map else snapshot
         self.tab, pages, self.image, self.image_name = await tab_pages(
             self.bot,
             self.tab,
-            snapshot=snapshot,
+            snapshot=shown,
             stockpile=stockpile,
             rows=rows,
             previous_rows=previous_rows,
@@ -1389,27 +1380,32 @@ class ContentsView(ImportActions, BaseView):
             map_mode=self.map_mode,
         )
         self.page = max(0, min(self.page, len(pages) - 1))
-        head = contents_header(snapshot, stockpile)
-        if index > 0:
-            head.append("Viewing an older import. Press **Back** to go towards the newest one, or pick one from the list.")
+        head = "\n".join(contents_header(shown, stockpile, older=index > 0 and not on_map))
+        body = pages[self.page]
         embed = discord.Embed(
             title=clip(f"Inventory: {display_name(snapshot, stockpile)}", 256),
-            description=clip("\n".join(head) + "\n\n" + pages[self.page], 4096),
+            description=clip(f"{head}\n\n{body}" if body else head, 4096),
             colour=Colour.PRIVATE if stockpile is not None and stockpile["private"] else Colour.INFO,
         )
-        part_text = f" | Part {self.page + 1}/{len(pages)}" if len(pages) > 1 else ""
-        embed.set_footer(text=f"{TAB_LABELS[self.tab]}{part_text} | Snapshot {snapshot['id']}")
+        footer = []
+        if self.tab == TAB_INVENTORY and self.image is not None and previous_rows is not None:
+            footer.append(DELTA_LEGEND)
+        if len(pages) > 1:
+            footer.append(f"Part {self.page + 1}/{len(pages)}")
+        if footer:
+            embed.set_footer(text=" | ".join(footer))
         if self.image is not None:
             embed.set_image(url=f"attachment://{self.image_name}")
         add_tab_buttons(self, self.tab, self._tab_switcher, row=0)
-        await self._add_history_select(history, index)
-        self._button("Back", discord.ButtonStyle.secondary, self._newer, row=2, disabled=index == 0)
-        self._button(f"Page {index + 1}/{len(history)}", discord.ButtonStyle.secondary, None, row=2, disabled=True)
-        self._button("Next", discord.ButtonStyle.secondary, self._older, row=2, disabled=index >= len(history) - 1)
-        self._button("Import new contents", discord.ButtonStyle.success, self._import, row=2)
         if self.tab == TAB_MAP:
-            add_map_switch(self, self.map_mode, self._map_switcher, row=3)
+            add_map_switch(self, self.map_mode, self._map_switcher, row=1)
         else:
+            await self._add_history_select(history, index)
+            self._button("Back", discord.ButtonStyle.secondary, self._newer, row=2, disabled=index == 0)
+            self._button(f"Page {index + 1}/{len(history)}", discord.ButtonStyle.secondary, None, row=2, disabled=True)
+            self._button("Next", discord.ButtonStyle.secondary, self._older, row=2, disabled=index >= len(history) - 1)
+        self._button("Import", discord.ButtonStyle.success, self._import, row=2)
+        if self.tab != TAB_MAP:
             add_page_buttons(self, self.page, len(pages), self._previous, self._next, row=3)
         self.add_import_actions(latest, row=4)
         return None, embed
@@ -1432,7 +1428,7 @@ class ContentsView(ImportActions, BaseView):
                     default=position == index,
                 )
             )
-        select = discord.ui.Select(placeholder="Pick an import from the history...", options=options, row=1)
+        select = discord.ui.Select(placeholder="Import history...", options=options, row=1)
         select.callback = self._picked
         self.add_item(select)
 
@@ -1465,7 +1461,7 @@ class ContentsView(ImportActions, BaseView):
         if self.outcome is not None:
             parts.extend(import_notes(self.outcome))
             if not self.outcome.kept and not self.linked:
-                parts.append("These contents are not linked to a tracked stockpile. Track them as a stockpile, link them to an existing one, or keep them unlinked.")
+                parts.append("Track these contents as a stockpile, link them to an existing one, or keep them unlinked.")
         text = "\n".join(part for part in parts if part)
         return clip(text, 1900) if text else None
 
@@ -1583,7 +1579,7 @@ class StockpileFromExportModal(BaseModal):
             await deny(
                 interaction,
                 "That text reached Discord's 4000 character limit for forms, so the end of it was probably cut off. "
-                "Nothing was saved. Save it as a .txt file, use `/inventory upload`, then press **Track as stockpile**.",
+                "Nothing was saved. Save it as a .txt file, use `/inventory upload`, then press **Track as Stockpile**.",
             )
             return
         await create_stockpile_from_export(
@@ -1693,6 +1689,386 @@ async def create_stockpile_from_export(
     await panel.send(interaction, notice="\n".join(notes))
 
 
+def age_text(seconds: int) -> str:
+    seconds = max(0, int(seconds))
+    if seconds < 3600:
+        return f"{max(1, seconds // 60)}m"
+    if seconds < 86400:
+        return f"{seconds // 3600}h"
+    return f"{seconds // 86400}d"
+
+
+def freshness(seconds: int) -> int:
+    hours = seconds / 3600
+    if hours < 6:
+        return 0
+    if hours < 24:
+        return 1
+    if hours < 72:
+        return 2
+    return 3
+
+
+def stale_note(snapshot: dict, now: int) -> str:
+    if now - snapshot["imported_at"] >= STALE_SECONDS:
+        return " - **out of date**"
+    return ""
+
+
+def card_amount(holding: Holding) -> str:
+    if holding.crates and holding.loose:
+        return f"{holding.crates:,} crates + {holding.loose:,}"
+    if holding.crates:
+        return f"{holding.crates:,} {'crate' if holding.crates == 1 else 'crates'}"
+    return f"{holding.loose:,}"
+
+
+@dataclass
+class StockpileState:
+    value: str
+    name: str
+    location: str
+    snapshot: dict | None
+    stockpile: dict | None
+
+
+async def all_stockpile_states(bot: FoxBot, member: discord.Member) -> list[StockpileState]:
+    states: list[StockpileState] = []
+    seen: set[str] = set()
+    for snapshot, stockpile in await visible_latest(bot, member):
+        if stockpile is not None:
+            seen.add(stockpile["id"])
+        states.append(
+            StockpileState(
+                contents_value(snapshot),
+                display_name(snapshot, stockpile),
+                display_location(snapshot, stockpile),
+                snapshot,
+                stockpile,
+            )
+        )
+    for stockpile in (await guild_stockpiles(bot, member.guild.id)).values():
+        if stockpile["id"] in seen or not await can_see_stockpile(bot, member, stockpile):
+            continue
+        states.append(
+            StockpileState(
+                STOCKPILE_PREFIX + stockpile["id"],
+                stockpile["name"],
+                entries.location_label(stockpile["hex"], stockpile["region"]),
+                None,
+                stockpile,
+            )
+        )
+    return states
+
+
+def aggregate(groups: list[list[dict]], category: str | None) -> list[dict]:
+    combined: dict[tuple[str, bool], dict] = {}
+    for rows in groups:
+        for row in rows:
+            if category and category_of(row) != category:
+                continue
+            key = (row["item_code"], bool(row["crated"]))
+            if key in combined:
+                combined[key]["quantity"] += row["quantity"]
+            else:
+                combined[key] = dict(row)
+    return list(combined.values())
+
+
+@dataclass
+class TotalsData:
+    states: list[StockpileState]
+    current: list[dict]
+    before: list[dict]
+    after: list[dict]
+    compared: int
+
+
+async def totals_data(bot: FoxBot, member: discord.Member, category: str | None) -> TotalsData:
+    states = await all_stockpile_states(bot, member)
+    filled = [state for state in states if state.snapshot is not None]
+    contents = await items_for(bot, [state.snapshot["id"] for state in filled])
+    before: list[list[dict]] = []
+    after: list[list[dict]] = []
+    for state in filled:
+        previous = await previous_snapshot(bot, state.snapshot)
+        if previous is not None:
+            before.append(await fetch_items(bot, previous["id"]))
+            after.append(contents[state.snapshot["id"]])
+    current = aggregate([contents[state.snapshot["id"]] for state in filled], category)
+    return TotalsData(states, current, aggregate(before, category), aggregate(after, category), len(after))
+
+
+def state_line(state: StockpileState, now: int) -> str:
+    head = f"**{md(state.name)}** - {md(state.location)}"
+    if state.snapshot is None:
+        return f"{head}: nothing imported yet"
+    return f"{head}: updated {timeutil.relative(state.snapshot['imported_at'])}{stale_note(state.snapshot, now)}"
+
+
+def state_order(state: StockpileState) -> tuple:
+    if state.snapshot is None:
+        return (0, 0, state.name.casefold())
+    return (1, state.snapshot["imported_at"], state.name.casefold())
+
+
+def freshness_note(states: list[StockpileState], now: int) -> str:
+    never = sum(1 for state in states if state.snapshot is None)
+    stale = sum(1 for state in states if state.snapshot is not None and now - state.snapshot["imported_at"] >= STALE_SECONDS)
+    parts = []
+    if stale:
+        parts.append(f"{stale} out of date (not updated for over a day)")
+    if never:
+        parts.append(f"{never} with nothing imported yet")
+    return ", ".join(parts)
+
+
+async def totals_tab(
+    bot: FoxBot, tab: str, data: TotalsData, category: str | None, now: int
+) -> tuple[list[str], bytes | None, str, list[list[StockpileState]]]:
+    filled = [state for state in data.states if state.snapshot is not None]
+    if tab == TAB_CHANGES:
+        if data.compared == 0:
+            return ["None of the stockpiles has an earlier import to compare with yet."], None, "", []
+        lines = [f"Latest import of each stockpile compared with the one before ({data.compared} of {plural(len(filled), 'stockpile')})."]
+        changes = diff_items(data.before, data.after)
+        if not changes:
+            return ["\n".join(lines) + "\n\nNothing changed."], None, "", []
+        lines.append("")
+        lines.extend(change_line(change) for change in changes)
+        return [page.strip() for page in chunk_lines(lines, TAB_PAGE_BUDGET)], None, "", []
+    if tab == TAB_STOCKPILES:
+        ordered = sorted(data.states, key=state_order)
+        if not ordered:
+            return ["No stockpiles are tracked or imported yet."], None, "", []
+        groups = [ordered[index : index + PICKS_PER_PART] for index in range(0, len(ordered), PICKS_PER_PART)]
+        note = freshness_note(ordered, now)
+        head = f"{plural(len(ordered), 'stockpile')}" + (f": {note}." if note else ".")
+        pages = [clip(head + "\n\n" + "\n".join(state_line(state, now) for state in group), 4000) for group in groups]
+        return pages, None, "", groups
+    if tab == TAB_MAP:
+        if not data.states:
+            return ["No stockpiles are tracked or imported yet."], None, "", []
+        points = []
+        for state in data.states:
+            spot = await state_spot(bot, state)
+            points.append((spot, state.name))
+        body, image = await points_map(bot, points)
+        return [body], image, MAP_FILENAME, []
+    image = await render_grid(grid_sections(data.current, None))
+    scope = f" in {category}" if category else ""
+    summary = f"{plural(len(filled), 'stockpile')}{scope} | {stock_totals(data.current)}"
+    note = freshness_note(data.states, now)
+    if note:
+        summary += f"\n{note[0].upper()}{note[1:]}."
+    if image is not None:
+        return [summary], image, GRID_FILENAME, []
+    pages = numbers_pages(data.current)
+    pages[0] = summary + "\n\n" + pages[0]
+    return pages, None, "", []
+
+
+async def state_spot(bot: FoxBot, state: StockpileState) -> MapSpot:
+    if state.snapshot is not None:
+        return await map_spot(bot, state.snapshot, state.stockpile)
+    stockpile = state.stockpile
+    key = bot.locations.map_key(stockpile["hex"])
+    position = bot.locations.position(stockpile["hex"], stockpile["region"])
+    if key is None:
+        return MapSpot(None, stockpile["hex"], stockpile["region"])
+    if position is None:
+        return MapSpot(key, stockpile["hex"], stockpile["region"], source="hex")
+    return MapSpot(key, stockpile["hex"], stockpile["region"], position[0], position[1], "town")
+
+
+async def points_map(bot: FoxBot, points: list[tuple[MapSpot, str]]) -> tuple[str, bytes | None]:
+    placed = [(spot, label) for spot, label in points if spot.key is not None and spot.x is not None]
+    missing = [label for spot, label in points if spot.key is None or spot.x is None]
+    approximate = sum(1 for spot, _ in placed if spot.source == "town")
+    lines = [f"{plural(len(placed), 'stockpile')} on the map."]
+    if approximate:
+        lines.append(f"{approximate} orange {'dot is' if approximate == 1 else 'dots are'} approximate (town position).")
+    if missing:
+        lines.append(clip(f"Not on the map: {', '.join(md(label) for label in missing)}.", 1500))
+    image = None
+    if placed and mapimages.available():
+        names = {hex_.key: hex_.name for hex_ in bot.locations.hexes.values()}
+        image = await asyncio.to_thread(
+            mapimages.render_world_points,
+            [(spot.key, spot.x, spot.y, spot.source == "town", label) for spot, label in placed],
+            names=names,
+        )
+    return "\n".join(lines), image
+
+
+class TotalsView(BaseView):
+    def __init__(self, bot: FoxBot, guild_id: int, owner_id: int, category: str | None = None):
+        super().__init__(owner_id=owner_id)
+        self.bot = bot
+        self.guild_id = guild_id
+        self.category = category
+        self.tab = TAB_INVENTORY
+        self.page = 0
+        self.image: bytes | None = None
+        self.image_name = ""
+        self.picks: list[StockpileState] = []
+
+    async def _render(self, interaction: discord.Interaction) -> tuple[str | None, discord.Embed | None]:
+        member = await interaction_member(interaction, self.guild_id)
+        if member is None:
+            return "This only works inside the server.", None
+        if not await self.bot.perms.has(member, GROUP):
+            return "You need the **Inventory** permission to see the totals.", None
+        now = timeutil.now()
+        data = await totals_data(self.bot, member, self.category)
+        pages, self.image, self.image_name, groups = await totals_tab(self.bot, self.tab, data, self.category, now)
+        self.page = max(0, min(self.page, len(pages) - 1))
+        self.picks = groups[self.page] if groups else []
+        title = f"Inventory Totals: {self.category}" if self.category else "Inventory Totals"
+        embed = discord.Embed(title=title, description=clip(pages[self.page], 4096), colour=Colour.INFO)
+        part_text = f" | Part {self.page + 1}/{len(pages)}" if len(pages) > 1 else ""
+        embed.set_footer(text=f"Latest import of each stockpile{part_text}")
+        if self.image is not None:
+            embed.set_image(url=f"attachment://{self.image_name}")
+        self.clear_items()
+        add_tab_buttons(self, self.tab, self._tab_switcher, row=0, tabs=TOTAL_TABS)
+        if self.picks:
+            select = discord.ui.Select(
+                placeholder="Open a stockpile's inventory...",
+                options=[
+                    option(
+                        f"{state.name} - {state.location}",
+                        state.value,
+                        "No contents imported yet"
+                        if state.snapshot is None
+                        else f"Updated {age_text(now - state.snapshot['imported_at'])} ago",
+                    )
+                    for state in self.picks
+                ],
+                row=1,
+            )
+            select.callback = self._picked
+            self.add_item(select)
+        add_page_buttons(self, self.page, len(pages), self._previous, self._next, row=2)
+        return None, embed
+
+    async def send(self, interaction: discord.Interaction) -> None:
+        error, embed = await self._render(interaction)
+        if error is not None:
+            await deny(interaction, error)
+            return
+        await reply(interaction, embed=embed, view=self, files=image_file(self.image, self.image_name) or None)
+
+    async def show(self, interaction: discord.Interaction) -> None:
+        error, embed = await self._render(interaction)
+        if error is not None:
+            await edit(interaction, content=error, embed=None, attachments=[], view=None)
+            return
+        await edit(interaction, content=None, embed=embed, attachments=image_file(self.image, self.image_name), view=self)
+
+    def _tab_switcher(self, tab: str):
+        async def switch(interaction: discord.Interaction) -> None:
+            self.tab = tab
+            self.page = 0
+            await self.show(interaction)
+
+        return switch
+
+    async def _previous(self, interaction: discord.Interaction) -> None:
+        self.page = max(0, self.page - 1)
+        await self.show(interaction)
+
+    async def _next(self, interaction: discord.Interaction) -> None:
+        self.page += 1
+        await self.show(interaction)
+
+    async def _picked(self, interaction: discord.Interaction) -> None:
+        select = next(item for item in self.children if isinstance(item, discord.ui.Select))
+        await open_contents(self.bot, interaction, str(select.values[0]) if select.values else "")
+
+
+class FindView(BaseView):
+    def __init__(
+        self,
+        bot: FoxBot,
+        owner_id: int,
+        *,
+        title: str,
+        pages: list[str],
+        image: bytes | None,
+        picks: list[tuple[str, str, str]],
+        places: list[tuple[dict, dict | None, str]],
+    ):
+        super().__init__(owner_id=owner_id)
+        self.bot = bot
+        self.title = title
+        self.pages = pages
+        self.image = image
+        self.picks = picks
+        self.places = places
+        self.page = 0
+        self.tab = TAB_RESULTS
+        self.map_text = ""
+        self.map_image: bytes | None = None
+        self.map_ready = False
+
+    async def _build(self) -> tuple[discord.Embed, list[discord.File]]:
+        self.clear_items()
+        add_tab_buttons(self, self.tab, self._tab_switcher, row=0, tabs=FIND_TABS)
+        if self.picks:
+            select = discord.ui.Select(
+                placeholder="Open a stockpile's inventory...",
+                options=[option(label, value, description) for value, label, description in self.picks[:25]],
+                row=1,
+            )
+            select.callback = self._picked
+            self.add_item(select)
+        if self.tab == TAB_MAP:
+            if not self.map_ready:
+                points = [(await map_spot(self.bot, snapshot, stockpile), label) for snapshot, stockpile, label in self.places]
+                self.map_text, self.map_image = await points_map(self.bot, points)
+                self.map_ready = True
+            embed = discord.Embed(title=self.title, description=self.map_text, colour=Colour.INFO)
+            if self.map_image is not None:
+                embed.set_image(url=f"attachment://{MAP_FILENAME}")
+            return embed, image_file(self.map_image, MAP_FILENAME)
+        add_page_buttons(self, self.page, len(self.pages), self._previous, self._next, row=2)
+        embed = discord.Embed(title=self.title, description=clip(self.pages[self.page], 4096), colour=Colour.INFO)
+        if len(self.pages) > 1:
+            embed.set_footer(text=f"Part {self.page + 1}/{len(self.pages)}")
+        if self.image is not None:
+            embed.set_image(url=f"attachment://{CARDS_FILENAME}")
+        return embed, image_file(self.image, CARDS_FILENAME)
+
+    async def send(self, interaction: discord.Interaction) -> None:
+        embed, files = await self._build()
+        await reply(interaction, embed=embed, view=self, files=files or None)
+
+    async def show(self, interaction: discord.Interaction) -> None:
+        embed, files = await self._build()
+        await edit(interaction, embed=embed, attachments=files, view=self)
+
+    def _tab_switcher(self, tab: str):
+        async def switch(interaction: discord.Interaction) -> None:
+            self.tab = tab
+            await self.show(interaction)
+
+        return switch
+
+    async def _previous(self, interaction: discord.Interaction) -> None:
+        self.page = max(0, self.page - 1)
+        await self.show(interaction)
+
+    async def _next(self, interaction: discord.Interaction) -> None:
+        self.page = min(len(self.pages) - 1, self.page + 1)
+        await self.show(interaction)
+
+    async def _picked(self, interaction: discord.Interaction) -> None:
+        select = next(item for item in self.children if isinstance(item, discord.ui.Select))
+        await open_contents(self.bot, interaction, str(select.values[0]) if select.values else "")
+
+
 async def show_find(bot: FoxBot, interaction: discord.Interaction, query: str) -> None:
     if not await check_group(interaction, GROUP):
         return
@@ -1720,79 +2096,67 @@ async def show_find(bot: FoxBot, interaction: discord.Interaction, query: str) -
             results.append((holding, snapshot, stockpile))
     results.sort(key=lambda r: (-r[0].units, display_name(r[1], r[2]).casefold()))
     label = item.name if item is not None else query
-    lines = []
-    if results:
-        grand = sum(holding.units for holding, _, _ in results)
-        places = len({group_key(snapshot) for _, snapshot, _ in results})
-        lines.append(f"**{grand}** units in {plural(places, 'stockpile')} (latest import of each).")
-        lines.append("")
-    for holding, snapshot, stockpile in results:
-        named = f" {md(holding.name)}:" if item is None else ":"
-        lines.append(
-            f"{describe(snapshot, stockpile)}{named} {amount_text(holding.crates, holding.loose, holding.units)}, "
-            f"data {timeutil.relative(snapshot['imported_at'])}"
+    title = clip(f"Find: {label}", 256)
+    if not results:
+        await reply(
+            interaction,
+            embed=discord.Embed(title=title, description=f"No imported stockpile you can see holds **{md(label)}**.", colour=Colour.INFO),
         )
-    embeds = paginate_embeds(
-        clip(f"Find: {label}", 256),
-        lines,
-        colour=Colour.INFO,
-        empty=f"No imported stockpile you can see holds **{md(label)}**.",
-        footer="Only you can see this. Data is as old as the last import.",
-    )
-    attachments: list[tuple[str, bytes]] = []
-    if item is not None and itemimages.available():
-        icon = await asyncio.to_thread(itemimages.render_icon, item.code, item.name)
-        if icon is not None:
-            attachments.append((ICON_FILENAME, icon))
-            for embed in embeds:
-                embed.set_thumbnail(url=f"attachment://{ICON_FILENAME}")
-    await EmbedPaginator(embeds, owner_id=interaction.user.id, attachments=attachments).start(interaction)
+        return
+    now = timeutil.now()
+    places = len({group_key(snapshot) for _, snapshot, _ in results})
+    stale = len({group_key(snapshot) for _, snapshot, _ in results if now - snapshot["imported_at"] >= STALE_SECONDS})
+    if item is not None:
+        crates = sum(holding.crates for holding, _, _ in results)
+        loose = sum(holding.loose for holding, _, _ in results)
+        lines = [f"{amount_text(crates, loose)} in {plural(places, 'stockpile')}."]
+    else:
+        lines = [f"{plural(len(results), 'match', 'matches')} in {plural(places, 'stockpile')}."]
+    if stale:
+        lines.append(f"{stale} of them {'is' if stale == 1 else 'are'} out of date (not updated for over a day).")
+    lines.append("")
+    cards = []
+    picks: dict[str, tuple[str, str, str]] = {}
+    holders: dict[str, tuple[dict, dict | None, list[str]]] = {}
+    for holding, snapshot, stockpile in results:
+        age = now - snapshot["imported_at"]
+        named = f" {md(holding.name)}" if item is None else ""
+        lines.append(
+            f"{describe(snapshot, stockpile, with_type=False)}:{named} {amount_text(holding.crates, holding.loose)} - "
+            f"updated {timeutil.relative(snapshot['imported_at'])}{stale_note(snapshot, now)}"
+        )
+        cards.append(
+            itemimages.Card(
+                holding.code,
+                holding.name,
+                card_amount(holding),
+                display_name(snapshot, stockpile),
+                display_region(snapshot, stockpile) or display_hex(snapshot, stockpile),
+                holding.crates > 0,
+                age_text(age),
+                freshness(age),
+            )
+        )
+        value = contents_value(snapshot)
+        picks.setdefault(
+            value,
+            (value, f"{display_name(snapshot, stockpile)} - {display_location(snapshot, stockpile)}", f"Updated {age_text(age)} ago"),
+        )
+        holders.setdefault(value, (snapshot, stockpile, []))[2].append(card_amount(holding))
+    image = await asyncio.to_thread(itemimages.render_cards, cards) if itemimages.available() else None
+    pages = [page.strip() for page in chunk_lines(lines, TAB_PAGE_BUDGET)]
+    located = [
+        (snapshot, stockpile, f"{display_name(snapshot, stockpile)} - {amounts[0]}" if len(amounts) == 1 else display_name(snapshot, stockpile))
+        for snapshot, stockpile, amounts in holders.values()
+    ]
+    view = FindView(bot, interaction.user.id, title=title, pages=pages, image=image, picks=list(picks.values()), places=located)
+    await view.send(interaction)
 
 
 async def show_totals(bot: FoxBot, interaction: discord.Interaction, category: str | None = None) -> None:
     if not await check_group(interaction, GROUP):
         return
-    member = await interaction_member(interaction)
-    rows = await visible_latest(bot, member)
-    contents = await items_for(bot, [snapshot["id"] for snapshot, _ in rows])
-    totals: dict[str, Holding] = {}
-    for snapshot, _ in rows:
-        for code, holding in holdings(contents[snapshot["id"]], snapshot["id"]).items():
-            total = totals.get(code)
-            if total is None:
-                totals[code] = holding
-                continue
-            total.crates += holding.crates
-            total.loose += holding.loose
-            total.units += holding.units
-            total.stockpiles |= holding.stockpiles
-    grouped: dict[str, list[Holding]] = {}
-    for holding in totals.values():
-        if category and holding.category != category:
-            continue
-        grouped.setdefault(holding.category, []).append(holding)
-    lines = []
-    for name in sorted(grouped, key=lambda c: (category_index(c), c)):
-        lines.append(f"**{md(name)}**")
-        for holding in sorted(grouped[name], key=lambda h: h.name.casefold()):
-            lines.append(
-                f"{md(holding.name)}: {amount_text(holding.crates, holding.loose, holding.units)} "
-                f"in {plural(len(holding.stockpiles), 'stockpile')}"
-            )
-    title = f"Inventory Totals: {category}" if category else "Inventory Totals"
-    embeds = paginate_embeds(
-        title,
-        lines,
-        colour=Colour.INFO,
-        empty="No imported contents match." if rows else "No stockpile contents have been imported yet.",
-        footer=f"Latest import of {plural(len(rows), 'stockpile')} you can see",
-    )
-    image = await render_grid(totals_sections(grouped))
-    attachments: list[tuple[str, bytes]] = []
-    if image is not None:
-        attachments.append((GRID_FILENAME, image))
-        embeds[0].set_image(url=f"attachment://{GRID_FILENAME}")
-    await EmbedPaginator(embeds, owner_id=interaction.user.id, attachments=attachments, attachment_pages={0}).start(interaction)
+    await TotalsView(bot, interaction.guild_id, interaction.user.id, category).send(interaction)
 
 
 def safe_cell(value) -> str:
@@ -1897,10 +2261,9 @@ class InventoryBoard:
 
         def line(entry: dict) -> str:
             snapshot, stockpile = entry["snapshot"], entry["stockpile"]
-            kind = display_type(snapshot, stockpile)
             tracked = "" if stockpile is not None else " [not tracked]"
             return (
-                f"**{md(display_name(snapshot, stockpile))}**{f' ({md(kind)})' if kind else ''}{tracked} - "
+                f"**{md(display_name(snapshot, stockpile))}**{tracked} - "
                 f"{plural(counts.get(snapshot['id'], 0), 'item type')}, updated {timeutil.relative(snapshot['imported_at'])}"
             )
 
@@ -1910,7 +2273,7 @@ class InventoryBoard:
             [BOARD_HELP, "", *lines] if lines else [],
             colour=Colour.INFO,
             empty=f"{BOARD_HELP}\n\nNo stockpile contents have been imported yet.",
-            footer=f"{plural(len(latest), 'stockpile')} with imported contents | Updates automatically",
+            footer=f"{plural(len(latest), 'stockpile')} with contents",
             overflow_hint="Too many to show here. Use /inventory view or /find.",
         )
         recent = sorted(latest, key=lambda r: (-r[0]["imported_at"], -r[0]["id"]))[:25]
@@ -1926,7 +2289,7 @@ class InventoryBoard:
         return BoardRender(
             embeds=embeds,
             options=options,
-            placeholder="View a stockpile's contents (latest imports first)...",
+            placeholder="View a stockpile's contents...",
             buttons=[
                 BoardButton("import", "Import Contents", discord.ButtonStyle.success),
                 BoardButton("find", "Find Item", discord.ButtonStyle.primary),

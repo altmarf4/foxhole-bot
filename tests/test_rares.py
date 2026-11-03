@@ -90,6 +90,8 @@ async def test_status_labels(world):
     assert rares.status_for(51)[0] == "Moderate"
     assert rares.status_for(200)[0] == "Moderate"
     assert rares.status_for(201)[0] == "Stocked"
+    assert rares.status_for(60, [100, 1000])[0] == "Low"
+    assert rares.status_for(1001, [100, 1000])[0] == "Stocked"
 
 
 async def test_board_render_shows_count_status_and_last_ten(world):
@@ -100,7 +102,7 @@ async def test_board_render_shows_count_status_and_last_ten(world):
     assert [button.label for button in render.buttons] == ["Add", "Remove", "Set", "Log"]
     assert not render.options
     embed = render.embeds[0]
-    assert "120 Rare Alloys" in embed.description
+    assert "120 Rares" in embed.description
     assert "Status: **Moderate**" in embed.description
     assert embed.description.count("added **") == 10
     assert "note 14" in embed.description and "note 4" not in embed.description
@@ -123,7 +125,7 @@ async def test_board_add_flow(world):
     modal = click.response.modal
     assert isinstance(modal, world.rares.ChangeModal)
     assert len(modal.children) <= 5
-    assert modal.title == "Add Rare Alloys"
+    assert modal.title == "Add Rares"
     set_label_value(modal.amount_field, "1,250")
     set_label_value(modal.note_field, "From KM")
     submit = make_interaction(world.bot, world.keeper, channel=world.channel)
@@ -142,7 +144,7 @@ async def test_board_remove_and_set_flows(world):
     click = make_interaction(world.bot, world.keeper, channel=world.channel)
     await board.on_button(click, "remove")
     modal = click.response.modal
-    assert modal.title == "Remove Rare Alloys"
+    assert modal.title == "Remove Rares"
     set_label_value(modal.amount_field, "100")
     set_label_value(modal.note_field, "")
     submit = make_interaction(world.bot, world.keeper, channel=world.channel)
@@ -153,7 +155,7 @@ async def test_board_remove_and_set_flows(world):
     click = make_interaction(world.bot, world.keeper, channel=world.channel)
     await board.on_button(click, "set")
     modal = click.response.modal
-    assert modal.title == "Set Rare Alloys Count"
+    assert modal.title == "Set Rares Count"
     set_label_value(modal.amount_field, "0")
     set_label_value(modal.note_field, "War reset")
     submit = make_interaction(world.bot, world.keeper, channel=world.channel)
@@ -254,19 +256,19 @@ async def test_voice_rename_is_debounced_and_ends_on_latest(world):
     world.cog.voice_interval = 0.3
     await change(world, "add", 1)
     await asyncio.sleep(0.05)
-    assert [name for _, name in voice.renames] == ["Rare Alloys: 1"]
+    assert [name for _, name in voice.renames] == ["Rares: 1"]
     await change(world, "add", 2)
     await change(world, "add", 3)
     await asyncio.sleep(0.05)
     assert len(voice.renames) == 1
     await change(world, "remove", 1)
     await world.cog.wait_voice()
-    assert [name for _, name in voice.renames] == ["Rare Alloys: 1", "Rare Alloys: 5"]
+    assert [name for _, name in voice.renames] == ["Rares: 1", "Rares: 5"]
     assert voice.renames[1][0] - voice.renames[0][0] >= 0.25
 
 
 async def test_voice_skips_unchanged_name_and_survives_errors(world):
-    voice = make_voice(world.guild, name="Rare Alloys: 10")
+    voice = make_voice(world.guild, name="Rares: 10")
     await world.bot.settings.set(world.guild.id, keys.RARES_VOICE_CHANNEL, voice.id)
     world.cog.voice_interval = 0.01
     await change(world, "add", 10)
@@ -290,7 +292,7 @@ async def test_sync_voice_helper(world):
     await world.bot.settings.set(world.guild.id, keys.RARES_VOICE_CHANNEL, voice.id)
     await world.rares.sync_voice(world.bot, world.guild.id)
     await world.cog.wait_voice()
-    assert voice.name == "Rare Alloys: 42"
+    assert voice.name == "Rares: 42"
 
 
 async def test_count_command_is_public(world):
@@ -300,7 +302,7 @@ async def test_count_command_is_public(world):
     kind, payload = interaction.recorder.last
     assert kind == "send" and payload["ephemeral"] is False
     fields = {field.name: field.value for field in payload["embed"].fields}
-    assert fields == {"Count": "**30** Rare Alloys", "Status": "Low"}
+    assert fields == {"Count": "**30** Rares", "Status": "Low"}
 
 
 async def test_board_command_requires_admin(world):

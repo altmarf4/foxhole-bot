@@ -60,7 +60,8 @@ async def test_help_covers_every_command_and_subcommand(world):
     pages = help_module.build_pages(bot)
     text = "\n".join(all_text(page) for page in pages)
     top_level = bot.tree.get_commands(type=discord.AppCommandType.chat_input)
-    assert {c.name for c in top_level} >= {"settings", "permissions", "setup", "purge", "role", "opsec", "help", "stockpile"}
+    assert {c.name for c in top_level} >= {"settings", "setup", "purge", "role", "opsec", "help", "stockpile"}
+    assert "permissions" not in {c.name for c in top_level}
     for command in top_level:
         assert f"**/{command.name}**" in pages[0].description
         assert any(page.title.startswith(f"/{command.name}") for page in pages)
@@ -78,12 +79,12 @@ async def test_help_pages_follow_preferred_order_and_intros(world):
     bot, help_module, _, _ = world
     pages = help_module.build_pages(bot)
     titles = [page.title for page in pages[1:]]
-    assert titles == ["/setup", "/stockpile", "/settings", "/permissions", "/purge", "/role", "/opsec", "/help"]
+    assert titles == ["/setup", "/stockpile", "/settings", "/purge", "/role", "/opsec", "/help"]
     stockpile_page = pages[2]
     assert stockpile_page.description.startswith(help_module.INTROS["stockpile"])
     rare_intro = help_module.INTROS["rare"]
-    assert "Rare Alloys" in rare_intro
-    for name in ["stockpile", "ship", "msupps", "inventory", "find", "order", "rare", "ticket", "mine", "settings", "permissions", "setup", "purge", "role", "opsec"]:
+    assert "Rares" in rare_intro
+    for name in ["stockpile", "ship", "msupps", "inventory", "find", "order", "rare", "ticket", "mine", "settings", "setup", "purge", "role", "opsec"]:
         assert name in help_module.INTROS
 
 

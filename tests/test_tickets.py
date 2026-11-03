@@ -225,8 +225,8 @@ async def test_open_creates_channels_and_exactly_one_card(world):
 
     assert len(channel.sent) == 1
     card = channel.sent[0]
-    assert card["content"] == world.staff_role.mention
-    assert card["allowed_mentions"].roles == [world.staff_role]
+    assert card["content"] is None
+    assert card["allowed_mentions"].roles is False
     assert card["allowed_mentions"].users is False and card["allowed_mentions"].everyone is False
     embed = card["embed"]
     assert embed.title == "Ticket 0001 - KM Navy"
@@ -300,14 +300,25 @@ async def test_open_refused_without_services(world):
     assert world.created == []
 
 
-async def test_no_staff_roles_means_no_ping_and_everyone_never_pinged(world):
-    await world.bot.perms.set_roles(world.guild.id, "tickets", set())
+async def test_only_the_chosen_ping_targets_are_pinged_and_can_see_the_ticket(world):
+    pinger = add_role(world.guild, "Logi Leads")
+    await world.bot.settings.set(
+        world.guild.id, keys.TICKET_PINGS, {"roles": [pinger.id, world.guild.id, 999999], "users": [world.other.id]}
+    )
+    channel, card, _ = await opened(world)
+    assert card["content"] == f"{pinger.mention} {world.other.mention}"
+    assert card["allowed_mentions"].roles == [pinger]
+    assert card["allowed_mentions"].users == [world.other]
+    assert card["allowed_mentions"].everyone is False
+    assert world.staff_role.mention not in card["content"]
+    overwrites = channel.kwargs["overwrites"]
+    assert overwrites[pinger].view_channel is True and overwrites[world.other].view_channel is True
+    assert overwrites[world.staff_role].view_channel is True
+    assert overwrites[world.guild.default_role].view_channel is False
+    await world.bot.settings.reset(world.guild.id, keys.TICKET_PINGS)
     channel, card, _ = await opened(world)
     assert card["content"] is None
-    await world.bot.perms.set_roles(world.guild.id, "tickets", {world.guild.id, world.staff_role.id})
-    channel, card, _ = await opened(world)
-    assert card["content"] == world.staff_role.mention
-    assert channel.kwargs["overwrites"][world.guild.default_role].view_channel is False
+    assert pinger not in channel.kwargs["overwrites"]
 
 
 async def test_admin_role_gets_channel_access(world):
@@ -315,7 +326,7 @@ async def test_admin_role_gets_channel_access(world):
     await world.bot.settings.set(world.guild.id, keys.ADMIN_ROLE, officer.id)
     channel, card, _ = await opened(world)
     assert channel.kwargs["overwrites"][officer].view_channel is True
-    assert card["content"] == world.staff_role.mention
+    assert card["content"] is None
 
 
 async def test_missing_permissions_give_clear_errors(world):
@@ -369,12 +380,12 @@ async def test_order_service_flow_with_live_cost_stacking_and_rename(world):
     assert len(service_select.options) <= 25 and len(quantity_select.options) == 25
     assert [o.label for o in quantity_select.options][:3] == ["1", "2", "3"]
     assert [o.label for o in service_select.options] == ["Repairs", "Ship Build"]
-    assert service_select.options[1].description == "200 Rare Alloys each"
+    assert service_select.options[1].description == "200 Rares each"
 
     select_values(service_select, ["1"])
     step = make_interaction(world.bot, world.customer, channel=channel)
     await service_select.callback(step)
-    assert "**Ship Build** - 200 Rare Alloys each." in step.recorder.last[1]["content"]
+    assert "**Ship Build** - 200 Rares each." in step.recorder.last[1]["content"]
     assert find_button(panel, "Confirm").disabled
 
     quantity_select = find_select(panel, 1)
@@ -382,7 +393,7 @@ async def test_order_service_flow_with_live_cost_stacking_and_rename(world):
     step = make_interaction(world.bot, world.customer, channel=channel)
     await quantity_select.callback(step)
     content = step.recorder.last[1]["content"]
-    assert "**3x Ship Build**" in content and "**600 Rare Alloys** total" in content
+    assert "**3x Ship Build**" in content and "**600 Rares** total" in content
     assert not find_button(panel, "Confirm").disabled
     assert any(o.default for o in find_select(panel, 0).options)
 
@@ -390,14 +401,14 @@ async def test_order_service_flow_with_live_cost_stacking_and_rename(world):
     await find_button(panel, "Confirm").callback(confirm)
     kind, payload = confirm.recorder.last
     assert kind == "edit"
-    assert "Added **3x Ship Build** (600 Rare Alloys)" in payload["content"]
-    assert "Order total is now **600 Rare Alloys**" in payload["content"]
+    assert "Added **3x Ship Build** (600 Rares)" in payload["content"]
+    assert "Order total is now **600 Rares**" in payload["content"]
     assert find_button(panel, "Confirm").disabled
     assert await world.tickets.items(world.bot, world.guild.id, 1) == [{"service": "Ship Build", "unit_cost": 200, "quantity": 3}]
     values = fields(last_card(world))
-    assert values["Services"] == "3x Ship Build - 600 Rare Alloys"
-    assert values["Total Cost"] == "600 Rare Alloys"
-    assert values["Rares Owed"] == "600 Rare Alloys"
+    assert values["Services"] == "3x Ship Build - 600 Rares"
+    assert values["Total Cost"] == "600 Rares"
+    assert values["Rares Owed"] == "600 Rares"
     assert channel.name == "ticket-km-ship-build-0001"
     assert (await world.tickets.fetch(world.bot, world.guild.id, 1))["renamed"] == 1
 
@@ -408,7 +419,7 @@ async def test_order_service_flow_with_live_cost_stacking_and_rename(world):
         {"service": "Repairs", "unit_cost": 50, "quantity": 1},
     ]
     assert channel.edit.await_count == 1
-    assert fields(last_card(world))["Total Cost"] == "1050 Rare Alloys"
+    assert fields(last_card(world))["Total Cost"] == "1050 Rares"
     assert len(channel.sent) == 1
 
 
@@ -422,8 +433,8 @@ async def test_prices_are_snapshotted_per_line(world):
         {"service": "Ship Build", "unit_cost": 300, "quantity": 1},
     ]
     values = fields(last_card(world))
-    assert values["Services"] == "2x Ship Build - 400 Rare Alloys\n1x Ship Build - 300 Rare Alloys"
-    assert values["Total Cost"] == "700 Rare Alloys"
+    assert values["Services"] == "2x Ship Build - 400 Rares\n1x Ship Build - 300 Rares"
+    assert values["Total Cost"] == "700 Rares"
 
 
 async def test_price_change_while_panel_open_needs_reconfirm(world):
@@ -438,7 +449,7 @@ async def test_price_change_while_panel_open_needs_reconfirm(world):
     confirm = make_interaction(world.bot, world.customer, channel=channel)
     await find_button(panel, "Confirm").callback(confirm)
     content = confirm.recorder.last[1]["content"]
-    assert "changed to **250**" in content and "**500 Rare Alloys** total" in content
+    assert "changed to **250**" in content and "**500 Rares** total" in content
     assert await world.tickets.items(world.bot, world.guild.id, 1) == []
     confirm = make_interaction(world.bot, world.customer, channel=channel)
     await find_button(panel, "Confirm").callback(confirm)
@@ -488,14 +499,14 @@ async def test_remove_service(world):
     panel = click.recorder.last[1]["view"]
     select = find_select(panel)
     assert [o.label for o in select.options] == ["2x Ship Build", "3x Repairs"]
-    assert select.options[0].description == "400 Rare Alloys (200 each)"
+    assert select.options[0].description == "400 Rares (200 each)"
     select_values(select, ["0"])
     pick = make_interaction(world.bot, world.customer, channel=channel)
     await select.callback(pick)
     content = pick.recorder.last[1]["content"]
-    assert "Removed **2x Ship Build**" in content and "**150 Rare Alloys**" in content
+    assert "Removed **2x Ship Build**" in content and "**150 Rares**" in content
     assert await world.tickets.items(world.bot, world.guild.id, 1) == [{"service": "Repairs", "unit_cost": 50, "quantity": 3}]
-    assert fields(last_card(world))["Total Cost"] == "150 Rare Alloys"
+    assert fields(last_card(world))["Total Cost"] == "150 Rares"
     again = make_interaction(world.bot, world.customer, channel=channel)
     await select.callback(again)
     assert "already removed" in again.recorder.last[1]["content"]
@@ -584,10 +595,10 @@ async def test_log_payment_updates_card_and_regiment_stock(world):
     submit = await submit_payment(world, card, channel, world.staff, "250")
     assert submit.recorder.kinds() == ["defer", "followup"]
     content = submit.recorder.last[1]["content"]
-    assert "Logged **+250** Rare Alloys" in content and "350 Rare Alloys still owed" in content
+    assert "Logged **+250** Rares" in content and "350 Rares still owed" in content
     assert "Regiment stock: 0 -> 250" in content
     values = fields(last_card(world))
-    assert values["Rares Paid"] == "250 Rare Alloys" and values["Rares Owed"] == "350 Rare Alloys"
+    assert values["Rares Paid"] == "250 Rares" and values["Rares Owed"] == "350 Rares"
     assert await world.rares.get_count(world.bot, world.guild.id) == 250
     log_row = (await world.rares.log_rows(world.bot, world.guild.id))[0]
     assert (log_row["action"], log_row["amount"], log_row["ticket_number"]) == ("payment", 250, 1)
@@ -596,7 +607,7 @@ async def test_log_payment_updates_card_and_regiment_stock(world):
 
     submit = await submit_payment(world, card, channel, world.staff, "-50")
     assert "Regiment stock: 250 -> 200" in submit.recorder.last[1]["content"]
-    assert fields(last_card(world))["Rares Paid"] == "200 Rare Alloys"
+    assert fields(last_card(world))["Rares Paid"] == "200 Rares"
 
     submit = await submit_payment(world, card, channel, world.staff, "400")
     assert "paid in full" in submit.recorder.last[1]["content"]
@@ -639,8 +650,8 @@ async def test_close_ticket_posts_transcript_and_deletes_channel(world):
     post = log_channel.sent[0]
     summary = fields(post["embed"])
     assert summary["Closed By"] == f"<@{world.customer.id}>"
-    assert summary["Services"] == "2x Repairs - 100 Rare Alloys"
-    assert summary["Rares Paid"] == "60 Rare Alloys" and summary["Rares Owed"] == "40 Rare Alloys"
+    assert summary["Services"] == "2x Repairs - 100 Rares"
+    assert summary["Rares Paid"] == "60 Rares" and summary["Rares Owed"] == "40 Rares"
     assert summary["Notes"] == "Urgent"
     attachment = post["file"]
     assert attachment.filename == "ticket-0001-transcript.txt"
@@ -735,10 +746,10 @@ async def test_overview(world):
     embed = payload["embed"]
     text = embed.description
     assert text.index("**Open** (1)") < text.index("**In Production** (1)")
-    assert "`0001` **KM** - 1000 Rare Alloys" in text and "<#111>" in text and f"<@{world.staff.id}>" in text
-    assert "`0002` **km** - 100 Rare Alloys - unassigned - <#222>" in text
+    assert "`0001` **KM** - 1000 Rares" in text and "<#111>" in text and f"<@{world.staff.id}>" in text
+    assert "`0002` **km** - 100 Rares - unassigned - <#222>" in text
     assert "Navy" not in text
-    assert embed.footer.text == "2 open ticket(s) - 1100 Rare Alloys total"
+    assert embed.footer.text == "2 open tickets - 1100 Rares total"
 
 
 async def test_rares_summary(world):
@@ -750,8 +761,8 @@ async def test_rares_summary(world):
     assert "`0001` **KM** - paid 1000/1000 - paid in full" in embed.description
     assert "`0002` **km** - paid 50/100 - 50 owed" in embed.description
     values = fields(embed)
-    assert values == {"Total Billed": "1100 Rare Alloys", "Total Paid": "1050 Rare Alloys", "Total Owed": "50 Rare Alloys"}
-    assert embed.footer.text == "2 open ticket(s) - 2 closed"
+    assert values == {"Total Billed": "1100 Rares", "Total Paid": "1050 Rares", "Total Owed": "50 Rares"}
+    assert embed.footer.text == "2 open tickets - 2 closed"
     denied = make_interaction(world.bot, world.customer, channel=world.lobby)
     await cog.rares.callback(cog, denied)
     assert "Ticket staff" in denied.recorder.last[1]["content"]
@@ -763,8 +774,8 @@ async def test_leaderboard(world):
     interaction = make_interaction(world.bot, world.staff, channel=world.lobby)
     await cog.leaderboard.callback(cog, interaction)
     embed = interaction.recorder.last[1]["embed"]
-    assert embed.description.splitlines() == ["1. KM - 1150 Rare Alloys", "2. Navy - 150 Rare Alloys"]
-    assert fields(embed) == {"Regiments": "2", "Total Spent": "1300 Rare Alloys"}
+    assert embed.description.splitlines() == ["1. KM - 1150 Rares", "2. Navy - 150 Rares"]
+    assert fields(embed) == {"Regiments": "2", "Total Spent": "1300 Rares"}
     assert "owed" not in embed.description.lower()
     denied = make_interaction(world.bot, world.customer, channel=world.lobby)
     await cog.leaderboard.callback(cog, denied)
@@ -780,7 +791,7 @@ async def test_mine(world):
     assert payload["ephemeral"]
     text = payload["embed"].description
     assert "**Open tickets**" in text and "**Closed tickets**" in text
-    assert "`0001` **KM** - In Production - cost 1000, paid 1000, owed 0 Rare Alloys - <#111>" in text
+    assert "`0001` **KM** - In Production - cost 1000, paid 1000, owed 0 Rares - <#111>" in text
     assert "`0003` **Navy** - closed" in text and "`0004`" in text
     assert "`0002`" not in text
     nobody = make_interaction(world.bot, world.admin, channel=world.lobby)
@@ -814,7 +825,7 @@ async def test_card_stays_within_limits_with_many_lines(world):
     embed = tickets.card_embed(summary)
     assert all(len(field.value) <= EMBED_FIELD_LIMIT for field in embed.fields)
     assert len(embed) <= EMBED_TOTAL_LIMIT
-    assert "more line(s)" in fields(embed)["Services"]
+    assert "more lines" in fields(embed)["Services"]
     closed = tickets.closed_embed(summary, world.staff.id, 1_700_000_000)
     assert len(closed) <= EMBED_TOTAL_LIMIT
     lines = await tickets.items(bot, guild_id, row["number"])
@@ -869,9 +880,26 @@ async def test_free_service_counts_as_ordered(world):
     channel, card, _ = await opened(world)
     await order(world, card["view"], channel, world.customer, "Advice", 1)
     values = fields(last_card(world))
-    assert values["Services"] == "1x Advice - 0 Rare Alloys"
+    assert values["Services"] == "1x Advice - 0 Rares"
     assert values["Rares Owed"] == "Paid in full"
     cog = world.bot.get_cog("Tickets")
     interaction = make_interaction(world.bot, world.staff, channel=world.lobby)
     await cog.rares.callback(cog, interaction)
     assert "paid 0/0 - paid in full" in interaction.recorder.last[1]["embed"].description
+
+
+async def test_ticket_board_lists_services_and_opens_the_form(world):
+    board = world.bot.boards.providers["tickets"]
+    render = await board.render(world.guild)
+    text = render.embeds[0].description
+    assert "**Repairs** - 50 Rares" in text and "**Ship Build** - 200 Rares" in text
+    assert [(button.action, button.label) for button in render.buttons] == [("open", "Open Ticket")]
+    click = make_interaction(world.bot, world.customer, channel=world.lobby)
+    await board.on_button(click, "open")
+    assert isinstance(click.response.modal, world.tickets.OpenTicketModal)
+    for name in ("Ship Build", "Repairs"):
+        await world.bot.db.execute("DELETE FROM ticket_services WHERE guild_id = ? AND name = ?", (world.guild.id, name))
+    assert "No services" in (await board.render(world.guild)).embeds[0].description
+    empty = make_interaction(world.bot, world.customer, channel=world.lobby)
+    await board.on_button(empty, "open")
+    assert "No services are configured" in empty.recorder.last[1]["content"]

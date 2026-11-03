@@ -161,7 +161,7 @@ def grouped_lines(
         for region in sorted(regions, key=lambda r: (r == "", r.lower())):
             indent = INDENT
             if region:
-                lines.append(f"{INDENT}__{md(region)}__")
+                lines.append(f"{INDENT}*{md(region)}*")
                 indent = INDENT * 2
             for entry in sorted(regions[region], key=sort_key):
                 lines.append(f"{indent}{line(entry)}")

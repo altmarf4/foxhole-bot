@@ -12,10 +12,11 @@ PRIORITIES = {
 }
 PRIORITY_ORDER = {name: index for index, name in enumerate(PRIORITIES)}
 
+DEFAULT_RARES_LEVELS = [50, 200]
 RARES_STATUS = [
-    (0, "Empty", 0x95A5A6),
-    (50, "Low", 0xE74C3C),
-    (200, "Moderate", 0xF1C40F),
+    ("Empty", 0x95A5A6),
+    ("Low", 0xE74C3C),
+    ("Moderate", 0xF1C40F),
 ]
 RARES_STOCKED = ("Stocked", 0x2ECC71)
 

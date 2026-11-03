@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from itertools import groupby
 from typing import TYPE_CHECKING, Awaitable, Callable
 
 import discord
@@ -19,25 +20,32 @@ MORE_PLACES = "__more__"
 MAJOR_PLACES = "__major__"
 PAGE_SIZE = 22
 
-LOCATION_TABLES = ("stockpiles", "ships", "msupps_bases", "orders")
-
-
-async def recent_hexes(bot: FoxBot, guild_id: int, limit: int = 25) -> list[str]:
-    union = " UNION ALL ".join(f"SELECT hex FROM {table} WHERE guild_id = ?" for table in LOCATION_TABLES)
-    rows = await bot.db.fetchall(
-        f"SELECT hex, COUNT(*) AS uses FROM ({union}) WHERE hex != '' GROUP BY hex ORDER BY uses DESC, hex LIMIT ?",
-        (*([guild_id] * len(LOCATION_TABLES)), limit),
-    )
-    known = set(bot.locations.hex_names())
-    return [row["hex"] for row in rows if row["hex"] in known]
-
-
-def split_evenly(names: list[str], max_size: int = 25) -> list[list[str]]:
+def letter_groups(names: list[str], max_size: int = 25) -> list[list[str]]:
     if not names:
         return []
-    groups = math.ceil(len(names) / max_size)
-    size = math.ceil(len(names) / groups)
-    return [names[i : i + size] for i in range(0, len(names), size)]
+    target = math.ceil(len(names) / math.ceil(len(names) / max_size))
+    groups: list[list[str]] = []
+    current: list[str] = []
+    for _, bucket in groupby(names, key=lambda name: name[:1].upper()):
+        bucket = list(bucket)
+        if current and len(current) + len(bucket) > max_size:
+            groups.append(current)
+            current = []
+        current += bucket
+        while len(current) > max_size:
+            groups.append(current[:max_size])
+            current = current[max_size:]
+        if len(current) >= target:
+            groups.append(current)
+            current = []
+    if current:
+        groups.append(current)
+    return groups
+
+
+def group_label(names: list[str]) -> str:
+    first, last = names[0][:1].upper(), names[-1][:1].upper()
+    return first if first == last else f"{first}-{last}"
 
 
 class TypedLocationModal(BaseModal, title="Type a location"):
@@ -58,12 +66,12 @@ class TypedLocationModal(BaseModal, title="Type a location"):
 
 
 class LocationPicker(BaseView):
-    def __init__(self, bot: FoxBot, owner_id: int, on_picked: OnPicked, *, prompt: str, recent: list[str]):
+    def __init__(self, bot: FoxBot, owner_id: int, on_picked: OnPicked, *, prompt: str):
         super().__init__(owner_id=owner_id)
         self.bot = bot
         self.on_picked = on_picked
         self.prompt = prompt
-        self.recent = recent
+        self.hex_group = 0
         self.stage = "hex"
         self.hex_name: str | None = None
         self.minor = False
@@ -73,14 +81,14 @@ class LocationPicker(BaseView):
 
     @classmethod
     async def create(cls, bot: FoxBot, interaction: discord.Interaction, on_picked: OnPicked, *, prompt: str) -> LocationPicker:
-        return cls(bot, interaction.user.id, on_picked, prompt=prompt, recent=await recent_hexes(bot, interaction.guild_id))
+        return cls(bot, interaction.user.id, on_picked, prompt=prompt)
 
     async def start(self, interaction: discord.Interaction) -> None:
         await reply(interaction, self.content(), view=self)
 
     def content(self) -> str:
         if self.stage == "hex":
-            return f"{self.prompt}\n**Step 1:** pick the hex."
+            return f"{self.prompt}\n**Step 1:** pick the hex. The letter buttons switch to other hexes."
         if self.stage == "typed" and self.typed is not None:
             if self.typed.known:
                 return f"{self.prompt}\nLocation: **{md(self.typed.label())}**. Press **Continue**."
@@ -109,16 +117,15 @@ class LocationPicker(BaseView):
             self._add_button("Back", discord.ButtonStyle.secondary, self._back, row=0)
 
     def _build_hex(self) -> None:
-        row = 0
-        if self.recent:
-            self._add_select("Hexes your server uses...", self.recent, self._hex_picked, row)
-            row += 1
-        groups = split_evenly(self.bot.locations.hex_names())
-        for group in groups[: 4 - row]:
-            placeholder = f"Other hexes {group[0][0]}-{group[-1][0]}..."
-            self._add_select(placeholder, group, self._hex_picked, row)
-            row += 1
-        self._add_button("Type it instead", discord.ButtonStyle.secondary, self._type_instead, row=4)
+        groups = letter_groups(self.bot.locations.hex_names())
+        if groups:
+            self.hex_group = min(self.hex_group, len(groups) - 1)
+            shown = groups[self.hex_group]
+            self._add_select(f"Pick a hex ({group_label(shown)})...", shown, self._hex_picked, 0)
+        for index, group in enumerate(groups[:4]):
+            style = discord.ButtonStyle.primary if index == self.hex_group else discord.ButtonStyle.secondary
+            self._add_button(group_label(group), style, lambda interaction, i=index: self._show_group(interaction, i), row=1)
+        self._add_button("Type it instead", discord.ButtonStyle.secondary, self._type_instead, row=2)
 
     def _build_town(self) -> None:
         regions = self._regions()
@@ -154,6 +161,10 @@ class LocationPicker(BaseView):
     async def _redraw(self, interaction: discord.Interaction) -> None:
         self._build()
         await edit(interaction, content=self.content(), view=self)
+
+    async def _show_group(self, interaction: discord.Interaction, index: int) -> None:
+        self.hex_group = index
+        await self._redraw(interaction)
 
     async def _hex_picked(self, interaction: discord.Interaction, value: str) -> None:
         self.hex_name = value

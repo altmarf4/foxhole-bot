@@ -6,7 +6,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from foxbot.constants import PRIORITIES, PRIORITY_ORDER, STOCKPILE_LIFETIME_HOURS, Colour
+from foxbot.constants import PRIORITIES, PRIORITY_ORDER, Colour
 from foxbot.core import entries, ids, timeutil
 from foxbot.core import settings as keys
 from foxbot.core.alerts import TimedEntry
@@ -14,7 +14,7 @@ from foxbot.core.boards import BoardButton, BoardRender
 from foxbot.core.locations import Location
 from foxbot.core.locpicker import LocationPicker
 from foxbot.core.permissions import check_admin, check_group, interaction_member
-from foxbot.core.text import chunk_lines, clip, code, fit_board_embeds, md, paginate_embeds
+from foxbot.core.text import chunk_lines, clip, code, fit_board_embeds, md, paginate_embeds, plural
 from foxbot.core.ui import (
     BaseModal,
     BaseView,
@@ -37,7 +37,6 @@ if TYPE_CHECKING:
 
 KIND = "stockpile"
 GROUP = "stockpile"
-LIFETIME_SECONDS = timeutil.hours_to_seconds(STOCKPILE_LIFETIME_HOURS)
 
 SavedCallback = Callable[[discord.Interaction, dict, str], Awaitable[None]]
 
@@ -68,7 +67,7 @@ async def create(
 ) -> dict:
     entry_id = await ids.unique_id(bot.db, "stockpiles")
     now = timeutil.now()
-    expires_at = now + LIFETIME_SECONDS
+    expires_at = now + await lifetime_seconds(bot, guild_id)
     await bot.db.execute(
         "INSERT INTO stockpiles (id, guild_id, name, hex, region, store_type, priority, code, expires_at, private, "
         "created_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -92,9 +91,13 @@ async def update(bot: FoxBot, entry: dict, **fields) -> dict | None:
     return await fetch(bot, entry["guild_id"], entry["id"])
 
 
+async def lifetime_seconds(bot: FoxBot, guild_id: int) -> int:
+    return timeutil.hours_to_seconds(float(await bot.settings.get(guild_id, keys.STOCKPILE_HOURS)))
+
+
 async def refresh_timer(bot: FoxBot, entry: dict, user_id: int) -> dict | None:
     now = timeutil.now()
-    expires_at = now + LIFETIME_SECONDS
+    expires_at = now + await lifetime_seconds(bot, entry["guild_id"])
     updated = await update(bot, entry, expires_at=expires_at, refreshed_by=user_id, refreshed_at=now)
     await bot.alerts.reset(KIND, entry["id"], entry["guild_id"], expires_at, now)
     return updated
@@ -138,9 +141,10 @@ def location_of(entry: dict) -> str:
 
 def board_line(entry: dict, now: int | None = None) -> str:
     who = entry.get("refreshed_by") or entry["created_by"]
+    priority = " (High)" if entry["priority"] == "High" else ""
     return (
-        f"{code(entry['code'])} **{md(entry['name'])}** [{entry['priority']}] "
-        f"{entries.timer_text(entry['expires_at'], now)} - <@{who}>"
+        f"{code(entry['code'])} **{md(entry['name'])}**{priority} "
+        f"{entries.timer_text(entry['expires_at'], now)} - refreshed by <@{who}>"
     )
 
 
@@ -163,29 +167,25 @@ def card_embed(
     now = now if now is not None else timeutil.now()
     colour = Colour.PRIVATE if entry["private"] else PRIORITIES.get(entry["priority"], Colour.MUTED)
     title = f"{'[Private] ' if entry['private'] else ''}{entry['name']}"
-    embed = discord.Embed(title=clip(title, 256), description=md(location_of(entry)), colour=colour)
-    embed.add_field(name="Storage", value=md(entry["store_type"]), inline=True)
+    description = f"{md(entry['store_type'])} - {md(location_of(entry))}"
+    embed = discord.Embed(title=clip(title, 256), description=description, colour=colour)
+    embed.add_field(name="Code", value=code(entry["code"]), inline=True)
     embed.add_field(name="Priority", value=entry["priority"], inline=True)
-    embed.add_field(name="Code", value=f"```{entry['code']}```", inline=False)
     if entry["expires_at"] <= now:
-        timer = "**EXPIRED** - the stockpile is no longer reserved"
+        timer = "**EXPIRED**, no longer reserved"
     else:
-        timer = f"{timeutil.relative(entry['expires_at'])} ({timeutil.full(entry['expires_at'])})"
-    embed.add_field(name="Timer", value=timer, inline=False)
-    embed.add_field(name="Last refreshed", value=entries.refreshed_text(entry), inline=False)
-    embed.add_field(
-        name="Reminder pings",
-        value=", ".join(f"<@&{rid}>" for rid in alert_role_ids) if alert_role_ids else "Logistics role only",
-        inline=False,
-    )
+        timer = f"{timeutil.relative(entry['expires_at'])}\n{timeutil.full(entry['expires_at'])}"
+    embed.add_field(name="Expires", value=timer, inline=True)
+    embed.add_field(name="Last refreshed", value=entries.refreshed_text(entry), inline=True)
+    embed.add_field(name="Added by", value=f"<@{entry['created_by']}> {timeutil.relative(entry['created_at'])}", inline=True)
+    if alert_role_ids:
+        embed.add_field(name="Reminder roles", value=", ".join(f"<@&{rid}>" for rid in alert_role_ids), inline=False)
     if access is not None:
         users, roles = access
         holders = [f"<@{entry['created_by']}> (creator)"]
         holders += [f"<@{uid}>" for uid in sorted(users) if uid != entry["created_by"]]
         holders += [f"<@&{rid}>" for rid in sorted(roles)]
         embed.add_field(name="Access", value=clip(", ".join(holders), 1024), inline=False)
-    embed.add_field(name="Added by", value=f"<@{entry['created_by']}> {timeutil.relative(entry['created_at'])}", inline=False)
-    embed.set_footer(text=f"ID {entry['id']}")
     return embed
 
 
@@ -331,8 +331,8 @@ class AlertRolesModal(BaseModal, title="Reminder Pings"):
         super().__init__()
         self.panel = panel
         self.roles = discord.ui.Label(
-            text="Extra roles to ping",
-            description="Pinged together with the logistics role when this stockpile's timer runs low.",
+            text="Extra roles to remind",
+            description="Everyone in these roles gets a DM when this stockpile's timer runs low.",
             component=discord.ui.RoleSelect(
                 min_values=0,
                 max_values=10,
@@ -348,7 +348,7 @@ class AlertRolesModal(BaseModal, title="Reminder Pings"):
             return
         role_ids = [role.id for role in self.roles.component.values]
         await entries.set_alert_roles(self.panel.bot.db, KIND, entry["id"], role_ids)
-        await self.panel.show(interaction, notice="Reminder pings updated.")
+        await self.panel.show(interaction, notice="Reminder roles updated.")
 
 
 class AccessModal(BaseModal, title="Private Stockpile Access"):
@@ -399,14 +399,14 @@ class StockpilePanel(BaseView):
     async def _build(self, entry: dict, member: discord.Member | None) -> None:
         self.clear_items()
         self._button("Refresh Timer", discord.ButtonStyle.success, self._refresh, row=0)
-        self._button("Edit", discord.ButtonStyle.primary, self._edit, row=0)
-        self._button("Screenshot", discord.ButtonStyle.secondary, self._screenshot, row=0)
-        self._button("Reminder Pings", discord.ButtonStyle.secondary, self._alert_roles, row=0)
         self._button("Inventory", discord.ButtonStyle.secondary, self._inventory, row=0)
         subscribed = member is not None and await entries.is_subscribed(self.bot.db, KIND, entry["id"], member.id)
-        self._button("Stop Notifying Me" if subscribed else "Notify Me", discord.ButtonStyle.secondary, self._notify, row=1)
+        self._button("Stop Notifying Me" if subscribed else "Notify Me", discord.ButtonStyle.secondary, self._notify, row=0)
+        self._button("Edit", discord.ButtonStyle.secondary, self._edit, row=1)
+        self._button("Screenshot", discord.ButtonStyle.secondary, self._screenshot, row=1)
+        self._button("Reminder Pings", discord.ButtonStyle.secondary, self._alert_roles, row=1)
         if entry["private"] and member is not None and await can_manage_access(self.bot, member, entry):
-            self._button("Access", discord.ButtonStyle.primary, self._access, row=1)
+            self._button("Access", discord.ButtonStyle.secondary, self._access, row=1)
         self._button("Delete", discord.ButtonStyle.danger, self._delete, row=1)
 
     def _button(self, label: str, style: discord.ButtonStyle, callback, *, row: int) -> None:
@@ -589,7 +589,7 @@ async def show_all(bot: FoxBot, interaction: discord.Interaction) -> None:
         await open_panel(bot, pick_interaction, value)
 
     view = PickerView(picker_options(rows, timeutil.now()), picked, owner_id=interaction.user.id, placeholder="Pick a stockpile to manage...")
-    await reply(interaction, f"{len(rows)} stockpile(s), sorted by location.", view=view)
+    await reply(interaction, f"{plural(len(rows), 'stockpile')}, sorted by location.", view=view)
 
 
 async def show_private(bot: FoxBot, interaction: discord.Interaction) -> None:
@@ -602,7 +602,6 @@ async def show_private(bot: FoxBot, interaction: discord.Interaction) -> None:
     lines = entries.grouped_lines(rows, lambda e: board_line(e, now), sort_key=sort_key)
     description = chunk_lines(lines, 3800)[0] if lines else "You do not have access to any private stockpiles."
     embed = discord.Embed(title="Private Stockpiles", description=description, colour=Colour.PRIVATE)
-    embed.set_footer(text="Only you can see this list.")
     add_button = discord.ui.Button(label="Add Private Stockpile", style=discord.ButtonStyle.success)
 
     async def add_clicked(button_interaction: discord.Interaction) -> None:
@@ -635,11 +634,11 @@ class StockpileBoard:
         now = timeutil.now()
         lines = entries.grouped_lines(rows, lambda e: board_line(e, now), sort_key=sort_key)
         embeds = fit_board_embeds(
-            "Tracked Stockpiles",
+            "Stockpiles",
             lines,
             colour=Colour.INFO,
             empty="No stockpiles are tracked yet. Press **Add Stockpile** to add one.",
-            footer=f"{len(rows)} stockpile(s) | Updates automatically",
+            footer=plural(len(rows), "stockpile"),
             overflow_hint="Too many to show here. Use All Stockpiles or /stockpile list.",
         )
         urgent = sorted(rows, key=sort_key)[:25]
@@ -650,7 +649,7 @@ class StockpileBoard:
         return BoardRender(
             embeds=embeds,
             options=options,
-            placeholder="Manage a stockpile (most urgent first)...",
+            placeholder="Open a stockpile (most urgent first)...",
             buttons=[
                 BoardButton("add", "Add Stockpile", discord.ButtonStyle.success),
                 BoardButton("all", "All Stockpiles"),
@@ -700,8 +699,11 @@ class StockpileAlerts:
         row = await fetch(self.bot, entry.guild_id, entry.entry_id)
         if row is None:
             return set()
+        result = {row["created_by"], *([row["refreshed_by"]] if row["refreshed_by"] else [])}
+        if not row["private"]:
+            return result
         users, roles = await entries.access_for(self.bot.db, KIND, entry.entry_id)
-        result = {row["created_by"], *users}
+        result.update(users)
         guild = self.bot.get_guild(entry.guild_id)
         if guild is not None:
             for role_id in roles:
@@ -730,7 +732,7 @@ class StockpileAlerts:
             await deny(interaction, "You do not have access to that stockpile.")
             return
         now = timeutil.now()
-        expires_at = now + LIFETIME_SECONDS
+        expires_at = now + await lifetime_seconds(self.bot, guild_id)
         await self.bot.db.execute(
             "UPDATE stockpiles SET expires_at = ?, updated_at = ?, refreshed_by = ?, refreshed_at = ? WHERE guild_id = ? AND id = ?",
             (expires_at, now, interaction.user.id, now, guild_id, entry_id),
@@ -873,7 +875,7 @@ class Stockpiles(commands.Cog):
             entries.grouped_lines(rows, line, sort_key=sort_key),
             colour=Colour.INFO,
             empty="No stockpiles are tracked yet.",
-            footer=f"{len(rows)} stockpile(s)",
+            footer=plural(len(rows), "stockpile"),
         )
         await EmbedPaginator(embeds, owner_id=interaction.user.id).start(interaction)
 
@@ -892,7 +894,7 @@ class Stockpiles(commands.Cog):
             await reply(interaction, f"Could not post the board here: {error.text or error}")
             return
         alert_channel = await self.bot.settings.get(interaction.guild_id, keys.ALERT_CHANNEL)
-        hint = "" if alert_channel else " Reminders will be posted in this channel until an alerts channel is set in `/settings`."
+        hint = "" if alert_channel else " Reminders go by DM. One nobody can receive is posted here until an alerts channel is set in `/settings`."
         await reply(interaction, f"Stockpile board posted.{hint}")
 
 

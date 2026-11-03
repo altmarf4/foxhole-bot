@@ -185,6 +185,75 @@ def render(sections: list[tuple[str, list[Tile]]], *, columns: int = COLUMNS) ->
     return buffer.getvalue()
 
 
+CARD_WIDTH = 132
+CARD_HEIGHT = 136
+CARD_COLUMNS = 5
+MAX_CARDS = 50
+SUBTITLE = (150, 155, 162)
+FRESHNESS = [(87, 242, 135), (235, 237, 240), (255, 166, 0), (237, 66, 69)]
+
+
+@dataclass
+class Card:
+    code: str
+    name: str
+    amount: str
+    title: str
+    subtitle: str = ""
+    crated: bool = False
+    badge: str = ""
+    level: int = 0
+
+
+def fit_text(draw, text: str, typeface, width: int) -> str:
+    if draw.textlength(text, font=typeface) <= width:
+        return text
+    while text and draw.textlength(text + "...", font=typeface) > width:
+        text = text[:-1]
+    return text.rstrip() + "..."
+
+
+def draw_card(canvas, draw, card: Card, x: int, y: int) -> None:
+    level = max(0, min(card.level, len(FRESHNESS) - 1))
+    draw.rectangle((x, y, x + CARD_WIDTH - 1, y + CARD_HEIGHT - 1), fill=SLOT, outline=FRESHNESS[level] if level >= 2 else BORDER, width=2 if level >= 2 else 1)
+    icon_x = x + (CARD_WIDTH - TILE) // 2
+    icon_y = y + 10
+    mask = icon_mask(card.code, card.crated, TILE)
+    if mask is not None:
+        canvas.paste(ICON, (icon_x, icon_y, icon_x + TILE, icon_y + TILE), mask)
+    else:
+        draw.text((icon_x + TILE // 2, icon_y + TILE // 2), initials(card.name), font=font(16), fill=ICON, anchor="mm")
+    if card.badge:
+        draw.text((x + 6, y + 5), card.badge, font=font(12), fill=FRESHNESS[level], anchor="la", stroke_width=2, stroke_fill=OUTLINE)
+    middle = x + CARD_WIDTH // 2
+    width = CARD_WIDTH - 10
+    draw.text((middle, y + 88), fit_text(draw, card.amount, font(15), width), font=font(15), fill=QUANTITY, anchor="mm")
+    draw.text((middle, y + 108), fit_text(draw, card.title, font(13), width), font=font(13), fill=HEADER_TEXT, anchor="mm")
+    if card.subtitle:
+        draw.text((middle, y + 124), fit_text(draw, card.subtitle, font(11), width), font=font(11), fill=SUBTITLE, anchor="mm")
+
+
+def render_cards(cards: list[Card], *, columns: int = CARD_COLUMNS) -> bytes | None:
+    if not available() or not cards:
+        return None
+    shown = cards[:MAX_CARDS]
+    hidden = len(cards) - len(shown)
+    columns = max(1, min(columns, len(shown)))
+    rows = math.ceil(len(shown) / columns)
+    width = PADDING * 2 + columns * CARD_WIDTH + (columns - 1) * GAP
+    height = PADDING * 2 + rows * CARD_HEIGHT + (rows - 1) * GAP + (HEADER_HEIGHT if hidden else 0)
+    canvas = Image.new("RGB", (width, height), BACKGROUND)
+    draw = ImageDraw.Draw(canvas)
+    for index, card in enumerate(shown):
+        row, column = divmod(index, columns)
+        draw_card(canvas, draw, card, PADDING + column * (CARD_WIDTH + GAP), PADDING + row * (CARD_HEIGHT + GAP))
+    if hidden:
+        draw.text((PADDING, height - PADDING), f"...and {hidden} more not shown", font=font(15), fill=HEADER_TEXT, anchor="ls")
+    buffer = io.BytesIO()
+    canvas.save(buffer, format="PNG", optimize=True)
+    return buffer.getvalue()
+
+
 def render_icon(code: str, name: str, *, crated: bool = False, size: int = 128) -> bytes | None:
     if not available():
         return None

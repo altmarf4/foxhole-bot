@@ -134,109 +134,53 @@ async def test_settings_requires_admin(world):
     assert "view" not in payload
 
 
-async def test_settings_panel_opens_ephemeral_with_sections(world):
+async def test_settings_panel_opens_on_overview_with_every_section(world):
     w = world
     interaction = await open_settings(w)
     kind, payload = last(interaction)
     assert kind == "send" and payload["ephemeral"]
-    assert payload["embed"].title == "Settings - General"
+    embed = payload["embed"]
+    assert embed.title == "Settings - Overview"
+    assert embed.footer.text.startswith("Section 1 of 11")
+    todo = next(field.value for field in embed.fields if field.name == "Still to do")
+    assert "No admin role" in todo and "Faction not set" in todo and "Boards not posted: Stockpiles" in todo
     panel = payload["view"]
     assert_view_limits(panel)
     section_select = select_of(panel, discord.ui.Select, 0)
-    assert [o.value for o in section_select.options] == ["general", "stockpiles", "ships", "tickets", "rares", "orders", "war"]
-    for key, title in [("stockpiles", "Stockpiles"), ("ships", "Ships"), ("tickets", "Tickets"), ("rares", "Rares"), ("orders", "Orders"), ("war", "War")]:
+    assert [o.value for o in section_select.options] == [
+        "overview", "roles", "channels", "permissions", "boards", "war", "timers", "lists", "tickets", "rares", "data",
+    ]
+    titles = {
+        "roles": "Roles", "channels": "Channels", "permissions": "Permissions", "boards": "Boards", "war": "Faction & War",
+        "timers": "Timers", "lists": "Stockpiles & Ships", "tickets": "Tickets", "rares": "Rares", "data": "Data & Backups",
+    }
+    for key, title in titles.items():
         payload = await go_to_section(w, panel, key)
         assert payload["embed"].title == f"Settings - {title}"
         assert len(payload["embed"]) <= 6000
+        assert [o.value for o in select_of(panel, discord.ui.Select, 0).options if o.default] == [key]
         assert_view_limits(panel)
-    general = await go_to_section(w, panel, "general")
-    names = [field.name for field in general["embed"].fields]
-    assert names == ["Admin role", "Logistics ping role", "Alerts channel", "Reminder thresholds", "Faction", "Backups"]
-    assert "12h, 6h, 2h, 1h" in general["embed"].fields[3].value
 
 
-async def test_general_modal_saves_and_prefills(world):
+async def test_roles_section_saves_on_pick_and_clears(world):
     w = world
-    panel = last(await open_settings(w))[1]["view"]
-    opened = await click(w, panel, "Edit General Settings")
-    modal = opened.response.modal
-    assert isinstance(modal, w.admin.GeneralModal)
-    assert_modal_limits(modal)
-    assert len(modal.children) == 5
-    assert modal.thresholds_field.component.default == "12, 6, 2, 1"
-    set_label_value(modal.admin_field, w.officer)
-    set_label_value(modal.logistics_field, w.logi)
-    set_label_value(modal.channel_field, w.channel)
-    set_label_value(modal.thresholds_field, "24, 6h; 2 0.5")
-    set_label_value(modal.faction_field, "Colonial")
-    result = await submit(w, modal)
-    kind, payload = last(result)
-    assert kind == "edit"
-    assert payload["content"].startswith("General settings saved.")
-    assert payload["embed"].title == "Settings - General"
     bot, gid = w.bot, w.guild.id
+    panel = last(await open_settings(w))[1]["view"]
+    await go_to_section(w, panel, "roles")
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 0), [w.officer]))[1]
+    assert "Admin role set" in payload["content"]
     assert await bot.settings.get(gid, keys.ADMIN_ROLE) == w.officer.id
+    assert [d.id for d in select_of(panel, discord.ui.RoleSelect, 0).default_values] == [w.officer.id]
+    await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 1), [w.logi])
     assert await bot.settings.get(gid, keys.LOGISTICS_ROLE) == w.logi.id
-    assert await bot.settings.get(gid, keys.ALERT_CHANNEL) == w.channel.id
-    assert await bot.settings.alert_thresholds(gid) == [24.0, 6.0, 2.0, 0.5]
-    assert await bot.settings.get(gid, keys.FACTION) == "colonial"
-    reopened = (await click(w, panel, "Edit General Settings")).response.modal
-    assert [d.id for d in reopened.admin_field.component.default_values] == [w.officer.id]
-    assert [d.id for d in reopened.logistics_field.component.default_values] == [w.logi.id]
-    assert [d.id for d in reopened.channel_field.component.default_values] == [w.channel.id]
-    assert reopened.thresholds_field.component.default == "24, 6, 2, 0.5"
-    assert [o.label for o in reopened.faction_field.component.options if o.default] == ["Colonial"]
-
-
-async def test_general_modal_reports_problems_and_keeps_old_values(world):
-    w = world
-    bot, gid = w.bot, w.guild.id
-    await bot.settings.set(gid, keys.ADMIN_ROLE, w.officer.id)
-    panel = last(await open_settings(w))[1]["view"]
-    modal = (await click(w, panel, "Edit General Settings")).response.modal
-    set_label_value(modal.admin_field, w.guild.default_role)
-    set_label_value(modal.logistics_field, w.guild.default_role)
-    set_label_value(modal.channel_field, [])
-    set_label_value(modal.thresholds_field, "12, soon")
-    set_label_value(modal.faction_field, "Not set")
-    payload = last(await submit(w, modal))[1]
-    assert "@everyone cannot be the admin role" in payload["content"]
+    await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 2), [w.officer, w.logi])
+    assert await bot.perms.roles_for(gid, "tickets") == {w.officer.id, w.logi.id}
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 1), [w.guild.default_role]))[1]
     assert "@everyone cannot be the logistics ping role" in payload["content"]
-    assert "Reminder thresholds were not changed" in payload["content"]
-    assert await bot.settings.get(gid, keys.ADMIN_ROLE) == w.officer.id
+    assert await bot.settings.get(gid, keys.LOGISTICS_ROLE) == w.logi.id
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 1), []))[1]
+    assert "Logistics ping role cleared" in payload["content"]
     assert await bot.settings.get(gid, keys.LOGISTICS_ROLE) is None
-    assert await bot.settings.alert_thresholds(gid) == [12.0, 6.0, 2.0, 1.0]
-    assert await bot.settings.get(gid, keys.FACTION) is None
-
-
-async def test_empty_thresholds_restore_defaults_and_cleared_roles(world):
-    w = world
-    bot, gid = w.bot, w.guild.id
-    await bot.settings.set(gid, keys.ALERT_THRESHOLDS, [3.0])
-    await bot.settings.set(gid, keys.LOGISTICS_ROLE, w.logi.id)
-    panel = last(await open_settings(w))[1]["view"]
-    modal = (await click(w, panel, "Edit General Settings")).response.modal
-    set_label_value(modal.admin_field, [])
-    set_label_value(modal.logistics_field, [])
-    set_label_value(modal.channel_field, [])
-    set_label_value(modal.thresholds_field, "")
-    set_label_value(modal.faction_field, "Warden")
-    await submit(w, modal)
-    assert await bot.settings.alert_thresholds(gid) == [12.0, 6.0, 2.0, 1.0]
-    assert await bot.settings.get(gid, keys.LOGISTICS_ROLE) is None
-    assert await bot.settings.get(gid, keys.FACTION) == "warden"
-
-
-async def test_alert_channel_warning_when_bot_cannot_post(world):
-    w = world
-    w.channel.permissions_for = MagicMock(return_value=discord.Permissions(view_channel=True))
-    panel = last(await open_settings(w))[1]["view"]
-    modal = (await click(w, panel, "Edit General Settings")).response.modal
-    set_label_value(modal.channel_field, w.channel)
-    set_label_value(modal.faction_field, "Not set")
-    payload = last(await submit(w, modal))[1]
-    assert "Send Messages" in payload["content"] and "Embed Links" in payload["content"]
-    assert await w.bot.settings.get(w.guild.id, keys.ALERT_CHANNEL) == w.channel.id
 
 
 async def test_admin_role_change_warns_when_editor_loses_admin(world):
@@ -244,14 +188,109 @@ async def test_admin_role_change_warns_when_editor_loses_admin(world):
     bot, gid = w.bot, w.guild.id
     officer_member = make_member(w.guild, name="Officer", roles=[w.officer])
     await bot.settings.set(gid, keys.ADMIN_ROLE, w.officer.id)
-    panel = last(await open_settings(w, officer_member))[1]["view"]
-    modal = (await click(w, panel, "Edit General Settings", officer_member)).response.modal
-    set_label_value(modal.admin_field, w.logi)
-    set_label_value(modal.faction_field, "Not set")
-    payload = last(await submit(w, modal, officer_member))[1]
+    panel = w.admin.SettingsPanel(bot, gid, officer_member.id, "roles")
+    await panel.send(make_interaction(bot, officer_member, channel=w.channel))
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.RoleSelect, 0), [w.logi], officer_member))[1]
     assert "no longer a bot admin" in payload["content"]
-    denied = await click(w, panel, "Back Up Now", officer_member)
+    denied = await pick(w, panel, select_of(panel, discord.ui.Select, 0), ["data"], officer_member)
     assert "Only bot admins" in last(denied)[1]["content"]
+
+
+async def test_channels_section_saves_warns_and_clears(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    panel = last(await open_settings(w))[1]["view"]
+    await go_to_section(w, panel, "channels")
+    channel_selects = [select_of(panel, discord.ui.ChannelSelect, i) for i in range(3)]
+    assert all(s.channel_types == [discord.ChannelType.text, discord.ChannelType.news] for s in channel_selects)
+    for index, setting in enumerate([keys.ALERT_CHANNEL, keys.ORDERS_CHANNEL, keys.WAR_ALERT_CHANNEL]):
+        await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, index), [w.channel])
+        assert await bot.settings.get(gid, setting) == w.channel.id
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, 1), []))[1]
+    assert payload["content"] == "Orders channel cleared."
+    assert await bot.settings.get(gid, keys.ORDERS_CHANNEL) is None
+    w.channel.permissions_for = MagicMock(return_value=discord.Permissions(view_channel=True))
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, 2), [w.channel]))[1]
+    assert "War alert channel set" in payload["content"] and "Send Messages" in payload["content"]
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert "Embed Links" in fields["War alert channel"]
+
+
+async def test_war_section_faction_buttons_and_alert_mode(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    panel = last(await open_settings(w))[1]["view"]
+    payload = await go_to_section(w, panel, "war")
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Town change alerts"].startswith("**Off**")
+    assert find_button(panel, "Not set").style == discord.ButtonStyle.success
+    mode_select = select_of(panel, discord.ui.Select, 1)
+    payload = last(await pick(w, panel, mode_select, ["Our faction only"]))[1]
+    assert "faction is not set" in payload["content"]
+    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "ours"
+    payload = last(await click(w, panel, "Colonial"))[1]
+    assert payload["content"] == "Faction set to Colonial."
+    assert await bot.settings.get(gid, keys.FACTION) == "colonial"
+    assert find_button(panel, "Colonial").style == discord.ButtonStyle.success
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Town change alerts"] == "**Our faction only**: towns the Colonials lost or took."
+    await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["Off"])
+    assert await bot.db.fetchval("SELECT COUNT(*) FROM guild_settings WHERE key = 'war_alert_mode'") == 0
+    await click(w, panel, "Not set")
+    assert await bot.settings.get(gid, keys.FACTION) is None
+    interaction = await click(w, panel, "Warden", w.plain)
+    assert "Only bot admins" in last(interaction)[1]["content"]
+    assert await bot.settings.get(gid, keys.FACTION) is None
+
+
+async def test_timers_modal_saves_validates_and_resets(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    panel = last(await open_settings(w))[1]["view"]
+    payload = await go_to_section(w, panel, "timers")
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Stockpile reserve timer"].startswith("50h")
+    assert fields["Ship squad-lock timer"].startswith("48h")
+    modal = (await click(w, panel, "Edit Timers")).response.modal
+    assert isinstance(modal, w.admin.TimersModal)
+    assert_modal_limits(modal)
+    assert modal.stockpile_field.component.default == "50"
+    assert modal.thresholds_field.component.default == "12, 6, 2, 1"
+    set_label_value(modal.stockpile_field, "24h")
+    set_label_value(modal.ship_field, "1000")
+    set_label_value(modal.thresholds_field, "24, 6h; 2 0.5")
+    payload = last(await submit(w, modal))[1]
+    assert payload["content"].startswith("Timers saved.")
+    assert "ship timer must be between 1 and 500" in payload["content"]
+    assert await bot.settings.get(gid, keys.STOCKPILE_HOURS) == 24.0
+    assert await bot.settings.get(gid, keys.SHIP_HOURS) == 48
+    assert await bot.settings.alert_thresholds(gid) == [24.0, 6.0, 2.0, 0.5]
+    broken = (await click(w, panel, "Edit Timers")).response.modal
+    set_label_value(broken.stockpile_field, "soon")
+    set_label_value(broken.ship_field, "48")
+    set_label_value(broken.thresholds_field, "12, soon")
+    payload = last(await submit(w, broken))[1]
+    assert "stockpile timer must be a number" in payload["content"]
+    assert "Reminder thresholds were not changed" in payload["content"]
+    assert await bot.settings.get(gid, keys.STOCKPILE_HOURS) == 24.0
+    await click(w, panel, "Restore Defaults")
+    assert await bot.settings.get(gid, keys.STOCKPILE_HOURS) == 50
+    assert await bot.settings.alert_thresholds(gid) == [12.0, 6.0, 2.0, 1.0]
+
+
+async def test_stockpile_timer_setting_is_used_for_new_and_refreshed_timers(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    stockpiles = bot.extensions["foxbot.features.stockpiles"]
+    await bot.settings.set(gid, keys.STOCKPILE_HOURS, 10)
+    entry = await stockpiles.create(
+        bot, gid, name="KM1", hex_name="Piper's Enclave", region="Pan's Villa", store_type="Storage Depot",
+        priority="Medium", access_code="111111", private=False, user_id=w.owner.id,
+    )
+    assert abs(entry["expires_at"] - timeutil.now() - 10 * 3600) <= 2
+    await bot.settings.set(gid, keys.STOCKPILE_HOURS, 2.5)
+    refreshed = await stockpiles.refresh_timer(bot, entry, w.owner.id)
+    assert abs(refreshed["expires_at"] - timeutil.now() - 9000) <= 2
 
 
 @pytest.mark.parametrize(
@@ -290,22 +329,28 @@ async def test_new_thresholds_do_not_fire_old_reminders(world):
         private=False,
         user_id=w.owner.id,
     )
-    panel = last(await open_settings(w))[1]["view"]
-    modal = (await click(w, panel, "Edit General Settings")).response.modal
+    panel = w.admin.SettingsPanel(bot, gid, w.owner.id, "timers")
+    await panel.send(make_interaction(bot, w.owner, channel=w.channel))
+    modal = (await click(w, panel, "Edit Timers")).response.modal
     set_label_value(modal.thresholds_field, "60, 12, 6, 2, 1")
-    set_label_value(modal.faction_field, "Not set")
     await submit(w, modal)
     rows = await bot.db.fetchall("SELECT threshold FROM alert_state WHERE entry_id = ?", (entry["id"],))
     assert [row["threshold"] for row in rows] == [60.0]
     await bot.alerts.check(now=timeutil.now() + 60)
-    assert w.channel.sent == []
+    assert w.owner.send.await_count == 0
     await bot.alerts.check(now=timeutil.now() + 39 * 3600)
-    assert len(w.channel.sent) == 1
+    assert w.owner.send.await_count == 1
 
 
-async def test_backup_now_reports_file_name(world):
+async def open_data(w):
+    panel = w.admin.SettingsPanel(w.bot, w.guild.id, w.owner.id, "data")
+    await panel.send(make_interaction(w.bot, w.owner, channel=w.channel))
+    return panel
+
+
+async def test_backup_now_reports_file_name_and_lists_it(world):
     w = world
-    panel = last(await open_settings(w))[1]["view"]
+    panel = await open_data(w)
     interaction = await click(w, panel, "Back Up Now")
     assert interaction.recorder.kinds() == ["defer", "edit_original"]
     payload = last(interaction)[1]
@@ -313,22 +358,43 @@ async def test_backup_now_reports_file_name(world):
     assert f"`{name}`" in payload["content"]
     assert (w.tmp / "backups" / name).exists()
     assert "file" not in payload and "files" not in payload and "attachments" not in payload
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert f"`{name}`" in fields["Latest backups"]
+    assert fields["Last archive"] == "Never."
 
 
 async def test_backup_failure_is_reported(world):
     w = world
     w.bot.backups.backup_now = AsyncMock(side_effect=OSError("disk full"))
-    panel = last(await open_settings(w))[1]["view"]
+    panel = await open_data(w)
     payload = last(await click(w, panel, "Back Up Now"))[1]
     assert "backup failed" in payload["content"]
 
 
-async def test_storage_types_add_remove_reset(world):
+async def test_archive_button_starts_the_war_archive(world):
+    w = world
+    panel = await open_data(w)
+    assert find_button(panel, "Archive Previous War").disabled
+    war = SimpleNamespace(start_archive=AsyncMock(), archive_label=MagicMock(return_value=127), load_state=AsyncMock(return_value={}))
+    w.bot._BotBase__extensions["foxbot.features.war"] = war
+    try:
+        panel = await open_data(w)
+        assert not find_button(panel, "Archive Previous War").disabled
+        interaction = await click(w, panel, "Archive Previous War")
+        war.start_archive.assert_awaited_once_with(w.bot, interaction, 127)
+        await click(w, panel, "Archive Previous War", w.plain)
+        assert war.start_archive.await_count == 1
+    finally:
+        del w.bot._BotBase__extensions["foxbot.features.war"]
+
+
+async def test_storage_and_ship_types_add_remove_reset(world):
     w = world
     bot, gid = w.bot, w.guild.id
     panel = last(await open_settings(w))[1]["view"]
-    payload = await go_to_section(w, panel, "stockpiles")
-    assert "Seaport" in payload["embed"].description
+    payload = await go_to_section(w, panel, "lists")
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert "Seaport" in fields["Stockpiles (3 of 25)"] and "Bluefin" in fields["Ships (7 of 25)"]
     opened = await click(w, panel, "Add Storage Type")
     modal = opened.response.modal
     assert_modal_limits(modal)
@@ -346,12 +412,16 @@ async def test_storage_types_add_remove_reset(world):
     assert "Removed **Seaport**" in payload["content"]
     for value in ["Storage Depot", "Aircraft Depot"]:
         await pick(w, panel, select_of(panel, discord.ui.Select, 1), [value])
-    assert await bot.settings.get(gid, keys.STORAGE_TYPES) == ["Bunker Base"]
     payload = last(await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["Bunker Base"]))[1]
     assert "Keep at least one" in payload["content"]
     assert await bot.settings.get(gid, keys.STORAGE_TYPES) == ["Bunker Base"]
-    await click(w, panel, "Reset to Defaults")
+    await pick(w, panel, select_of(panel, discord.ui.Select, 2), ["Bluefin"])
+    assert "Bluefin" not in await bot.settings.get(gid, keys.SHIP_TYPES)
+    await click(w, panel, "Reset Stockpiles")
     assert await bot.settings.get(gid, keys.STORAGE_TYPES) == ["Storage Depot", "Seaport", "Aircraft Depot"]
+    assert "Bluefin" not in await bot.settings.get(gid, keys.SHIP_TYPES)
+    await click(w, panel, "Reset Ships")
+    assert "Bluefin" in await bot.settings.get(gid, keys.SHIP_TYPES)
 
 
 async def test_list_values_capped_at_25(world):
@@ -359,8 +429,8 @@ async def test_list_values_capped_at_25(world):
     bot, gid = w.bot, w.guild.id
     await bot.settings.set(gid, keys.SHIP_TYPES, [f"Ship {n}" for n in range(25)])
     panel = last(await open_settings(w))[1]["view"]
-    await go_to_section(w, panel, "ships")
-    assert len(select_of(panel, discord.ui.Select, 1).options) == 25
+    await go_to_section(w, panel, "lists")
+    assert len(select_of(panel, discord.ui.Select, 2).options) == 25
     assert_view_limits(panel)
     modal = (await click(w, panel, "Add Ship Type")).response.modal
     set_label_value(modal.value_field, "Frigate")
@@ -375,13 +445,13 @@ async def test_ticket_services_add_update_remove(world):
     panel = last(await open_settings(w))[1]["view"]
     payload = await go_to_section(w, panel, "tickets")
     assert "No services yet" in payload["embed"].description
-    assert len(selects(panel)) == 1
+    assert len([s for s in selects(panel) if isinstance(s, discord.ui.Select)]) == 1
     modal = (await click(w, panel, "Add or Update Service")).response.modal
     assert_modal_limits(modal)
     set_label_value(modal.name_field, "Tank Production")
     set_label_value(modal.cost_field, "1,500")
     payload = last(await submit(w, modal))[1]
-    assert "Added **Tank Production**: 1,500 Rare Alloys" in payload["content"]
+    assert "Added **Tank Production**: 1,500 Rares" in payload["content"]
     assert "Tank Production" in payload["embed"].description
     update = (await click(w, panel, "Add or Update Service")).response.modal
     set_label_value(update.name_field, "tank production")
@@ -417,6 +487,7 @@ async def test_ticket_services_capped_at_25(world):
     payload = await go_to_section(w, panel, "tickets")
     assert len(payload["embed"]) <= 6000
     assert len(select_of(panel, discord.ui.Select, 1).options) == 25
+    assert_view_limits(panel)
     modal = (await click(w, panel, "Add or Update Service")).response.modal
     set_label_value(modal.name_field, "One Too Many")
     set_label_value(modal.cost_field, "5")
@@ -429,137 +500,115 @@ async def test_ticket_services_capped_at_25(world):
     assert payload["content"].startswith("Updated")
 
 
-async def test_ticket_category_and_log_reset(world):
+async def test_ticket_category_and_log_channel_pick_and_clear(world):
     w = world
     bot, gid = w.bot, w.guild.id
     category = make_channel(w.guild, "Tickets")
     await bot.settings.set(gid, keys.TICKET_CATEGORY, category.id)
-    await bot.settings.set(gid, keys.TICKET_LOG_CHANNEL, w.channel.id)
     panel = last(await open_settings(w))[1]["view"]
     payload = await go_to_section(w, panel, "tickets")
-    assert payload["embed"].fields[0].value == "**Tickets**"
-    payload = last(await click(w, panel, "Reset Ticket Category"))[1]
-    assert "Ticket category reset" in payload["content"]
+    assert {f.name: f.value for f in payload["embed"].fields}["Ticket category"] == "**Tickets**"
+    category_select = select_of(panel, discord.ui.ChannelSelect, 0)
+    assert category_select.channel_types == [discord.ChannelType.category]
+    assert [d.id for d in category_select.default_values] == [category.id]
+    payload = last(await pick(w, panel, category_select, []))[1]
+    assert payload["content"] == "Ticket category cleared."
     assert await bot.settings.get(gid, keys.TICKET_CATEGORY) is None
-    payload = last(await click(w, panel, "Reset Log Channel"))[1]
-    assert "Ticket log channel reset" in payload["content"]
-    assert await bot.settings.get(gid, keys.TICKET_LOG_CHANNEL) is None
+    await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, 1), [w.channel])
+    assert await bot.settings.get(gid, keys.TICKET_LOG_CHANNEL) == w.channel.id
 
 
-async def test_rares_channels_set_and_clear(world):
+async def test_rares_section_channels_and_levels(world):
     w = world
     bot, gid = w.bot, w.guild.id
+    bot.boards.request_refresh = MagicMock()
     panel = last(await open_settings(w))[1]["view"]
-    await go_to_section(w, panel, "rares")
-    modal = (await click(w, panel, "Set Channels")).response.modal
-    assert_modal_limits(modal)
-    assert modal.log_field.component.channel_types == [discord.ChannelType.text, discord.ChannelType.news]
-    assert modal.voice_field.component.channel_types == [discord.ChannelType.voice]
-    set_label_value(modal.log_field, w.channel)
-    set_label_value(modal.voice_field, w.voice)
-    payload = last(await submit(w, modal))[1]
-    assert payload["content"].startswith("Rare Alloys channels saved.")
+    payload = await go_to_section(w, panel, "rares")
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Status levels"] == "Empty at 0, Low up to 50, Moderate up to 200, Stocked above that."
+    log_select = select_of(panel, discord.ui.ChannelSelect, 0)
+    voice_select = select_of(panel, discord.ui.ChannelSelect, 1)
+    assert voice_select.channel_types == [discord.ChannelType.voice]
+    await pick(w, panel, log_select, [w.channel])
     assert await bot.settings.get(gid, keys.RARES_LOG_CHANNEL) == w.channel.id
-    assert await bot.settings.get(gid, keys.RARES_VOICE_CHANNEL) == w.voice.id
-    reopened = (await click(w, panel, "Set Channels")).response.modal
-    assert [d.id for d in reopened.voice_field.component.default_values] == [w.voice.id]
-    await click(w, panel, "Clear Voice Channel")
-    assert await bot.settings.get(gid, keys.RARES_VOICE_CHANNEL) is None
-    await click(w, panel, "Clear Log Channel")
-    assert await bot.settings.get(gid, keys.RARES_LOG_CHANNEL) is None
-
-
-async def test_rares_voice_warns_without_manage_channels(world):
-    w = world
     w.voice.permissions_for = MagicMock(return_value=discord.Permissions(view_channel=True, connect=True))
-    panel = last(await open_settings(w))[1]["view"]
-    await go_to_section(w, panel, "rares")
-    modal = (await click(w, panel, "Set Channels")).response.modal
-    set_label_value(modal.log_field, [])
-    set_label_value(modal.voice_field, w.voice)
-    payload = last(await submit(w, modal))[1]
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, 1), [w.voice]))[1]
     assert "Manage Channels" in payload["content"]
+    assert await bot.settings.get(gid, keys.RARES_VOICE_CHANNEL) == w.voice.id
+    await pick(w, panel, select_of(panel, discord.ui.ChannelSelect, 1), [])
+    assert await bot.settings.get(gid, keys.RARES_VOICE_CHANNEL) is None
+    modal = (await click(w, panel, "Status Levels")).response.modal
+    assert_modal_limits(modal)
+    assert modal.low_field.component.default == "50"
+    set_label_value(modal.low_field, "100")
+    set_label_value(modal.moderate_field, "1,000")
+    payload = last(await submit(w, modal))[1]
+    assert "Low up to 100, Moderate up to 1,000" in payload["content"]
+    assert await bot.settings.get(gid, keys.RARES_LEVELS) == [100, 1000]
+    bot.boards.request_refresh.assert_any_call(gid, "rares")
+    for low, moderate in [("0", "10"), ("50", "50"), ("x", "10")]:
+        broken = (await click(w, panel, "Status Levels")).response.modal
+        set_label_value(broken.low_field, low)
+        set_label_value(broken.moderate_field, moderate)
+        payload = last(await submit(w, broken))[1]
+        assert payload["content"].startswith("Nothing was saved")
+    assert await bot.settings.get(gid, keys.RARES_LEVELS) == [100, 1000]
 
 
-async def test_orders_channel_set_and_clear(world):
+async def test_permissions_all_trackers_button(world):
     w = world
     bot, gid = w.bot, w.guild.id
-    panel = last(await open_settings(w))[1]["view"]
-    await go_to_section(w, panel, "orders")
-    modal = (await click(w, panel, "Set Orders Channel")).response.modal
+    panel = w.admin.SettingsPanel(bot, gid, w.owner.id, "permissions")
+    await panel.send(make_interaction(bot, w.owner, channel=w.channel))
+    modal = (await click(w, panel, "Same Roles for All Trackers")).response.modal
+    assert isinstance(modal, w.admin.AllTrackersModal)
     assert_modal_limits(modal)
-    set_label_value(modal.channel_field, w.channel)
+    set_label_value(modal.roles_field, [w.logi])
+    set_label_value(modal.everyone_field, "No")
     payload = last(await submit(w, modal))[1]
-    assert payload["content"] == "Orders channel saved."
-    assert await bot.settings.get(gid, keys.ORDERS_CHANNEL) == w.channel.id
-    payload = last(await click(w, panel, "Clear Orders Channel"))[1]
-    assert payload["content"] == "Orders channel cleared."
-    assert await bot.settings.get(gid, keys.ORDERS_CHANNEL) is None
+    assert "Saved for all 6 groups" in payload["content"]
+    for group in w.admin.ACCESS_GROUPS:
+        assert await bot.perms.roles_for(gid, group) == {w.logi.id}
+    assert await bot.perms.roles_for(gid, "tickets") == set()
+    sneaky = w.admin.AllTrackersModal(panel, w.guild)
+    set_label_value(sneaky.roles_field, [])
+    set_label_value(sneaky.everyone_field, "Yes")
+    await submit(w, sneaky, w.plain)
+    assert await bot.perms.roles_for(gid, "stockpile") == {w.logi.id}
 
 
-async def test_war_alerts_set_and_clear(world):
+async def test_boards_section_remove_and_refresh(world):
     w = world
     bot, gid = w.bot, w.guild.id
-    panel = last(await open_settings(w))[1]["view"]
-    payload = await go_to_section(w, panel, "war")
-    fields = {field.name: field.value for field in payload["embed"].fields}
-    assert fields["Town change alerts"].startswith("**Off**")
-    assert fields["War alert channel"].startswith("Not set.")
-    assert_view_limits(panel)
-    modal = (await click(w, panel, "Set War Alerts")).response.modal
-    assert isinstance(modal, w.admin.WarAlertsModal)
-    assert_modal_limits(modal)
-    assert [o.label for o in modal.mode_field.component.options] == ["Off", "Our faction only", "All changes"]
-    assert [o.label for o in modal.mode_field.component.options if o.default] == ["Off"]
-    set_label_value(modal.mode_field, "Our faction only")
-    set_label_value(modal.channel_field, w.channel)
-    payload = last(await submit(w, modal))[1]
-    assert payload["content"].startswith("War alerts saved.")
-    assert "faction is not set" in payload["content"]
-    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "ours"
-    assert await bot.settings.get(gid, keys.WAR_ALERT_CHANNEL) == w.channel.id
-    fields = {field.name: field.value for field in payload["embed"].fields}
-    assert "faction is not set, so these alerts are off" in fields["Town change alerts"]
-    assert fields["War alert channel"] == f"<#{w.channel.id}>"
-    await bot.settings.set(gid, keys.FACTION, "colonial")
-    reopened = (await click(w, panel, "Set War Alerts")).response.modal
-    assert [o.label for o in reopened.mode_field.component.options if o.default] == ["Our faction only"]
-    assert [d.id for d in reopened.channel_field.component.default_values] == [w.channel.id]
-    set_label_value(reopened.mode_field, "All changes")
-    set_label_value(reopened.channel_field, w.channel)
-    payload = last(await submit(w, reopened))[1]
-    assert payload["content"] == "War alerts saved."
-    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "all"
-    await bot.settings.set(gid, keys.WAR_ALERT_MODE, "ours")
-    payload = last(await click(w, panel, "Clear War Alert Channel"))[1]
-    assert payload["content"].startswith("War alert channel cleared.")
-    assert await bot.settings.get(gid, keys.WAR_ALERT_CHANNEL) is None
-    fields = {field.name: field.value for field in payload["embed"].fields}
-    assert fields["Town change alerts"] == "**Our faction only**: towns the Colonials lost or took."
-    off = (await click(w, panel, "Set War Alerts")).response.modal
-    set_label_value(off.mode_field, "Off")
-    set_label_value(off.channel_field, [])
-    await submit(w, off)
-    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "off"
-    assert await bot.db.fetchval("SELECT COUNT(*) FROM guild_settings WHERE key = 'war_alert_mode'") == 0
-    sneaky = w.admin.WarAlertsModal(panel, "off", None)
-    set_label_value(sneaky.mode_field, "All changes")
-    set_label_value(sneaky.channel_field, [])
-    interaction = await submit(w, sneaky, w.plain)
-    assert "Only bot admins" in last(interaction)[1]["content"]
-    assert await bot.settings.get(gid, keys.WAR_ALERT_MODE) == "off"
-    for label in ["Set War Alerts", "Clear War Alert Channel"]:
-        interaction = await click(w, panel, label, w.plain)
-        assert "Only bot admins" in last(interaction)[1]["content"]
-        assert interaction.response.modal is None
+    panel = w.admin.SettingsPanel(bot, gid, w.owner.id, "boards")
+    await panel.send(make_interaction(bot, w.owner, channel=w.channel))
+    payload = last(await click(w, panel, "Refresh All Boards"))[1]
+    assert payload["content"] == "No boards are posted yet."
+    payload = last(await click(w, panel, "Remove Board"))[1]
+    assert payload["content"] == "Pick a board first."
+    await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["stockpile"])
+    payload = last(await click(w, panel, "Remove Board"))[1]
+    assert payload["content"] == "**Stockpiles** is not posted."
+    await pick(w, panel, select_of(panel, discord.ui.ChannelSelect), [w.channel])
+    await click(w, panel, "Post Board")
+    assert await bot.boards.record(gid, "stockpile") is not None
+    bot.boards.request_refresh = MagicMock()
+    payload = last(await click(w, panel, "Refresh All Boards"))[1]
+    assert payload["content"] == "Refreshing 1 posted board."
+    bot.boards.request_refresh.assert_called_once_with(gid, "stockpile")
+    bot.boards._delete_message = AsyncMock()
+    payload = last(await click(w, panel, "Remove Board"))[1]
+    assert "board removed" in payload["content"]
+    assert await bot.boards.record(gid, "stockpile") is None
+    bot.boards._delete_message.assert_awaited_once()
 
 
 async def test_settings_callbacks_recheck_admin(world):
     w = world
     bot, gid = w.bot, w.guild.id
-    panel = w.admin.SettingsPanel(bot, gid, w.plain.id)
+    panel = w.admin.SettingsPanel(bot, gid, w.plain.id, "timers")
     await panel.send(make_interaction(bot, w.plain, channel=w.channel))
-    for label in ["Edit General Settings", "Back Up Now"]:
+    for label in ["Edit Timers", "Restore Defaults"]:
         interaction = await click(w, panel, label, w.plain)
         assert "Only bot admins" in last(interaction)[1]["content"]
         assert interaction.response.modal is None
@@ -572,7 +621,12 @@ async def test_settings_callbacks_recheck_admin(world):
     section_select = select_of(panel, discord.ui.Select, 0)
     interaction = await pick(w, panel, section_select, ["tickets"], w.plain)
     assert "Only bot admins" in last(interaction)[1]["content"]
-    assert panel.section == "general"
+    assert panel.section == "timers"
+    roles = w.admin.SettingsPanel(bot, gid, w.plain.id, "roles")
+    await roles.send(make_interaction(bot, w.plain, channel=w.channel))
+    interaction = await pick(w, roles, select_of(roles, discord.ui.RoleSelect, 0), [w.logi], w.plain)
+    assert "Only bot admins" in last(interaction)[1]["content"]
+    assert await bot.settings.get(gid, keys.ADMIN_ROLE) is None
 
 
 async def test_other_member_cannot_use_someone_elses_panel(world):
@@ -584,21 +638,25 @@ async def test_other_member_cannot_use_someone_elses_panel(world):
     assert "belongs to someone else" in last(interaction)[1]["content"]
 
 
-async def test_permissions_panel_lists_groups_and_updates(world):
+async def open_permissions(w, member=None):
+    panel = w.admin.SettingsPanel(w.bot, w.guild.id, (member or w.owner).id, "permissions")
+    interaction = make_interaction(w.bot, member or w.owner, channel=w.channel)
+    await panel.send(interaction)
+    return panel, interaction
+
+
+async def test_permissions_section_lists_groups_and_updates(world):
     w = world
     bot, gid = w.bot, w.guild.id
-    cog = bot.get_cog("Admin")
-    interaction = make_interaction(bot, w.owner, channel=w.channel)
-    await cog.permissions_command.callback(cog, interaction)
-    kind, payload = last(interaction)
-    assert kind == "send" and payload["ephemeral"]
+    panel = last(await open_settings(w))[1]["view"]
+    payload = await go_to_section(w, panel, "permissions")
     embed = payload["embed"]
+    assert embed.title == "Settings - Permissions"
     assert [field.name for field in embed.fields] == list(GROUPS.values())
     assert all(field.value == "Admins only" for field in embed.fields)
     assert "@everyone" in embed.description and "always pass" in embed.description
-    panel = payload["view"]
     assert_view_limits(panel)
-    group_select = select_of(panel, discord.ui.Select, 0)
+    group_select = select_of(panel, discord.ui.Select, 1)
     assert [o.value for o in group_select.options] == list(GROUPS)
     opened = await pick(w, panel, group_select, ["stockpile"])
     modal = opened.response.modal
@@ -610,11 +668,12 @@ async def test_permissions_panel_lists_groups_and_updates(world):
     payload = last(await submit(w, modal))[1]
     assert await bot.perms.roles_for(gid, "stockpile") == {w.logi.id, w.officer.id}
     assert "**Stockpiles** can now be used by" in payload["content"]
+    assert payload["embed"].title == "Settings - Permissions"
     stockpile_field = payload["embed"].fields[0]
     assert f"<@&{w.logi.id}>" in stockpile_field.value
-    option = next(o for o in select_of(panel, discord.ui.Select, 0).options if o.value == "stockpile")
+    option = next(o for o in select_of(panel, discord.ui.Select, 1).options if o.value == "stockpile")
     assert option.description == "Officer, Logi" or option.description == "Logi, Officer"
-    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 0), ["stockpile"])).response.modal
+    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["stockpile"])).response.modal
     assert {d.id for d in modal.roles_field.component.default_values} == {w.logi.id, w.officer.id}
     set_label_value(modal.roles_field, [])
     set_label_value(modal.everyone_field, "Yes")
@@ -622,16 +681,15 @@ async def test_permissions_panel_lists_groups_and_updates(world):
     assert await bot.perms.roles_for(gid, "stockpile") == {gid}
     assert payload["embed"].fields[0].value == "Everyone"
     assert await bot.perms.has(w.plain, "stockpile")
-    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 0), ["stockpile"])).response.modal
+    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["stockpile"])).response.modal
     assert [o.label for o in modal.everyone_field.component.options if o.default] == ["Yes"]
     assert modal.roles_field.component.default_values == []
 
 
 async def test_permissions_everyone_role_from_select_counts(world):
     w = world
-    panel = w.admin.PermissionsPanel(w.bot, w.guild.id, w.owner.id)
-    await panel.send(make_interaction(w.bot, w.owner, channel=w.channel))
-    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 0), ["orders"])).response.modal
+    panel, _ = await open_permissions(w)
+    modal = (await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["orders"])).response.modal
     set_label_value(modal.roles_field, [w.guild.default_role])
     set_label_value(modal.everyone_field, "No")
     await submit(w, modal)
@@ -640,13 +698,8 @@ async def test_permissions_everyone_role_from_select_counts(world):
 
 async def test_permissions_denied_for_non_admin(world):
     w = world
-    cog = w.bot.get_cog("Admin")
-    interaction = make_interaction(w.bot, w.plain, channel=w.channel)
-    await cog.permissions_command.callback(cog, interaction)
-    assert "Only bot admins" in last(interaction)[1]["content"]
-    panel = w.admin.PermissionsPanel(w.bot, w.guild.id, w.plain.id)
-    await panel.send(make_interaction(w.bot, w.plain, channel=w.channel))
-    denied = await pick(w, panel, select_of(panel, discord.ui.Select, 0), ["stockpile"], w.plain)
+    panel, _ = await open_permissions(w, w.plain)
+    denied = await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["stockpile"], w.plain)
     assert denied.response.modal is None
     assert "Only bot admins" in last(denied)[1]["content"]
     modal = w.admin.PermissionModal(panel, w.guild, "stockpile", set())
@@ -708,8 +761,8 @@ async def test_setup_wizard_full_flow(world):
     await pick(w, wizard, select_of(wizard, discord.ui.RoleSelect), [w.logi])
     assert await bot.perms.roles_for(gid, "stockpile") == set()
     payload = last(await click(w, wizard, "Apply to All"))[1]
-    assert "Saved for all 8 groups" in payload["content"]
-    for group in ["stockpile", "ship", "msupps", "orders", "inventory", "rares", "logi", "facility"]:
+    assert "Saved for all 6 groups" in payload["content"]
+    for group in ["stockpile", "ship", "msupps", "orders", "inventory", "rares"]:
         assert await bot.perms.roles_for(gid, group) == {w.logi.id}
     assert await bot.perms.roles_for(gid, "tickets") == {w.officer.id}
     assert [d.id for d in select_of(wizard, discord.ui.RoleSelect).default_values] == [w.logi.id]
@@ -809,3 +862,67 @@ async def test_setup_requires_admin_everywhere(world):
     denied = await click(w, wizard, "Next", w.plain)
     assert "Only bot admins" in last(denied)[1]["content"]
     assert wizard.step == 0
+
+
+async def test_settings_boards_section_posts_a_board(world):
+    w = world
+    panel = last(await open_settings(w))[1]["view"]
+    payload = await go_to_section(w, panel, "boards")
+    assert payload["embed"].title == "Settings - Boards"
+    assert "not posted yet" in payload["embed"].description
+    assert_view_limits(panel)
+    board_select = select_of(panel, discord.ui.Select, 1)
+    assert [o.value for o in board_select.options] == ["stockpile"]
+    await pick(w, panel, board_select, ["stockpile"])
+    await pick(w, panel, select_of(panel, discord.ui.ChannelSelect), [w.channel])
+    payload = last(await click(w, panel, "Post Board"))[1]
+    assert "**Stockpiles** board posted" in payload["content"]
+    assert payload["embed"].title == "Settings - Boards"
+    assert f"posted in <#{w.channel.id}>" in payload["embed"].description
+    assert await w.bot.boards.record(w.guild.id, "stockpile") is not None
+
+    sneaky = await pick(w, panel, select_of(panel, discord.ui.Select, 1), ["stockpile"], w.plain)
+    assert "Only bot admins" in last(sneaky)[1]["content"]
+
+
+async def test_ticket_pings_set_in_roles_section(world):
+    w = world
+    bot, gid = w.bot, w.guild.id
+    panel = w.admin.SettingsPanel(bot, gid, w.owner.id, "roles")
+    payload = None
+    interaction = make_interaction(bot, w.owner, channel=w.channel)
+    await panel.send(interaction)
+    payload = last(interaction)[1]
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Pinged for new tickets"].startswith("Nobody")
+    assert_view_limits(panel)
+    ping_select = select_of(panel, discord.ui.MentionableSelect)
+    assert ping_select.max_values == 25 and ping_select.min_values == 0
+    payload = last(await pick(w, panel, ping_select, [w.logi, w.plain, w.guild.default_role]))[1]
+    assert "@everyone is never pinged" in payload["content"]
+    assert await bot.settings.get(gid, keys.TICKET_PINGS) == {"roles": [w.logi.id], "users": [w.plain.id]}
+    defaults = select_of(panel, discord.ui.MentionableSelect).default_values
+    assert [(d.id, d.type) for d in defaults] == [
+        (w.logi.id, discord.SelectDefaultValueType.role),
+        (w.plain.id, discord.SelectDefaultValueType.user),
+    ]
+    fields = {field.name: field.value for field in payload["embed"].fields}
+    assert fields["Pinged for new tickets"].startswith(f"<@&{w.logi.id}>, <@{w.plain.id}>")
+    payload = last(await pick(w, panel, select_of(panel, discord.ui.MentionableSelect), []))[1]
+    assert payload["content"] == "New tickets ping: Nobody."
+    assert await bot.db.fetchval("SELECT COUNT(*) FROM guild_settings WHERE key = 'ticket_pings'") == 0
+    sneaky = await pick(w, panel, select_of(panel, discord.ui.MentionableSelect), [w.logi], w.plain)
+    assert "Only bot admins" in last(sneaky)[1]["content"]
+    assert await bot.settings.get(gid, keys.TICKET_PINGS) == {"roles": [], "users": []}
+
+
+async def test_setup_ticket_step_sets_staff_and_pings(world):
+    w = world
+    wizard = last(await open_wizard(w))[1]["view"]
+    wizard.step = 4
+    await wizard.show(make_interaction(w.bot, w.owner, channel=w.channel))
+    assert_view_limits(wizard)
+    await pick(w, wizard, select_of(wizard, discord.ui.MentionableSelect), [w.officer])
+    assert await w.bot.settings.get(w.guild.id, keys.TICKET_PINGS) == {"roles": [w.officer.id], "users": []}
+    payload = last(await click(w, wizard, "Next"))[1]
+    assert payload["embed"].title.startswith("Server Setup - Step 6 of 7")

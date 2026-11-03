@@ -1036,17 +1036,7 @@ async def seed_war_data(bot, guild_id, tag):
             "INSERT INTO order_contributions (order_id, line_id, user_id, amount, created_at) VALUES (?, ?, 1, 2, ?)",
             (f"O{tag}", cursor.lastrowid, now),
         )
-        await tx.execute(
-            "INSERT INTO logi_runs (id, guild_id, title, priority, status, ping_channel_id, ping_message_id, created_by, created_at, updated_at) "
-            "VALUES (?, ?, 'Haul', 'High', 'open', ?, ?, 1, ?, ?)",
-            (f"L{tag}", guild_id, channel, 6000 + guild_id % 1000, now, now),
-        )
-        await tx.execute(
-            "INSERT INTO facility_queue (id, guild_id, item, quantity, position, status, requested_by, created_at, updated_at) "
-            "VALUES (?, ?, 'Tank', 1, 0, 'queued', 1, ?, ?)",
-            (f"F{tag}", guild_id, now, now),
-        )
-        for kind, entry_id in (("stockpile", f"S{tag}0"), ("ship", f"H{tag}"), ("msupps", f"M{tag}"), ("logi", f"L{tag}")):
+        for kind, entry_id in (("stockpile", f"S{tag}0"), ("ship", f"H{tag}"), ("msupps", f"M{tag}")):
             await tx.execute("INSERT INTO entry_access (kind, entry_id, target_type, target_id) VALUES (?, ?, 'user', 7)", (kind, entry_id))
             await tx.execute("INSERT INTO entry_subscribers (kind, entry_id, user_id) VALUES (?, ?, 7)", (kind, entry_id))
             await tx.execute("INSERT INTO entry_alert_roles (kind, entry_id, role_id) VALUES (?, ?, 8)", (kind, entry_id))
@@ -1073,7 +1063,7 @@ async def seed_war_data(bot, guild_id, tag):
     await bot.perms.set_roles(guild_id, "stockpile", {guild_id})
 
 
-WAR_TABLES = ["stockpiles", "ships", "msupps_bases", "inventory_snapshots", "orders", "logi_runs", "facility_queue"]
+WAR_TABLES = ["stockpiles", "ships", "msupps_bases", "inventory_snapshots", "orders"]
 
 
 async def guild_counts(bot, guild_id):
@@ -1110,7 +1100,7 @@ async def test_archive_button_cleans_only_this_guild(archive_world):
     assert kind == "send" and payload["ephemeral"]
     prompt = payload["content"]
     assert prompt.startswith("**Archive war 127 for this server?**")
-    assert "2 stockpiles, 1 ship, 1 msupps base, 2 inventory snapshots, 1 order, 1 logi run, 1 facility queue entry" in prompt
+    assert "2 stockpiles, 1 ship, 1 msupps base, 2 inventory snapshots, 1 order" in prompt
     assert "only lives in memory" in prompt
     confirm = payload["view"]
     assert isinstance(confirm, ConfirmView)
@@ -1126,7 +1116,7 @@ async def test_archive_button_cleans_only_this_guild(archive_world):
     done = press.recorder.last[1]["content"]
     assert done.startswith("War 127 archived for this server.")
     assert "No backup was made" in done
-    assert "Deleted: 2 stockpiles, 1 ship, 1 msupps base, 2 inventory snapshots, 1 order, 1 logi run, 1 facility queue entry." in done
+    assert "Deleted: 2 stockpiles, 1 ship, 1 msupps base, 2 inventory snapshots, 1 order." in done
     assert press.recorder.last[1]["view"] is None
 
     after = await guild_counts(bot, w.guild.id)
@@ -1134,15 +1124,14 @@ async def test_archive_button_cleans_only_this_guild(archive_world):
     assert after["rares_stock"] == 1 and after["ticket_services"] == 1 and after["tickets"] == 1
     assert after["boards"] == 1 and after["guild_settings"] == 1 and after["permission_roles"] == 1
     assert await guild_counts(bot, w.other.id) == before_other
-    assert await generic_rows(bot) == {name: 4 for name in ("entry_access", "entry_subscribers", "entry_alert_roles", "entry_screenshots", "alert_state", "alert_messages")}
+    assert await generic_rows(bot) == {name: 3 for name in ("entry_access", "entry_subscribers", "entry_alert_roles", "entry_screenshots", "alert_state", "alert_messages")}
     assert await bot.db.fetchval("SELECT COUNT(*) FROM order_lines", (), 0) == 1
     assert await bot.db.fetchval("SELECT COUNT(*) FROM order_contributions", (), 0) == 1
     assert await bot.db.fetchval("SELECT COUNT(*) FROM inventory_items", (), 0) == 2
     order_message = 5000 + w.guild.id % 1000
-    logi_message = 6000 + w.guild.id % 1000
     deleted_ids = {message_id for _, message_id in deleted}
-    assert order_message in deleted_ids and logi_message in deleted_ids
-    assert len(deleted) == 6
+    assert order_message in deleted_ids
+    assert len(deleted) == 4
     archives = await bot.db.fetchall("SELECT * FROM war_archives")
     assert len(archives) == 1
     row = archives[0]

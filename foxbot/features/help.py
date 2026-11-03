@@ -18,10 +18,10 @@ TITLE = "Foxhole Logistics Bot - Help"
 
 INTROS = {
     "stockpile": (
-        "Track reserved stockpiles, their codes and their 50 hour reserve timers. The live board lists every public "
+        "Track reserved stockpiles, their codes and their reserve timers (50 hours unless an admin changes it). The live board lists every public "
         "stockpile with its code; private stockpiles are only visible to the people with access."
     ),
-    "ship": "Track large ships: type, reserved squad, where they are parked and their 48 hour squad lock timers.",
+    "ship": "Track large ships: type, reserved squad, where they are parked and their squad lock timers (48 hours unless an admin changes it).",
     "msupps": (
         "Track maintenance supplies at bases: how many are stored, how fast they are used and when they run out."
     ),
@@ -35,34 +35,26 @@ INTROS = {
         "contribute to, plus a leaderboard of contributors."
     ),
     "rare": (
-        "The regiment's Rare Alloys stock: the current count, every change with who made it, an optional log "
+        "The regiment's Rares stock: the current count, every change with who made it, an optional log "
         "channel and an optional voice channel that shows the live count."
     ),
     "ticket": (
         "Customer tickets for ordering services from the regiment. Each ticket gets a private channel; prices are "
-        "in Rare Alloys and payments are added to the regiment's stock."
+        "in Rares and payments are added to the regiment's stock. An admin can post a ticket board with "
+        "`/ticket board`: a price list with an Open Ticket button."
     ),
     "war": (
         "The current war from the official War API: war number and day, victory towns held by each side, "
         "casualties and recent town captures. Admins can post a live war board and archive the previous war's data."
     ),
-    "logi": (
-        "Logi run requests: ask for a delivery from one place to another, let a driver claim it and mark it "
-        "delivered. The logistics role is pinged once when a request is made."
-    ),
-    "facility": (
-        "A shared facility queue: what the regiment wants produced at its facilities, in order, who is working on "
-        "each entry and what is done."
-    ),
     "mine": (
-        "Everything you created or have access to across stockpiles, ships and bases, with their timers, plus the "
-        "open logi runs you requested or claimed."
+        "Everything you created or have access to across stockpiles, ships and bases, with their timers."
     ),
     "settings": (
-        "Admin panel: admin and logistics roles, alerts channel, reminder thresholds, faction, storage and ship "
-        "types, ticket services, Rare Alloys channels, orders channel, war alerts and backups."
+        "Admin menu with every bot setting, one section at a time: admin and logistics roles, alerts channel, "
+        "reminder thresholds, faction, permissions, posting boards, storage and ship types, orders channel, ticket "
+        "services, Rares channels, war alerts and backups."
     ),
-    "permissions": "Admin panel to choose which roles may use each part of the bot. Admins always pass.",
     "setup": "Guided first-time setup: roles, alerts channel, faction, ticket staff, who can use the trackers and the boards.",
     "purge": (
         "Delete recent messages in the current channel, optionally only from one user. Needs Discord's Manage "
@@ -91,12 +83,9 @@ ORDER = [
     "order",
     "rare",
     "ticket",
-    "logi",
-    "facility",
     "war",
     "mine",
     "settings",
-    "permissions",
     "purge",
     "role",
     "opsec",

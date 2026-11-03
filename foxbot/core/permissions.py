@@ -19,8 +19,6 @@ GROUPS: dict[str, str] = {
     "inventory": "Inventory",
     "rares": "Regiment rares",
     "tickets": "Ticket staff",
-    "logi": "Logi runs",
-    "facility": "Facility queue",
 }
 
 
@@ -97,7 +95,7 @@ async def check_group(interaction: discord.Interaction, group: str, guild_id: in
         return False
     if await interaction.client.perms.has(member, group):
         return True
-    await deny(interaction, f"You need the **{GROUPS[group]}** permission for that. Ask an admin to grant it with `/permissions`.")
+    await deny(interaction, f"You need the **{GROUPS[group]}** permission for that. Ask an admin to grant it in `/settings` under Permissions.")
     return False
 
 

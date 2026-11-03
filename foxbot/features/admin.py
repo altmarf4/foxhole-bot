@@ -4,6 +4,7 @@ import logging
 import math
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Awaitable, Callable
 
 import discord
@@ -40,6 +41,10 @@ MAX_THRESHOLD_HOURS = 720
 MAX_LIST_VALUES = 25
 LIST_VALUE_MAX_LENGTH = 40
 MAX_SERVICES = 25
+TICKET_BOARD = "tickets"
+RARES_BOARD = "rares"
+MIN_TIMER_HOURS = 1
+MAX_TIMER_HOURS = 500
 SERVICE_NAME_MAX_LENGTH = 60
 MAX_SERVICE_COST = 1_000_000
 
@@ -47,23 +52,33 @@ FACTIONS = {"Warden": "warden", "Colonial": "colonial"}
 NO_FACTION = "Not set"
 
 TEXT_CHANNEL_TYPES = [discord.ChannelType.text, discord.ChannelType.news]
+CATEGORY_TYPES = [discord.ChannelType.category]
 VOICE_CHANNEL_TYPES = [discord.ChannelType.voice]
 
 SEND_PERMISSIONS = {"view_channel": "View Channel", "send_messages": "Send Messages", "embed_links": "Embed Links"}
 RENAME_PERMISSIONS = {"view_channel": "View Channel", "manage_channels": "Manage Channels"}
 
-ACCESS_GROUPS = ["stockpile", "ship", "msupps", "orders", "inventory", "rares", "logi", "facility"]
+ACCESS_GROUPS = ["stockpile", "ship", "msupps", "orders", "inventory", "rares"]
 ALL_ACCESS_GROUPS = f"all {len(ACCESS_GROUPS)} groups"
 
 SECTIONS = {
-    "general": ("General", "Roles, alerts channel, reminder thresholds, faction, backups"),
-    "stockpiles": ("Stockpiles", "Storage types"),
-    "ships": ("Ships", "Ship types"),
-    "tickets": ("Tickets", "Services, prices and ticket channels"),
-    "rares": ("Rares", "Rare Alloys log and voice channels"),
-    "orders": ("Orders", "Orders channel"),
-    "war": ("War", "Town change alerts and war notices"),
+    "overview": ("Overview", "Everything at a glance and what is still to set up"),
+    "roles": ("Roles", "Admin role, logistics ping role, ticket staff"),
+    "channels": ("Channels", "Alerts, orders and war alert channels"),
+    "permissions": ("Permissions", "Which roles can use each part of the bot"),
+    "boards": ("Boards", "Post, move, remove or refresh the live boards"),
+    "war": ("Faction & War", "Faction and town change alerts"),
+    "timers": ("Timers", "Stockpile and ship timers, reminder thresholds"),
+    "lists": ("Stockpiles & Ships", "Storage types and ship types"),
+    "tickets": ("Tickets", "Services and prices, ticket category and log channel"),
+    "rares": ("Rares", "Log and voice channels, status levels"),
+    "data": ("Data & Backups", "Back up now, archive the previous war"),
 }
+
+BOARDS_HELP = (
+    "Boards are live messages that update by themselves and carry the buttons people use. "
+    "Pick a board and a channel, then press **Post Board**. Posting a board again moves it."
+)
 
 WAR_ALERT_MODES = {"Off": "off", "Our faction only": "ours", "All changes": "all"}
 FACTION_TEAM_NAMES = {"warden": "Wardens", "colonial": "Colonials"}
@@ -73,7 +88,7 @@ SETUP_STEPS = [
     ("logistics", "Logistics ping role"),
     ("alerts", "Alerts channel"),
     ("faction", "Faction"),
-    ("tickets", "Ticket staff"),
+    ("tickets", "Ticket staff and pings"),
     ("access", "Who can use the trackers"),
     ("boards", "Post boards"),
 ]
@@ -135,10 +150,10 @@ def parse_thresholds(text: str) -> list[float]:
 def parse_cost(text: str) -> int:
     cleaned = re.sub(r"[\s,_']", "", text)
     if not re.fullmatch(r"[0-9]+", cleaned):
-        raise ValueError("The cost must be a whole number of Rare Alloys, 0 or more.")
+        raise ValueError("The cost must be a whole number of Rares, 0 or more.")
     value = int(cleaned)
     if value > MAX_SERVICE_COST:
-        raise ValueError(f"The cost can be at most {MAX_SERVICE_COST:,} Rare Alloys.")
+        raise ValueError(f"The cost can be at most {MAX_SERVICE_COST:,} Rares.")
     return value
 
 
@@ -196,11 +211,14 @@ async def save_service(bot: FoxBot, guild_id: int, name: str, cost: int) -> bool
         if existing is not None:
             await tx.execute("DELETE FROM ticket_services WHERE guild_id = ? AND name = ?", (guild_id, existing["name"]))
         await tx.execute("INSERT INTO ticket_services (guild_id, name, cost) VALUES (?, ?, ?)", (guild_id, name, cost))
+    bot.boards.request_refresh(guild_id, TICKET_BOARD)
     return existing is not None
 
 
 async def remove_service(bot: FoxBot, guild_id: int, name: str) -> bool:
-    return bool(await bot.db.execute("DELETE FROM ticket_services WHERE guild_id = ? AND name = ?", (guild_id, name)))
+    removed = bool(await bot.db.execute("DELETE FROM ticket_services WHERE guild_id = ? AND name = ?", (guild_id, name)))
+    bot.boards.request_refresh(guild_id, TICKET_BOARD)
+    return removed
 
 
 async def group_roles(bot: FoxBot, guild_id: int, groups: list[str] | None = None) -> dict[str, set[int]]:
@@ -240,7 +258,7 @@ async def refresh_rares_voice(bot: FoxBot, guild_id: int) -> None:
     try:
         await sync(bot, guild_id)
     except Exception:
-        log.exception("Could not update the Rare Alloys voice channel in guild %s", guild_id)
+        log.exception("Could not update the Rares voice channel in guild %s", guild_id)
 
 
 async def update_thresholds(bot: FoxBot, guild_id: int, raw: str) -> str | None:
@@ -313,6 +331,21 @@ def role_defaults(guild: discord.Guild, role_ids) -> list[discord.SelectDefaultV
     ][:25]
 
 
+def ping_defaults(guild: discord.Guild, stored: dict) -> list[discord.SelectDefaultValue]:
+    values = [
+        discord.SelectDefaultValue(id=int(rid), type=discord.SelectDefaultValueType.role)
+        for rid in stored.get("roles", [])
+        if guild.get_role(int(rid)) is not None
+    ]
+    values += [discord.SelectDefaultValue(id=int(uid), type=discord.SelectDefaultValueType.user) for uid in stored.get("users", [])]
+    return values[:25]
+
+
+def pings_text(stored: dict, empty: str = "Nobody") -> str:
+    mentions = [f"<@&{rid}>" for rid in stored.get("roles", [])] + [f"<@{uid}>" for uid in stored.get("users", [])]
+    return clip(", ".join(mentions), EMBED_FIELD_LIMIT) if mentions else empty
+
+
 def channel_defaults(channel_id: int | None) -> list[discord.SelectDefaultValue]:
     if not channel_id:
         return []
@@ -339,119 +372,7 @@ def channel_warning(guild: discord.Guild, channel_id: int | None, needed: dict[s
 
 
 def services_lines(services: list[dict]) -> list[str]:
-    return [f"- **{md(row['name'])}**: {row['cost']:,} Rare Alloys" for row in services]
-
-
-async def general_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
-    admin_role = await bot.settings.get(guild.id, keys.ADMIN_ROLE)
-    logistics_role = await bot.settings.get(guild.id, keys.LOGISTICS_ROLE)
-    alert_channel = await bot.settings.get(guild.id, keys.ALERT_CHANNEL)
-    thresholds = await bot.settings.alert_thresholds(guild.id)
-    faction = await bot.settings.get(guild.id, keys.FACTION)
-    embed = discord.Embed(
-        title="Settings - General",
-        description="Press **Edit General Settings** to change these. Pick another section below for more settings.",
-        colour=Colour.INFO,
-    )
-    embed.add_field(
-        name="Admin role",
-        value=role_text(guild, admin_role, "Not set. Only the server owner and members with the Administrator permission are admins."),
-        inline=False,
-    )
-    embed.add_field(name="Logistics ping role", value=role_text(guild, logistics_role, "Not set. Reminders ping nobody by default."), inline=False)
-    embed.add_field(
-        name="Alerts channel",
-        value=channel_text(alert_channel, "Not set. Each reminder is posted in its board's channel."),
-        inline=False,
-    )
-    embed.add_field(
-        name="Reminder thresholds",
-        value=f"{thresholds_text(thresholds)} before a timer runs out, plus one notice when it expires.",
-        inline=False,
-    )
-    embed.add_field(name="Faction", value=faction_label(faction), inline=False)
-    embed.add_field(
-        name="Backups",
-        value=(
-            f"The database is backed up every day and the last {BACKUPS_KEPT} copies are kept on the bot's host. "
-            "**Back Up Now** makes one immediately."
-        ),
-        inline=False,
-    )
-    embed.set_footer(text="Only bot admins can change settings.")
-    return embed
-
-
-async def list_embed(bot: FoxBot, guild: discord.Guild, section: ListSection) -> discord.Embed:
-    values = list(await bot.settings.get(guild.id, section.setting))
-    lines = "\n".join(f"- {md(value)}" for value in values) or "None"
-    embed = discord.Embed(
-        title=f"Settings - {section.title}",
-        description=f"{section.usage}\n\n{lines}",
-        colour=Colour.INFO,
-    )
-    embed.set_footer(text=f"{len(values)} of at most {MAX_LIST_VALUES} {section.noun}s. At least one must remain.")
-    return embed
-
-
-async def tickets_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
-    services = await list_services(bot, guild.id)
-    category_id = await bot.settings.get(guild.id, keys.TICKET_CATEGORY)
-    log_channel = await bot.settings.get(guild.id, keys.TICKET_LOG_CHANNEL)
-    lines = services_lines(services) or ["No services yet. Customers cannot order anything until you add one."]
-    embed = discord.Embed(
-        title="Settings - Tickets",
-        description="Services customers can order in a ticket, with their price in Rare Alloys.\n\n" + "\n".join(lines),
-        colour=Colour.INFO,
-    )
-    category = guild.get_channel(category_id) if category_id else None
-    if category is not None:
-        category_value = f"**{md(category.name)}**"
-    elif category_id:
-        category_value = "Missing. It is created again with the next ticket."
-    else:
-        category_value = "Not created yet. It is created automatically with the first ticket."
-    embed.add_field(name="Ticket category", value=category_value, inline=False)
-    embed.add_field(
-        name="Ticket log channel",
-        value=channel_text(log_channel, "Not created yet. The ticket system creates it automatically."),
-        inline=False,
-    )
-    embed.set_footer(text=f"{len(services)} of at most {MAX_SERVICES} services. Prices are saved on each ticket when ordered.")
-    return embed
-
-
-async def rares_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
-    log_channel = await bot.settings.get(guild.id, keys.RARES_LOG_CHANNEL)
-    voice_channel = await bot.settings.get(guild.id, keys.RARES_VOICE_CHANNEL)
-    embed = discord.Embed(
-        title="Settings - Rares",
-        description="Optional channels for the regiment's Rare Alloys stock.",
-        colour=Colour.INFO,
-    )
-    embed.add_field(name="Log channel", value=channel_text(log_channel, "Not set. Changes are only kept in the log."), inline=False)
-    embed.add_field(
-        name="Voice channel",
-        value=channel_text(voice_channel, "Not set. No channel shows the live count."),
-        inline=False,
-    )
-    embed.set_footer(text="Discord allows only 2 channel renames per 10 minutes, so the voice channel name can lag behind.")
-    return embed
-
-
-async def orders_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
-    channel_id = await bot.settings.get(guild.id, keys.ORDERS_CHANNEL)
-    embed = discord.Embed(
-        title="Settings - Orders",
-        description="The channel where new order cards are posted.",
-        colour=Colour.INFO,
-    )
-    embed.add_field(
-        name="Orders channel",
-        value=channel_text(channel_id, "Not set. Order cards are posted in the channel where each order is created."),
-        inline=False,
-    )
-    return embed
+    return [f"- **{md(row['name'])}**: {row['cost']:,} Rares" for row in services]
 
 
 def war_mode_label(value: Any) -> str:
@@ -465,40 +386,18 @@ def war_mode_text(mode_label: str, faction: Any) -> str:
         return "**All changes**: every town that changes hands, on any side."
     if mode_label == "Our faction only":
         if team is None:
-            return "**Our faction only**, but the faction is not set, so these alerts are off. Set it under General."
+            return "**Our faction only**, but the faction is not set, so these alerts are off. Press your faction's button above."
         return f"**Our faction only**: towns the {team} lost or took."
     return "**Off**: no town change alerts are posted."
 
 
-async def war_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
-    mode = war_mode_label(await bot.settings.get(guild.id, keys.WAR_ALERT_MODE))
-    channel_id = await bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL)
-    faction = await bot.settings.get(guild.id, keys.FACTION)
-    embed = discord.Embed(
-        title="Settings - War",
-        description=(
-            "Town change alerts from the official War API, checked every 5 minutes. All changes from one check "
-            "are posted as one message. New war and war over notices go to the same channel."
-        ),
-        colour=Colour.INFO,
-    )
-    embed.add_field(name="Town change alerts", value=war_mode_text(mode, faction), inline=False)
-    embed.add_field(
-        name="War alert channel",
-        value=channel_text(channel_id, "Not set. War posts go to the alerts channel, or to the war board's channel."),
-        inline=False,
-    )
-    embed.set_footer(text="War posts never ping anyone. Admins archive the previous war with /war archive.")
-    return embed
-
-
 def permissions_embed(guild: discord.Guild, current: dict[str, set[int]]) -> discord.Embed:
     embed = discord.Embed(
-        title="Permissions",
+        title="Settings - Permissions",
         description=(
             "Choose which roles may use each part of the bot. Pick a group below to change it.\n\n"
             "Admins always pass every check: the server owner, members with the Administrator permission "
-            "and members with the admin role from `/settings`.\n"
+            "and members with the admin role from General.\n"
             "Adding @everyone (or setting **Open to everyone** to Yes) opens a group to all members.\n"
             "A group without roles can only be used by admins."
         ),
@@ -519,10 +418,19 @@ async def boards_lines(bot: FoxBot, guild: discord.Guild) -> list[str]:
     return lines
 
 
+async def boards_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    lines = await boards_lines(bot, guild)
+    return discord.Embed(
+        title="Settings - Boards",
+        description=clip(BOARDS_HELP + "\n\n" + ("\n".join(lines) or "No boards are available."), 4000),
+        colour=Colour.INFO,
+    )
+
+
 async def summary_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
     embed = discord.Embed(
         title="Server Setup - Summary",
-        description="Setup is done. Change anything later with `/settings` and `/permissions`, or run `/setup` again.",
+        description="Setup is done. Change anything later with `/settings`, or run `/setup` again.",
         colour=Colour.SUCCESS,
     )
     embed.add_field(name="Admin role", value=role_text(guild, await bot.settings.get(guild.id, keys.ADMIN_ROLE)), inline=True)
@@ -555,110 +463,11 @@ def role_select_label(text: str, description: str, guild: discord.Guild, role_id
     )
 
 
-def channel_select_label(text: str, description: str, channel_id: int | None, channel_types: list[discord.ChannelType]) -> discord.ui.Label:
-    return discord.ui.Label(
-        text=text,
-        description=description,
-        component=discord.ui.ChannelSelect(
-            channel_types=channel_types,
-            min_values=0,
-            max_values=1,
-            required=False,
-            default_values=channel_defaults(channel_id),
-        ),
-    )
-
-
-def first_id(label: discord.ui.Label) -> int | None:
-    values = label.component.values
-    return values[0].id if values else None
-
-
 async def lost_admin_warning(bot: FoxBot, interaction: discord.Interaction) -> str | None:
     member = await interaction_member(interaction)
     if member is not None and not await bot.perms.is_admin(member):
         return "You are no longer a bot admin, so further changes will be refused."
     return None
-
-
-class GeneralModal(BaseModal, title="General Settings"):
-    def __init__(
-        self,
-        panel: SettingsPanel,
-        guild: discord.Guild,
-        *,
-        admin_role: int | None,
-        logistics_role: int | None,
-        alert_channel: int | None,
-        thresholds: list[float],
-        faction: str | None,
-    ):
-        super().__init__()
-        self.panel = panel
-        self.admin_field = role_select_label(
-            "Admin role",
-            "Members with this role can use every admin panel and command.",
-            guild,
-            [admin_role] if admin_role else [],
-        )
-        self.logistics_field = role_select_label(
-            "Logistics ping role",
-            "Pinged in the alerts channel when timers run low.",
-            guild,
-            [logistics_role] if logistics_role else [],
-        )
-        self.channel_field = channel_select_label(
-            "Alerts channel",
-            "Where reminders are posted. Leave empty to use each board's channel.",
-            alert_channel,
-            TEXT_CHANNEL_TYPES,
-        )
-        self.thresholds_field = text_field(
-            "Reminder thresholds (hours)",
-            default=thresholds_input(thresholds),
-            placeholder="12, 6, 2, 1",
-            description=f"Up to {MAX_THRESHOLDS} positive numbers, separated by commas. Empty restores 12, 6, 2, 1.",
-            required=False,
-            max_length=100,
-        )
-        self.faction_field = select_field(
-            "Faction",
-            [*FACTIONS, NO_FACTION],
-            default=faction_label(faction),
-            description="Used for items that share a name and for war alerts. Switch it every war.",
-        )
-        for item in (self.admin_field, self.logistics_field, self.channel_field, self.thresholds_field, self.faction_field):
-            self.add_item(item)
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        guild = await self.panel.guard(interaction)
-        if guild is None:
-            return
-        bot = self.panel.bot
-        problems: list[str] = []
-        admin_role = first_id(self.admin_field)
-        if admin_role == guild.id:
-            problems.append("@everyone cannot be the admin role, so the admin role was not changed.")
-        else:
-            await store_optional(bot, guild.id, keys.ADMIN_ROLE, admin_role)
-        logistics_role = first_id(self.logistics_field)
-        if logistics_role == guild.id:
-            problems.append("@everyone cannot be the logistics ping role, so it was not changed.")
-        else:
-            await store_optional(bot, guild.id, keys.LOGISTICS_ROLE, logistics_role)
-        alert_channel = first_id(self.channel_field)
-        await store_optional(bot, guild.id, keys.ALERT_CHANNEL, alert_channel)
-        warning = channel_warning(guild, alert_channel, SEND_PERMISSIONS, "post reminders")
-        if warning:
-            problems.append(warning)
-        threshold_problem = await update_thresholds(bot, guild.id, text_value(self.thresholds_field))
-        if threshold_problem:
-            problems.append(threshold_problem)
-        await store_optional(bot, guild.id, keys.FACTION, FACTIONS.get(select_value(self.faction_field) or NO_FACTION))
-        lost = await lost_admin_warning(bot, interaction)
-        if lost:
-            problems.append(lost)
-        await self.panel.show(interaction, "\n".join(["General settings saved.", *problems]))
 
 
 class ListValueModal(BaseModal):
@@ -694,7 +503,7 @@ class ServiceModal(BaseModal, title="Add or Update Service"):
             max_length=SERVICE_NAME_MAX_LENGTH,
         )
         self.cost_field = text_field(
-            "Cost in Rare Alloys",
+            "Cost in Rares",
             placeholder="e.g. 50",
             description="A whole number, 0 or more.",
             max_length=9,
@@ -714,107 +523,7 @@ class ServiceModal(BaseModal, title="Add or Update Service"):
             await self.panel.show(interaction, f"Nothing was saved. {error}")
             return
         verb = "Updated" if updated else "Added"
-        await self.panel.show(interaction, f"{verb} **{md(name)}**: {cost:,} Rare Alloys.")
-
-
-class RaresChannelsModal(BaseModal, title="Rare Alloys Channels"):
-    def __init__(self, panel: SettingsPanel, log_channel: int | None, voice_channel: int | None):
-        super().__init__()
-        self.panel = panel
-        self.log_field = channel_select_label(
-            "Log channel",
-            "Every change to the Rare Alloys count is posted here. Leave empty for none.",
-            log_channel,
-            TEXT_CHANNEL_TYPES,
-        )
-        self.voice_field = channel_select_label(
-            "Voice channel",
-            "Renamed to show the live Rare Alloys count. Leave empty for none.",
-            voice_channel,
-            VOICE_CHANNEL_TYPES,
-        )
-        self.add_item(self.log_field)
-        self.add_item(self.voice_field)
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        guild = await self.panel.guard(interaction)
-        if guild is None:
-            return
-        bot = self.panel.bot
-        log_channel = first_id(self.log_field)
-        voice_channel = first_id(self.voice_field)
-        await store_optional(bot, guild.id, keys.RARES_LOG_CHANNEL, log_channel)
-        await store_optional(bot, guild.id, keys.RARES_VOICE_CHANNEL, voice_channel)
-        if voice_channel:
-            await refresh_rares_voice(bot, guild.id)
-        problems = [
-            warning
-            for warning in (
-                channel_warning(guild, log_channel, SEND_PERMISSIONS, "post the Rare Alloys log"),
-                channel_warning(guild, voice_channel, RENAME_PERMISSIONS, "rename the voice channel"),
-            )
-            if warning
-        ]
-        await self.panel.show(interaction, "\n".join(["Rare Alloys channels saved.", *problems]))
-
-
-class OrdersChannelModal(BaseModal, title="Orders Channel"):
-    def __init__(self, panel: SettingsPanel, channel_id: int | None):
-        super().__init__()
-        self.panel = panel
-        self.channel_field = channel_select_label(
-            "Orders channel",
-            "Where new order cards are posted. Leave empty for none.",
-            channel_id,
-            TEXT_CHANNEL_TYPES,
-        )
-        self.add_item(self.channel_field)
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        guild = await self.panel.guard(interaction)
-        if guild is None:
-            return
-        channel_id = first_id(self.channel_field)
-        await store_optional(self.panel.bot, guild.id, keys.ORDERS_CHANNEL, channel_id)
-        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, "post order cards")
-        await self.panel.show(interaction, "\n".join(filter(None, ["Orders channel saved.", warning])))
-
-
-class WarAlertsModal(BaseModal, title="War Alerts"):
-    def __init__(self, panel: SettingsPanel, mode: Any, channel_id: int | None):
-        super().__init__()
-        self.panel = panel
-        self.mode_field = select_field(
-            "Town change alerts",
-            list(WAR_ALERT_MODES),
-            default=war_mode_label(mode),
-            description="Our faction only uses the faction from General settings.",
-        )
-        self.channel_field = channel_select_label(
-            "War alert channel",
-            "Town changes and war notices. Leave empty to use the alerts channel.",
-            channel_id,
-            TEXT_CHANNEL_TYPES,
-        )
-        self.add_item(self.mode_field)
-        self.add_item(self.channel_field)
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        guild = await self.panel.guard(interaction)
-        if guild is None:
-            return
-        bot = self.panel.bot
-        mode = WAR_ALERT_MODES.get(select_value(self.mode_field) or "Off", "off")
-        await store_optional(bot, guild.id, keys.WAR_ALERT_MODE, None if mode == "off" else mode)
-        channel_id = first_id(self.channel_field)
-        await store_optional(bot, guild.id, keys.WAR_ALERT_CHANNEL, channel_id)
-        problems = []
-        if mode == "ours" and not await bot.settings.get(guild.id, keys.FACTION):
-            problems.append("The faction is not set, so our-faction alerts stay off until you set it under General.")
-        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, "post war alerts")
-        if warning:
-            problems.append(warning)
-        await self.panel.show(interaction, "\n".join(["War alerts saved.", *problems]))
+        await self.panel.show(interaction, f"{verb} **{md(name)}**: {cost:,} Rares.")
 
 
 class AdminPanel(BaseView):
@@ -822,6 +531,8 @@ class AdminPanel(BaseView):
         super().__init__(owner_id=owner_id)
         self.bot = bot
         self.guild_id = guild_id
+        self.board_kind: str | None = None
+        self.board_channel_id: int | None = None
 
     async def guard(self, interaction: discord.Interaction) -> discord.Guild | None:
         if not await check_admin(interaction):
@@ -838,6 +549,178 @@ class AdminPanel(BaseView):
         component.callback = lambda interaction, c=component: handler(interaction, c)
         self.add_item(component)
 
+    async def _add_board_controls(self, guild: discord.Guild, row: int) -> None:
+        providers = self.bot.boards.providers
+        if not providers:
+            return
+        if self.board_kind not in providers:
+            self.board_kind = None
+        options = []
+        for kind, provider in sorted(providers.items(), key=lambda item: item[1].title.lower())[:25]:
+            record = await self.bot.boards.record(guild.id, kind)
+            channel = guild.get_channel(record["channel_id"]) if record else None
+            if record and channel is not None:
+                where = f"Posted in #{channel.name}"
+            else:
+                where = "Posted" if record else "Not posted yet"
+            options.append(option(provider.title, kind, where, default=kind == self.board_kind))
+        board_select = discord.ui.Select(placeholder="1. Pick a board...", options=options, row=row)
+        self._watch(board_select, self._board_picked)
+        channel_select = discord.ui.ChannelSelect(
+            placeholder="2. Pick the channel for it...",
+            channel_types=TEXT_CHANNEL_TYPES,
+            min_values=1,
+            max_values=1,
+            default_values=channel_defaults(self.board_channel_id),
+            row=row + 1,
+        )
+        self._watch(channel_select, self._board_channel_picked)
+        self._button("Post Board", discord.ButtonStyle.success, self._post_board, row=row + 2)
+
+    async def _board_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
+        if await self.guard(interaction) is None:
+            return
+        self.board_kind = select.values[0] if select.values else None
+        await self.show(interaction)
+
+    async def _board_channel_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        if await self.guard(interaction) is None:
+            return
+        self.board_channel_id = select.values[0].id if select.values else None
+        await self.show(interaction)
+
+    async def _post_board(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        provider = self.bot.boards.providers.get(self.board_kind or "")
+        if provider is None:
+            await self.show(interaction, "Pick a board first.")
+            return
+        if not self.board_channel_id:
+            await self.show(interaction, "Pick a channel first.")
+            return
+        channel = guild.get_channel(self.board_channel_id)
+        if channel is None:
+            await self.show(interaction, f"I cannot see <#{self.board_channel_id}>. Give me the View Channel permission there.")
+            return
+        missing = missing_permissions(channel, guild.me, SEND_PERMISSIONS)
+        if missing:
+            await self.show(interaction, f"I cannot post in {channel.mention}: I am missing {', '.join(missing)} there.")
+            return
+        await interaction.response.defer()
+        try:
+            await self.bot.boards.post(guild, provider.kind, channel)
+        except discord.Forbidden:
+            notice = f"Discord refused to let me post in {channel.mention}. Check my permissions there (View Channel, Send Messages, Embed Links)."
+        except discord.HTTPException as error:
+            notice = f"Could not post the {md(provider.title)} board: {error.text or error}"
+        else:
+            notice = f"**{md(provider.title)}** board posted in {channel.mention}."
+        await self.show(interaction, notice)
+
+    def _add_permission_select(self, guild: discord.Guild, current: dict[str, set[int]], row: int) -> None:
+        select = discord.ui.Select(
+            placeholder="Change who can use a group...",
+            options=[option(label, group, roles_plain(guild, current[group])) for group, label in GROUPS.items()],
+            row=row,
+        )
+        self._watch(select, self._group_picked)
+
+    async def _group_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        group = select.values[0] if select.values else ""
+        if group not in GROUPS:
+            await self.show(interaction, "That group no longer exists.")
+            return
+        current = await self.bot.perms.roles_for(guild.id, group)
+        await interaction.response.send_modal(PermissionModal(self, guild, group, current))
+
+    async def _admin_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        role = select.values[0] if select.values else None
+        if role is not None and role.id == guild.id:
+            await self.show(interaction, "@everyone cannot be the admin role.")
+            return
+        await store_optional(self.bot, guild.id, keys.ADMIN_ROLE, role.id if role else None)
+        notice = f"Admin role set to {role.mention}." if role else "Admin role cleared."
+        lost = await lost_admin_warning(self.bot, interaction)
+        await self.show(interaction, f"{notice}\n{lost}" if lost else notice)
+
+    async def _logistics_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        role = select.values[0] if select.values else None
+        if role is not None and role.id == guild.id:
+            await self.show(interaction, "@everyone cannot be the logistics ping role.")
+            return
+        await store_optional(self.bot, guild.id, keys.LOGISTICS_ROLE, role.id if role else None)
+        await self.show(interaction, f"Logistics ping role set to {role.mention}." if role else "Logistics ping role cleared.")
+
+    async def _alerts_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        channel_id = select.values[0].id if select.values else None
+        await store_optional(self.bot, guild.id, keys.ALERT_CHANNEL, channel_id)
+        notice = f"Alerts channel set to <#{channel_id}>." if channel_id else "Alerts channel cleared."
+        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, "post reminders")
+        await self.show(interaction, f"{notice}\n{warning}" if warning else notice)
+
+    async def _faction_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
+        await self._store_faction(interaction, select.values[0] if select.values else NO_FACTION)
+
+    async def _store_faction(self, interaction: discord.Interaction, label: str) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        await store_optional(self.bot, guild.id, keys.FACTION, FACTIONS.get(label))
+        await self.show(interaction, f"Faction set to {faction_label(FACTIONS.get(label))}.")
+
+    async def _tickets_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        current = await self.bot.perms.roles_for(guild.id, "tickets")
+        role_ids = {role.id for role in select.values}
+        if guild.id in current:
+            role_ids.add(guild.id)
+        await self.bot.perms.set_roles(guild.id, "tickets", role_ids)
+        await self.show(interaction, f"Ticket staff: {roles_text(guild, role_ids)}.")
+
+    def _add_ping_select(self, guild: discord.Guild, stored: dict, row: int) -> None:
+        select = discord.ui.MentionableSelect(
+            placeholder="Who gets pinged for new tickets...",
+            min_values=0,
+            max_values=25,
+            default_values=ping_defaults(guild, stored),
+            row=row,
+        )
+        self._watch(select, self._ticket_pings_picked)
+
+    async def _ticket_pings_picked(self, interaction: discord.Interaction, select: discord.ui.MentionableSelect) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        roles = [value.id for value in select.values if isinstance(value, discord.Role) and value.id != guild.id]
+        users = [value.id for value in select.values if not isinstance(value, discord.Role)]
+        stored = {"roles": roles, "users": users}
+        if roles or users:
+            await self.bot.settings.set(guild.id, keys.TICKET_PINGS, stored)
+        else:
+            await self.bot.settings.reset(guild.id, keys.TICKET_PINGS)
+        notice = f"New tickets ping: {pings_text(stored)}."
+        if any(isinstance(value, discord.Role) and value.id == guild.id for value in select.values):
+            notice += " @everyone is never pinged, so it was left out."
+        if roles or users:
+            notice += " They can also see every new ticket channel."
+        await self.show(interaction, notice)
+
     async def render(self, guild: discord.Guild) -> discord.Embed:
         raise NotImplementedError
 
@@ -852,10 +735,467 @@ class AdminPanel(BaseView):
         await edit(interaction, content=notice, embed=embed, view=self)
 
 
+def parse_hours(text: str, label: str) -> float:
+    cleaned = text.strip().lower().removesuffix("h").strip()
+    try:
+        value = float(cleaned)
+    except ValueError:
+        raise ValueError(f"{label} must be a number of hours.") from None
+    if not math.isfinite(value) or value < MIN_TIMER_HOURS or value > MAX_TIMER_HOURS:
+        raise ValueError(f"{label} must be between {MIN_TIMER_HOURS} and {MAX_TIMER_HOURS} hours.")
+    return round(value, 2)
+
+
+def parse_levels(low_text: str, moderate_text: str) -> list[int]:
+    values = []
+    for text, label in ((low_text, "Low"), (moderate_text, "Moderate")):
+        cleaned = re.sub(r"[\s,_']", "", text)
+        if not re.fullmatch(r"[0-9]+", cleaned):
+            raise ValueError(f"{label} must be a whole number of Rares.")
+        values.append(int(cleaned))
+    low, moderate = values
+    if low < 1:
+        raise ValueError("Low must be at least 1.")
+    if moderate <= low:
+        raise ValueError("Moderate must be higher than Low.")
+    if moderate > MAX_SERVICE_COST:
+        raise ValueError(f"Moderate can be at most {MAX_SERVICE_COST:,}.")
+    return [low, moderate]
+
+
+def hours_text(value: Any) -> str:
+    return timeutil.format_hours(float(value))
+
+
+def section_footer(key: str) -> str:
+    keys_in_order = list(SECTIONS)
+    return f"Section {keys_in_order.index(key) + 1} of {len(keys_in_order)}. Pick another one in the menu at the top."
+
+
+def backup_files(bot: FoxBot, limit: int = 5) -> list[Path]:
+    directory = bot.backups.directory
+    if not directory.exists():
+        return []
+    files = [path for path in directory.glob("*.db") if path.is_file()]
+    return sorted(files, key=lambda path: path.stat().st_mtime, reverse=True)[:limit]
+
+
+def backup_line(path: Path) -> str:
+    stat = path.stat()
+    size = stat.st_size / (1024 * 1024)
+    return f"`{path.name}` - {size:.1f} MB - {timeutil.relative(int(stat.st_mtime))}"
+
+
+async def setup_todo(bot: FoxBot, guild: discord.Guild) -> list[str]:
+    todo = []
+    if not await bot.settings.get(guild.id, keys.ADMIN_ROLE):
+        todo.append("No admin role (Roles). Only the owner and Administrators can change settings.")
+    if not await bot.settings.get(guild.id, keys.FACTION):
+        todo.append("Faction not set (Faction & War).")
+    if not await bot.settings.get(guild.id, keys.ALERT_CHANNEL):
+        todo.append("No alerts channel (Channels). Reminders nobody can get by DM go to the board's channel.")
+    closed = [GROUPS[group] for group in ACCESS_GROUPS if not await bot.perms.roles_for(guild.id, group)]
+    if closed:
+        todo.append(f"Only admins can use: {', '.join(closed)} (Permissions).")
+    if not await list_services(bot, guild.id):
+        todo.append("No ticket services, so customers cannot order anything (Tickets).")
+    unposted = [provider.title for kind, provider in bot.boards.providers.items() if not await bot.boards.record(guild.id, kind)]
+    if unposted:
+        todo.append(f"Boards not posted: {', '.join(sorted(unposted))} (Boards).")
+    return todo
+
+
+async def overview_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    s = bot.settings
+    embed = discord.Embed(
+        title="Settings - Overview",
+        description="Every setting of this bot, one section at a time. Pick a section in the menu at the top to change it.",
+        colour=Colour.INFO,
+    )
+    embed.add_field(
+        name="Roles",
+        value=(
+            f"Admin: {role_text(guild, await s.get(guild.id, keys.ADMIN_ROLE))}\n"
+            f"Logistics ping: {role_text(guild, await s.get(guild.id, keys.LOGISTICS_ROLE))}\n"
+            f"Ticket staff: {roles_text(guild, await bot.perms.roles_for(guild.id, 'tickets'), 'Admins only')}\n"
+            f"Pinged for new tickets: {pings_text(await s.get(guild.id, keys.TICKET_PINGS))}"
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name="Channels",
+        value=(
+            f"Alerts: {channel_text(await s.get(guild.id, keys.ALERT_CHANNEL))}\n"
+            f"Orders: {channel_text(await s.get(guild.id, keys.ORDERS_CHANNEL))}\n"
+            f"War alerts: {channel_text(await s.get(guild.id, keys.WAR_ALERT_CHANNEL))}"
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name="Faction & War",
+        value=(
+            f"Faction: {faction_label(await s.get(guild.id, keys.FACTION))}\n"
+            f"Town change alerts: {war_mode_label(await s.get(guild.id, keys.WAR_ALERT_MODE))}"
+        ),
+        inline=True,
+    )
+    embed.add_field(
+        name="Timers",
+        value=(
+            f"Stockpiles: {hours_text(await s.get(guild.id, keys.STOCKPILE_HOURS))}\n"
+            f"Ships: {hours_text(await s.get(guild.id, keys.SHIP_HOURS))}\n"
+            f"Reminders: {thresholds_text(await s.alert_thresholds(guild.id))}"
+        ),
+        inline=True,
+    )
+    todo = await setup_todo(bot, guild)
+    embed.add_field(
+        name="Still to do" if todo else "Setup",
+        value=clip("\n".join(f"- {line}" for line in todo), EMBED_FIELD_LIMIT) if todo else "Everything important is set up.",
+        inline=False,
+    )
+    return embed
+
+
+async def roles_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    embed = discord.Embed(
+        title="Settings - Roles",
+        description="Pick a role in a menu to save it straight away. Remove every role from a menu to clear it.",
+        colour=Colour.INFO,
+    )
+    embed.add_field(
+        name="Admin role",
+        value=(
+            role_text(guild, await bot.settings.get(guild.id, keys.ADMIN_ROLE), "Not set")
+            + "\nCan use `/settings`, `/setup` and every admin button. The server owner and members with the "
+            "Administrator permission are always admins."
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name="Logistics ping role",
+        value=(
+            role_text(guild, await bot.settings.get(guild.id, keys.LOGISTICS_ROLE), "Not set")
+            + "\nPinged when a timer reminder could not be sent to anyone by DM."
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name="Ticket staff",
+        value=(
+            roles_text(guild, await bot.perms.roles_for(guild.id, "tickets"))
+            + "\nSee every ticket channel and can set status, assign tickets and log payments."
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name="Pinged for new tickets",
+        value=(
+            pings_text(await bot.settings.get(guild.id, keys.TICKET_PINGS), "Nobody")
+            + "\nRoles or members mentioned in every new ticket channel. They can see those channels too. "
+            "Nobody is pinged until you pick someone."
+        ),
+        inline=False,
+    )
+    return embed
+
+
+async def channels_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    alerts = await bot.settings.get(guild.id, keys.ALERT_CHANNEL)
+    orders_channel = await bot.settings.get(guild.id, keys.ORDERS_CHANNEL)
+    war_channel = await bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL)
+    embed = discord.Embed(
+        title="Settings - Channels",
+        description=(
+            "Pick a channel in a menu to save it straight away. Remove it from a menu to clear it. "
+            "Ticket, Rares and board channels are in their own sections."
+        ),
+        colour=Colour.INFO,
+    )
+    rows = [
+        ("Alerts channel", alerts, "Not set. A reminder nobody can get by DM goes to its board's channel.", "post reminders"),
+        ("Orders channel", orders_channel, "Not set. Order cards are posted where each order is created.", "post order cards"),
+        ("War alert channel", war_channel, "Not set. War posts go to the alerts channel, or the war board's channel.", "post war alerts"),
+    ]
+    for name, channel_id, empty, purpose in rows:
+        value = channel_text(channel_id, empty)
+        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, purpose)
+        embed.add_field(name=name, value=f"{value}\n{warning}" if warning else value, inline=False)
+    return embed
+
+
+async def war_section_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    faction = await bot.settings.get(guild.id, keys.FACTION)
+    mode = war_mode_label(await bot.settings.get(guild.id, keys.WAR_ALERT_MODE))
+    embed = discord.Embed(
+        title="Settings - Faction & War",
+        description=(
+            "Press your faction's button at the start of every war. Town change alerts come from the official "
+            "War API, are checked every 5 minutes and never ping anyone."
+        ),
+        colour=Colour.INFO,
+    )
+    embed.add_field(
+        name="Faction",
+        value=f"{faction_label(faction)}\nUsed for items that share a name and for our-faction war alerts.",
+        inline=False,
+    )
+    embed.add_field(name="Town change alerts", value=war_mode_text(mode, faction), inline=False)
+    embed.add_field(
+        name="War alert channel",
+        value=channel_text(await bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL), "Not set (change it under Channels)."),
+        inline=False,
+    )
+    embed.add_field(name="New war", value="Archive the previous war's data under Data & Backups.", inline=False)
+    return embed
+
+
+async def timers_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    embed = discord.Embed(
+        title="Settings - Timers",
+        description="Press **Edit Timers** to change these. New lengths apply the next time a timer is started or refreshed.",
+        colour=Colour.INFO,
+    )
+    embed.add_field(
+        name="Stockpile reserve timer",
+        value=f"{hours_text(await bot.settings.get(guild.id, keys.STOCKPILE_HOURS))} (default {constants.STOCKPILE_LIFETIME_HOURS} hours)",
+        inline=False,
+    )
+    embed.add_field(
+        name="Ship squad-lock timer",
+        value=f"{hours_text(await bot.settings.get(guild.id, keys.SHIP_HOURS))} (default {constants.SHIP_LIFETIME_HOURS} hours)",
+        inline=False,
+    )
+    embed.add_field(
+        name="Reminders",
+        value=f"{thresholds_text(await bot.settings.alert_thresholds(guild.id))} before a timer runs out, plus one notice when it expires.",
+        inline=False,
+    )
+    return embed
+
+
+async def lists_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    embed = discord.Embed(
+        title="Settings - Stockpiles & Ships",
+        description="The choices offered when adding or editing a stockpile or a ship. Pick one in a menu to remove it.",
+        colour=Colour.INFO,
+    )
+    for section in LIST_SECTIONS.values():
+        values = list(await bot.settings.get(guild.id, section.setting))
+        lines = "\n".join(f"- {md(value)}" for value in values) or "None"
+        embed.add_field(
+            name=f"{section.title} ({len(values)} of {MAX_LIST_VALUES})",
+            value=clip(lines, EMBED_FIELD_LIMIT),
+            inline=True,
+        )
+    embed.set_footer(text="At least one of each must remain. Entries that use a removed value keep it.")
+    return embed
+
+
+async def tickets_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    services = await list_services(bot, guild.id)
+    category_id = await bot.settings.get(guild.id, keys.TICKET_CATEGORY)
+    log_channel = await bot.settings.get(guild.id, keys.TICKET_LOG_CHANNEL)
+    lines = services_lines(services) or ["No services yet. Customers cannot order anything until you add one."]
+    embed = discord.Embed(
+        title="Settings - Tickets",
+        description=clip(
+            f"Services customers can order, with their price in Rares ({len(services)} of {MAX_SERVICES}). "
+            "Pick one in the first menu to remove it. Prices are saved on each ticket when ordered.\n\n" + "\n".join(lines),
+            4000,
+        ),
+        colour=Colour.INFO,
+    )
+    category = guild.get_channel(category_id) if category_id else None
+    if category is not None:
+        category_value = f"**{md(category.name)}**"
+    elif category_id:
+        category_value = "Missing. A new one is created with the next ticket."
+    else:
+        category_value = "Not set. One is created automatically with the first ticket."
+    embed.add_field(
+        name="Pinged for new tickets",
+        value=pings_text(await bot.settings.get(guild.id, keys.TICKET_PINGS), "Nobody") + " (change it under Roles)",
+        inline=False,
+    )
+    embed.add_field(name="Ticket category", value=category_value, inline=False)
+    embed.add_field(
+        name="Ticket log channel",
+        value=channel_text(log_channel, "Not set. One is created automatically when it is first needed."),
+        inline=False,
+    )
+    return embed
+
+
+async def rares_section_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    log_channel = await bot.settings.get(guild.id, keys.RARES_LOG_CHANNEL)
+    voice_channel = await bot.settings.get(guild.id, keys.RARES_VOICE_CHANNEL)
+    low, moderate = await bot.settings.get(guild.id, keys.RARES_LEVELS)
+    embed = discord.Embed(title="Settings - Rares", description="The regiment's Rares stock.", colour=Colour.INFO)
+    log_value = channel_text(log_channel, "Not set. Changes are only kept in the log.")
+    warning = channel_warning(guild, log_channel, SEND_PERMISSIONS, "post the Rares log")
+    embed.add_field(name="Log channel", value=f"{log_value}\n{warning}" if warning else log_value, inline=False)
+    voice_value = channel_text(voice_channel, "Not set. No channel shows the live count.")
+    warning = channel_warning(guild, voice_channel, RENAME_PERMISSIONS, "rename the voice channel")
+    embed.add_field(name="Voice channel", value=f"{voice_value}\n{warning}" if warning else voice_value, inline=False)
+    embed.add_field(
+        name="Status levels",
+        value=f"Empty at 0, Low up to {low:,}, Moderate up to {moderate:,}, Stocked above that.",
+        inline=False,
+    )
+    embed.set_footer(text="Discord allows only 2 channel renames per 10 minutes, so the voice channel name can lag behind.")
+    return embed
+
+
+async def data_embed(bot: FoxBot, guild: discord.Guild) -> discord.Embed:
+    embed = discord.Embed(
+        title="Settings - Data & Backups",
+        description=(
+            f"The database is backed up every day and the last {BACKUPS_KEPT} daily copies are kept on the bot's host. "
+            "**Back Up Now** makes one immediately.\n\n"
+            "**Archive Previous War** backs up the database, then deletes this server's stockpiles, ships, msupps "
+            "bases, inventories and orders. Settings, permissions, boards, Rares and tickets are kept. "
+            "It asks for confirmation first."
+        ),
+        colour=Colour.INFO,
+    )
+    files = backup_files(bot)
+    embed.add_field(
+        name="Latest backups",
+        value=clip("\n".join(backup_line(path) for path in files), EMBED_FIELD_LIMIT) if files else "None yet.",
+        inline=False,
+    )
+    archive = await bot.db.fetchone(
+        "SELECT war_number, archived_by, archived_at FROM war_archives WHERE guild_id = ? ORDER BY archived_at DESC LIMIT 1",
+        (guild.id,),
+    )
+    if archive is not None:
+        war = f"War {archive['war_number']}" if archive["war_number"] else "A war"
+        value = f"{war}, by <@{archive['archived_by']}> {timeutil.relative(archive['archived_at'])}"
+    else:
+        value = "Never."
+    embed.add_field(name="Last archive", value=value, inline=False)
+    return embed
+
+
+class TimersModal(BaseModal, title="Timers"):
+    def __init__(self, panel: SettingsPanel, *, stockpile_hours: Any, ship_hours: Any, thresholds: list[float]):
+        super().__init__()
+        self.panel = panel
+        self.stockpile_field = text_field(
+            "Stockpile reserve timer (hours)",
+            default=f"{float(stockpile_hours):g}",
+            placeholder=str(constants.STOCKPILE_LIFETIME_HOURS),
+            description=f"Between {MIN_TIMER_HOURS} and {MAX_TIMER_HOURS}. The game's default is {constants.STOCKPILE_LIFETIME_HOURS}.",
+            max_length=6,
+        )
+        self.ship_field = text_field(
+            "Ship squad-lock timer (hours)",
+            default=f"{float(ship_hours):g}",
+            placeholder=str(constants.SHIP_LIFETIME_HOURS),
+            description=f"Between {MIN_TIMER_HOURS} and {MAX_TIMER_HOURS}. The game's default is {constants.SHIP_LIFETIME_HOURS}.",
+            max_length=6,
+        )
+        self.thresholds_field = text_field(
+            "Reminder thresholds (hours)",
+            default=thresholds_input(thresholds),
+            placeholder="12, 6, 2, 1",
+            description=f"Up to {MAX_THRESHOLDS} positive numbers, separated by commas. Empty restores 12, 6, 2, 1.",
+            required=False,
+            max_length=100,
+        )
+        for item in (self.stockpile_field, self.ship_field, self.thresholds_field):
+            self.add_item(item)
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        guild = await self.panel.guard(interaction)
+        if guild is None:
+            return
+        bot = self.panel.bot
+        problems = []
+        for field, setting, label in (
+            (self.stockpile_field, keys.STOCKPILE_HOURS, "The stockpile timer"),
+            (self.ship_field, keys.SHIP_HOURS, "The ship timer"),
+        ):
+            try:
+                await bot.settings.set(guild.id, setting, parse_hours(text_value(field), label))
+            except ValueError as error:
+                problems.append(f"{error} It was not changed.")
+        threshold_problem = await update_thresholds(bot, guild.id, text_value(self.thresholds_field))
+        if threshold_problem:
+            problems.append(threshold_problem)
+        await self.panel.show(interaction, "\n".join(["Timers saved.", *problems]))
+
+
+class RaresLevelsModal(BaseModal, title="Rares Status Levels"):
+    def __init__(self, panel: SettingsPanel, levels: list[int]):
+        super().__init__()
+        self.panel = panel
+        self.low_field = text_field(
+            "Low up to",
+            default=str(levels[0]),
+            description="The status shows Low from 1 up to this count.",
+            max_length=9,
+        )
+        self.moderate_field = text_field(
+            "Moderate up to",
+            default=str(levels[1]),
+            description="Moderate above Low up to this count, Stocked above it.",
+            max_length=9,
+        )
+        self.add_item(self.low_field)
+        self.add_item(self.moderate_field)
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        guild = await self.panel.guard(interaction)
+        if guild is None:
+            return
+        try:
+            levels = parse_levels(text_value(self.low_field), text_value(self.moderate_field))
+        except ValueError as error:
+            await self.panel.show(interaction, f"Nothing was saved. {error}")
+            return
+        await self.panel.bot.settings.set(guild.id, keys.RARES_LEVELS, levels)
+        self.panel.bot.boards.request_refresh(guild.id, RARES_BOARD)
+        await self.panel.show(interaction, f"Status levels saved: Low up to {levels[0]:,}, Moderate up to {levels[1]:,}.")
+
+
+class AllTrackersModal(BaseModal, title="Same Roles for All Trackers"):
+    def __init__(self, panel: AdminPanel, guild: discord.Guild):
+        super().__init__()
+        self.panel = panel
+        self.roles_field = role_select_label(
+            "Roles allowed",
+            f"Replaces the roles of {ALL_ACCESS_GROUPS}. Admins always can.",
+            guild,
+            [],
+            max_values=25,
+        )
+        self.everyone_field = select_field(
+            "Open to everyone",
+            ["No", "Yes"],
+            default="No",
+            description="Yes lets every member use all of them.",
+        )
+        self.add_item(self.roles_field)
+        self.add_item(self.everyone_field)
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        guild = await self.panel.guard(interaction)
+        if guild is None:
+            return
+        role_ids = {role.id for role in self.roles_field.component.values}
+        if select_value(self.everyone_field) == "Yes":
+            role_ids.add(guild.id)
+        for group in ACCESS_GROUPS:
+            await self.panel.bot.perms.set_roles(guild.id, group, role_ids)
+        await self.panel.show(interaction, f"Saved for {ALL_ACCESS_GROUPS}: {roles_text(guild, role_ids, 'admins only')}.")
+
+
 class SettingsPanel(AdminPanel):
-    def __init__(self, bot: FoxBot, guild_id: int, owner_id: int, section: str = "general"):
+    def __init__(self, bot: FoxBot, guild_id: int, owner_id: int, section: str = "overview"):
         super().__init__(bot, guild_id, owner_id)
-        self.section = section if section in SECTIONS else "general"
+        self.section = section if section in SECTIONS else "overview"
 
     async def render(self, guild: discord.Guild) -> discord.Embed:
         self.clear_items()
@@ -865,118 +1205,282 @@ class SettingsPanel(AdminPanel):
             row=0,
         )
         self._watch(sections, self._section_picked)
-        if self.section in LIST_SECTIONS:
-            return await self._render_list(guild, LIST_SECTIONS[self.section])
-        if self.section == "tickets":
-            return await self._render_tickets(guild)
-        if self.section == "rares":
-            self._button("Set Channels", discord.ButtonStyle.primary, self._edit_rares, row=1)
-            self._button("Clear Log Channel", discord.ButtonStyle.secondary, self._clear_rares_log, row=1)
-            self._button("Clear Voice Channel", discord.ButtonStyle.secondary, self._clear_rares_voice, row=1)
-            return await rares_embed(self.bot, guild)
-        if self.section == "orders":
-            self._button("Set Orders Channel", discord.ButtonStyle.primary, self._edit_orders, row=1)
-            self._button("Clear Orders Channel", discord.ButtonStyle.secondary, self._clear_orders, row=1)
-            return await orders_embed(self.bot, guild)
-        if self.section == "war":
-            self._button("Set War Alerts", discord.ButtonStyle.primary, self._edit_war, row=1)
-            self._button("Clear War Alert Channel", discord.ButtonStyle.secondary, self._clear_war_channel, row=1)
-            return await war_embed(self.bot, guild)
-        self._button("Edit General Settings", discord.ButtonStyle.primary, self._edit_general, row=1)
-        self._button("Back Up Now", discord.ButtonStyle.secondary, self._backup, row=1)
-        return await general_embed(self.bot, guild)
+        builders = {
+            "overview": self._render_overview,
+            "roles": self._render_roles,
+            "channels": self._render_channels,
+            "permissions": self._render_permissions,
+            "boards": self._render_boards,
+            "war": self._render_war,
+            "timers": self._render_timers,
+            "lists": self._render_lists,
+            "tickets": self._render_tickets,
+            "rares": self._render_rares,
+            "data": self._render_data,
+        }
+        embed = await builders[self.section](guild)
+        footer = section_footer(self.section)
+        if embed.footer and embed.footer.text:
+            footer = f"{embed.footer.text}\n{footer}"
+        embed.set_footer(text=footer)
+        return embed
 
-    async def _render_list(self, guild: discord.Guild, section: ListSection) -> discord.Embed:
-        values = list(await self.bot.settings.get(guild.id, section.setting))
-        if values:
-            remove = discord.ui.Select(
-                placeholder=f"Remove a {section.noun}...",
-                options=[option(value, value[:100]) for value in values[:25]],
-                row=1,
+    def _role_select(self, guild: discord.Guild, placeholder: str, role_ids, handler: SelectHandler, row: int, *, max_values: int = 1) -> None:
+        select = discord.ui.RoleSelect(
+            placeholder=placeholder,
+            min_values=0,
+            max_values=max_values,
+            default_values=role_defaults(guild, role_ids)[:max_values],
+            row=row,
+        )
+        self._watch(select, handler)
+
+    def _channel_select(self, placeholder: str, channel_id: int | None, channel_types, handler: SelectHandler, row: int) -> None:
+        select = discord.ui.ChannelSelect(
+            placeholder=placeholder,
+            channel_types=channel_types,
+            min_values=0,
+            max_values=1,
+            default_values=channel_defaults(channel_id),
+            row=row,
+        )
+        self._watch(select, handler)
+
+    async def _render_overview(self, guild: discord.Guild) -> discord.Embed:
+        return await overview_embed(self.bot, guild)
+
+    async def _render_roles(self, guild: discord.Guild) -> discord.Embed:
+        admin_role = await self.bot.settings.get(guild.id, keys.ADMIN_ROLE)
+        logistics_role = await self.bot.settings.get(guild.id, keys.LOGISTICS_ROLE)
+        staff = await self.bot.perms.roles_for(guild.id, "tickets")
+        self._role_select(guild, "Admin role...", [admin_role] if admin_role else [], self._admin_picked, 1)
+        self._role_select(guild, "Logistics ping role...", [logistics_role] if logistics_role else [], self._logistics_picked, 2)
+        self._role_select(guild, "Ticket staff roles...", staff, self._tickets_picked, 3, max_values=25)
+        self._add_ping_select(guild, await self.bot.settings.get(guild.id, keys.TICKET_PINGS), 4)
+        return await roles_embed(self.bot, guild)
+
+    async def _render_channels(self, guild: discord.Guild) -> discord.Embed:
+        s = self.bot.settings
+        self._channel_select("Alerts channel...", await s.get(guild.id, keys.ALERT_CHANNEL), TEXT_CHANNEL_TYPES, self._alerts_picked, 1)
+        self._channel_select("Orders channel...", await s.get(guild.id, keys.ORDERS_CHANNEL), TEXT_CHANNEL_TYPES, self._orders_channel_picked, 2)
+        self._channel_select("War alert channel...", await s.get(guild.id, keys.WAR_ALERT_CHANNEL), TEXT_CHANNEL_TYPES, self._war_channel_picked, 3)
+        return await channels_embed(self.bot, guild)
+
+    async def _render_permissions(self, guild: discord.Guild) -> discord.Embed:
+        current = await group_roles(self.bot, guild.id)
+        self._add_permission_select(guild, current, 1)
+        self._button("Same Roles for All Trackers", discord.ButtonStyle.primary, self._all_trackers, row=2)
+        return permissions_embed(guild, current)
+
+    async def _render_boards(self, guild: discord.Guild) -> discord.Embed:
+        await self._add_board_controls(guild, 1)
+        if self.bot.boards.providers:
+            self._button("Remove Board", discord.ButtonStyle.danger, self._remove_board, row=3)
+            self._button("Refresh All Boards", discord.ButtonStyle.secondary, self._refresh_boards, row=3)
+        return await boards_embed(self.bot, guild)
+
+    async def _render_war(self, guild: discord.Guild) -> discord.Embed:
+        current = faction_label(await self.bot.settings.get(guild.id, keys.FACTION))
+        for label in [*FACTIONS, NO_FACTION]:
+            style = discord.ButtonStyle.success if label == current else discord.ButtonStyle.secondary
+            self._button(label, style, lambda interaction, value=label: self._store_faction(interaction, value), row=1)
+        mode = war_mode_label(await self.bot.settings.get(guild.id, keys.WAR_ALERT_MODE))
+        select = discord.ui.Select(
+            placeholder="Town change alerts...",
+            options=[option(f"Town change alerts: {label}", label, default=label == mode) for label in WAR_ALERT_MODES],
+            row=2,
+        )
+        self._watch(select, self._war_mode_picked)
+        return await war_section_embed(self.bot, guild)
+
+    async def _render_timers(self, guild: discord.Guild) -> discord.Embed:
+        self._button("Edit Timers", discord.ButtonStyle.primary, self._edit_timers, row=1)
+        self._button("Restore Defaults", discord.ButtonStyle.secondary, self._reset_timers, row=1)
+        return await timers_embed(self.bot, guild)
+
+    async def _render_lists(self, guild: discord.Guild) -> discord.Embed:
+        for row, section in enumerate(LIST_SECTIONS.values(), start=1):
+            values = list(await self.bot.settings.get(guild.id, section.setting))
+            if values:
+                remove = discord.ui.Select(
+                    placeholder=f"Remove a {section.noun}...",
+                    options=[option(value, value[:100]) for value in values[:25]],
+                    row=row,
+                )
+                self._watch(remove, lambda interaction, select, key=section.key: self._remove_list_value(interaction, select, key))
+        for section in LIST_SECTIONS.values():
+            self._button(
+                f"Add {section.noun.title()}",
+                discord.ButtonStyle.success,
+                lambda interaction, key=section.key: self._add_list_value(interaction, key),
+                row=3,
             )
-            self._watch(remove, self._remove_list_value)
-        self._button(f"Add {section.noun.title()}", discord.ButtonStyle.success, self._add_list_value, row=2)
-        self._button("Reset to Defaults", discord.ButtonStyle.secondary, self._reset_list, row=2)
-        return await list_embed(self.bot, guild, section)
+        for section in LIST_SECTIONS.values():
+            self._button(
+                f"Reset {section.title}",
+                discord.ButtonStyle.secondary,
+                lambda interaction, key=section.key: self._reset_list(interaction, key),
+                row=4,
+            )
+        return await lists_embed(self.bot, guild)
 
     async def _render_tickets(self, guild: discord.Guild) -> discord.Embed:
         services = await list_services(self.bot, guild.id)
         if services:
             remove = discord.ui.Select(
                 placeholder="Remove a service...",
-                options=[option(row["name"], row["name"][:100], f"{row['cost']:,} Rare Alloys") for row in services[:25]],
+                options=[option(row["name"], row["name"][:100], f"{row['cost']:,} Rares") for row in services[:25]],
                 row=1,
             )
             self._watch(remove, self._remove_service)
-        self._button("Add or Update Service", discord.ButtonStyle.success, self._add_service, row=2)
-        self._button("Reset Ticket Category", discord.ButtonStyle.secondary, self._reset_ticket_category, row=2)
-        self._button("Reset Log Channel", discord.ButtonStyle.secondary, self._reset_ticket_log, row=2)
+        s = self.bot.settings
+        self._channel_select("Ticket category...", await s.get(guild.id, keys.TICKET_CATEGORY), CATEGORY_TYPES, self._ticket_category_picked, 2)
+        self._channel_select("Ticket log channel...", await s.get(guild.id, keys.TICKET_LOG_CHANNEL), TEXT_CHANNEL_TYPES, self._ticket_log_picked, 3)
+        self._button("Add or Update Service", discord.ButtonStyle.success, self._add_service, row=4)
         return await tickets_embed(self.bot, guild)
+
+    async def _render_rares(self, guild: discord.Guild) -> discord.Embed:
+        s = self.bot.settings
+        self._channel_select("Rares log channel...", await s.get(guild.id, keys.RARES_LOG_CHANNEL), TEXT_CHANNEL_TYPES, self._rares_log_picked, 1)
+        self._channel_select("Rares voice channel...", await s.get(guild.id, keys.RARES_VOICE_CHANNEL), VOICE_CHANNEL_TYPES, self._rares_voice_picked, 2)
+        self._button("Status Levels", discord.ButtonStyle.primary, self._edit_levels, row=3)
+        return await rares_section_embed(self.bot, guild)
+
+    async def _render_data(self, guild: discord.Guild) -> discord.Embed:
+        self._button("Back Up Now", discord.ButtonStyle.primary, self._backup, row=1)
+        war_loaded = self.bot.extensions.get("foxbot.features.war") is not None
+        self._button("Archive Previous War", discord.ButtonStyle.danger, self._archive, row=1, disabled=not war_loaded)
+        return await data_embed(self.bot, guild)
 
     async def _section_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
         if await self.guard(interaction) is None:
             return
-        value = select.values[0] if select.values else "general"
-        self.section = value if value in SECTIONS else "general"
+        value = select.values[0] if select.values else "overview"
+        self.section = value if value in SECTIONS else "overview"
         await self.show(interaction)
 
-    async def _edit_general(self, interaction: discord.Interaction) -> None:
+    async def _store_channel(
+        self,
+        interaction: discord.Interaction,
+        select: discord.ui.ChannelSelect,
+        setting: Setting,
+        name: str,
+        needed: dict[str, str] | None = None,
+        purpose: str | None = None,
+    ) -> int | None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return None
+        channel_id = select.values[0].id if select.values else None
+        await store_optional(self.bot, guild.id, setting, channel_id)
+        notice = f"{name} set to <#{channel_id}>." if channel_id else f"{name} cleared."
+        warning = channel_warning(guild, channel_id, needed, purpose) if needed and purpose else None
+        await self.show(interaction, f"{notice}\n{warning}" if warning else notice)
+        return channel_id
+
+    async def _orders_channel_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        await self._store_channel(interaction, select, keys.ORDERS_CHANNEL, "Orders channel", SEND_PERMISSIONS, "post order cards")
+
+    async def _war_channel_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        await self._store_channel(interaction, select, keys.WAR_ALERT_CHANNEL, "War alert channel", SEND_PERMISSIONS, "post war alerts")
+
+    async def _ticket_category_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        await self._store_channel(interaction, select, keys.TICKET_CATEGORY, "Ticket category")
+
+    async def _ticket_log_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        await self._store_channel(interaction, select, keys.TICKET_LOG_CHANNEL, "Ticket log channel", SEND_PERMISSIONS, "post ticket transcripts")
+
+    async def _rares_log_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        await self._store_channel(interaction, select, keys.RARES_LOG_CHANNEL, "Rares log channel", SEND_PERMISSIONS, "post the Rares log")
+
+    async def _rares_voice_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
+        channel_id = await self._store_channel(
+            interaction, select, keys.RARES_VOICE_CHANNEL, "Rares voice channel", RENAME_PERMISSIONS, "rename the voice channel"
+        )
+        if channel_id:
+            await refresh_rares_voice(self.bot, self.guild_id)
+
+    async def _war_mode_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
         guild = await self.guard(interaction)
         if guild is None:
             return
-        modal = GeneralModal(
+        label = select.values[0] if select.values else "Off"
+        mode = WAR_ALERT_MODES.get(label, "off")
+        await store_optional(self.bot, guild.id, keys.WAR_ALERT_MODE, None if mode == "off" else mode)
+        notice = f"Town change alerts: {label}."
+        if mode == "ours" and not await self.bot.settings.get(guild.id, keys.FACTION):
+            notice += " The faction is not set, so these alerts stay off until you press your faction's button."
+        await self.show(interaction, notice)
+
+    async def _all_trackers(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        await interaction.response.send_modal(AllTrackersModal(self, guild))
+
+    async def _remove_board(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        provider = self.bot.boards.providers.get(self.board_kind or "")
+        if provider is None:
+            await self.show(interaction, "Pick a board first.")
+            return
+        removed = await self.bot.boards.remove(guild.id, provider.kind)
+        notice = f"**{md(provider.title)}** board removed. Post it again at any time." if removed else f"**{md(provider.title)}** is not posted."
+        await self.show(interaction, notice)
+
+    async def _refresh_boards(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        posted = [kind for kind in self.bot.boards.providers if await self.bot.boards.record(guild.id, kind)]
+        for kind in posted:
+            self.bot.boards.request_refresh(guild.id, kind)
+        await self.show(interaction, f"Refreshing {plural(len(posted), 'posted board')}." if posted else "No boards are posted yet.")
+
+    async def _edit_timers(self, interaction: discord.Interaction) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        modal = TimersModal(
             self,
-            guild,
-            admin_role=await self.bot.settings.get(guild.id, keys.ADMIN_ROLE),
-            logistics_role=await self.bot.settings.get(guild.id, keys.LOGISTICS_ROLE),
-            alert_channel=await self.bot.settings.get(guild.id, keys.ALERT_CHANNEL),
+            stockpile_hours=await self.bot.settings.get(guild.id, keys.STOCKPILE_HOURS),
+            ship_hours=await self.bot.settings.get(guild.id, keys.SHIP_HOURS),
             thresholds=await self.bot.settings.alert_thresholds(guild.id),
-            faction=await self.bot.settings.get(guild.id, keys.FACTION),
         )
         await interaction.response.send_modal(modal)
 
-    async def _backup(self, interaction: discord.Interaction) -> None:
-        if await self.guard(interaction) is None:
-            return
-        await interaction.response.defer()
-        try:
-            path = await self.bot.backups.backup_now()
-        except Exception:
-            log.exception("Manual backup failed")
-            notice = "The backup failed. The error was logged for the bot host."
-        else:
-            notice = f"Backup saved as `{path.name}` on the bot's host."
-        await self.show(interaction, notice)
-
-    async def _add_list_value(self, interaction: discord.Interaction) -> None:
-        if await self.guard(interaction) is None:
-            return
-        section = LIST_SECTIONS.get(self.section)
-        if section is None:
-            await self.show(interaction)
-            return
-        await interaction.response.send_modal(ListValueModal(self, section))
-
-    async def _remove_list_value(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
+    async def _reset_timers(self, interaction: discord.Interaction) -> None:
         guild = await self.guard(interaction)
         if guild is None:
             return
-        section = LIST_SECTIONS.get(self.section)
-        if section is None or not select.values:
+        await self.bot.settings.reset(guild.id, keys.STOCKPILE_HOURS)
+        await self.bot.settings.reset(guild.id, keys.SHIP_HOURS)
+        await update_thresholds(self.bot, guild.id, "")
+        await self.show(interaction, "Timers are back to the defaults.")
+
+    async def _add_list_value(self, interaction: discord.Interaction, key: str) -> None:
+        if await self.guard(interaction) is None:
+            return
+        await interaction.response.send_modal(ListValueModal(self, LIST_SECTIONS[key]))
+
+    async def _remove_list_value(self, interaction: discord.Interaction, select: discord.ui.Select, key: str) -> None:
+        guild = await self.guard(interaction)
+        if guild is None:
+            return
+        if not select.values:
             await self.show(interaction)
             return
         value = select.values[0]
-        error = await remove_list_value(self.bot, guild.id, section, value)
+        error = await remove_list_value(self.bot, guild.id, LIST_SECTIONS[key], value)
         await self.show(interaction, error or f"Removed **{md(value)}**. Entries that already use it keep it.")
 
-    async def _reset_list(self, interaction: discord.Interaction) -> None:
+    async def _reset_list(self, interaction: discord.Interaction, key: str) -> None:
         guild = await self.guard(interaction)
         if guild is None:
             return
-        section = LIST_SECTIONS.get(self.section)
-        if section is None:
-            await self.show(interaction)
-            return
+        section = LIST_SECTIONS[key]
         await self.bot.settings.reset(guild.id, section.setting)
         await self.show(interaction, f"The {section.noun}s are back to the defaults.")
 
@@ -994,70 +1498,37 @@ class SettingsPanel(AdminPanel):
         notice = f"Removed **{md(name)}**. Tickets that already ordered it keep their price." if removed else "That service was already removed."
         await self.show(interaction, notice)
 
-    async def _reset_ticket_category(self, interaction: discord.Interaction) -> None:
+    async def _edit_levels(self, interaction: discord.Interaction) -> None:
         guild = await self.guard(interaction)
         if guild is None:
             return
-        await self.bot.settings.reset(guild.id, keys.TICKET_CATEGORY)
-        await self.show(interaction, "Ticket category reset. A new one is created with the next ticket; the old category was not deleted.")
+        await interaction.response.send_modal(RaresLevelsModal(self, list(await self.bot.settings.get(guild.id, keys.RARES_LEVELS))))
 
-    async def _reset_ticket_log(self, interaction: discord.Interaction) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
+    async def _backup(self, interaction: discord.Interaction) -> None:
+        if await self.guard(interaction) is None:
             return
-        await self.bot.settings.reset(guild.id, keys.TICKET_LOG_CHANNEL)
-        await self.show(interaction, "Ticket log channel reset. The ticket system creates a new one when it next needs it; the old channel was not deleted.")
-
-    async def _edit_rares(self, interaction: discord.Interaction) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        modal = RaresChannelsModal(
-            self,
-            await self.bot.settings.get(guild.id, keys.RARES_LOG_CHANNEL),
-            await self.bot.settings.get(guild.id, keys.RARES_VOICE_CHANNEL),
-        )
-        await interaction.response.send_modal(modal)
-
-    async def _clear(self, interaction: discord.Interaction, setting: Setting, notice: str) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        await self.bot.settings.reset(guild.id, setting)
+        await interaction.response.defer()
+        try:
+            path = await self.bot.backups.backup_now()
+        except Exception:
+            log.exception("Manual backup failed")
+            notice = "The backup failed. The error was logged for the bot host."
+        else:
+            notice = f"Backup saved as `{path.name}` on the bot's host."
         await self.show(interaction, notice)
 
-    async def _clear_rares_log(self, interaction: discord.Interaction) -> None:
-        await self._clear(interaction, keys.RARES_LOG_CHANNEL, "Rare Alloys log channel cleared.")
-
-    async def _clear_rares_voice(self, interaction: discord.Interaction) -> None:
-        await self._clear(interaction, keys.RARES_VOICE_CHANNEL, "Rare Alloys voice channel cleared. Its current name is left as it is.")
-
-    async def _edit_orders(self, interaction: discord.Interaction) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
+    async def _archive(self, interaction: discord.Interaction) -> None:
+        if await self.guard(interaction) is None:
             return
-        await interaction.response.send_modal(OrdersChannelModal(self, await self.bot.settings.get(guild.id, keys.ORDERS_CHANNEL)))
-
-    async def _clear_orders(self, interaction: discord.Interaction) -> None:
-        await self._clear(interaction, keys.ORDERS_CHANNEL, "Orders channel cleared.")
-
-    async def _edit_war(self, interaction: discord.Interaction) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
+        war = self.bot.extensions.get("foxbot.features.war")
+        if war is None:
+            await self.show(interaction, "The war feature is not loaded on this bot.")
             return
-        modal = WarAlertsModal(
-            self,
-            await self.bot.settings.get(guild.id, keys.WAR_ALERT_MODE),
-            await self.bot.settings.get(guild.id, keys.WAR_ALERT_CHANNEL),
-        )
-        await interaction.response.send_modal(modal)
-
-    async def _clear_war_channel(self, interaction: discord.Interaction) -> None:
-        await self._clear(interaction, keys.WAR_ALERT_CHANNEL, "War alert channel cleared. War posts go to the alerts channel.")
+        await war.start_archive(self.bot, interaction, war.archive_label(await war.load_state(self.bot)))
 
 
 class PermissionModal(BaseModal):
-    def __init__(self, panel: PermissionsPanel, guild: discord.Guild, group: str, current: set[int]):
+    def __init__(self, panel: AdminPanel, guild: discord.Guild, group: str, current: set[int]):
         super().__init__(title=clip(f"Permissions: {GROUPS[group]}", 45))
         self.panel = panel
         self.group = group
@@ -1088,37 +1559,11 @@ class PermissionModal(BaseModal):
         await self.panel.show(interaction, f"**{GROUPS[self.group]}** can now be used by: {roles_text(guild, role_ids)}.")
 
 
-class PermissionsPanel(AdminPanel):
-    async def render(self, guild: discord.Guild) -> discord.Embed:
-        self.clear_items()
-        current = await group_roles(self.bot, guild.id)
-        select = discord.ui.Select(
-            placeholder="Change who can use a group...",
-            options=[option(label, group, roles_plain(guild, current[group])) for group, label in GROUPS.items()],
-            row=0,
-        )
-        self._watch(select, self._group_picked)
-        return permissions_embed(guild, current)
-
-    async def _group_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        group = select.values[0] if select.values else ""
-        if group not in GROUPS:
-            await self.show(interaction, "That group no longer exists.")
-            return
-        current = await self.bot.perms.roles_for(guild.id, group)
-        await interaction.response.send_modal(PermissionModal(self, guild, group, current))
-
-
 class SetupWizard(AdminPanel):
     def __init__(self, bot: FoxBot, guild_id: int, owner_id: int):
         super().__init__(bot, guild_id, owner_id)
         self.step = 0
         self.pending_access: list[int] | None = None
-        self.board_kind: str | None = None
-        self.board_channel_id: int | None = None
 
     @property
     def finished(self) -> bool:
@@ -1163,7 +1608,7 @@ class SetupWizard(AdminPanel):
         )
         self._watch(select, self._admin_picked)
         return (
-            "Members with this role can use `/settings`, `/permissions`, `/setup` and every admin button.\n"
+            "Members with this role can use `/settings`, `/setup` and every admin button.\n"
             "The server owner and members with the Administrator permission are always admins.\n\n"
             f"Current: {role_text(guild, current)}"
         )
@@ -1195,7 +1640,8 @@ class SetupWizard(AdminPanel):
         )
         self._watch(select, self._alerts_picked)
         return (
-            "Timer reminders are posted here. Without one, each reminder goes to the channel of its board.\n\n"
+            "Timer reminders go by DM to whoever added or last refreshed the entry, everyone who pressed Notify Me and the entry's reminder roles. "
+            "Only a reminder nobody can get by DM is posted here. Without a channel it goes to the channel of its board.\n\n"
             f"Current: {channel_text(current)}"
         )
 
@@ -1222,9 +1668,14 @@ class SetupWizard(AdminPanel):
             row=0,
         )
         self._watch(select, self._tickets_picked)
+        pings = await self.bot.settings.get(guild.id, keys.TICKET_PINGS)
+        self._add_ping_select(guild, pings, 1)
         return (
-            "Ticket staff see every ticket channel and can set status, assign tickets and log payments.\n\n"
-            f"Current: {roles_text(guild, current)}"
+            "**1. Ticket staff** (first menu) see every ticket channel and can set status, assign tickets and log payments.\n"
+            "**2. Who gets pinged** (second menu) is mentioned in every new ticket channel and can see those channels. "
+            "Pick roles or members; nobody is pinged until you pick someone.\n\n"
+            f"Ticket staff: {roles_text(guild, current)}\n"
+            f"Pinged for new tickets: {pings_text(pings)}"
         )
 
     async def _step_access(self, guild: discord.Guild) -> str:
@@ -1254,96 +1705,16 @@ class SetupWizard(AdminPanel):
             f"Who may use {names}?\n"
             f"Pick roles and press **Apply to All**. This replaces the roles of {ALL_ACCESS_GROUPS}. "
             "**Allow Everyone** opens them to every member. Press **Next** to keep the current access. "
-            "Fine-tune single groups later with `/permissions`.\n\n" + "\n".join(lines) + pending,
+            "Fine-tune single groups later in `/settings` under Permissions.\n\n" + "\n".join(lines) + pending,
             4000,
         )
 
     async def _step_boards(self, guild: discord.Guild) -> str:
-        providers = self.bot.boards.providers
-        if not providers:
+        if not self.bot.boards.providers:
             return "No boards are available."
-        if self.board_kind not in providers:
-            self.board_kind = None
-        options = []
-        for kind, provider in sorted(providers.items(), key=lambda item: item[1].title.lower())[:25]:
-            record = await self.bot.boards.record(guild.id, kind)
-            channel = guild.get_channel(record["channel_id"]) if record else None
-            if record and channel is not None:
-                where = f"Posted in #{channel.name}"
-            else:
-                where = "Posted" if record else "Not posted yet"
-            options.append(option(provider.title, kind, where, default=kind == self.board_kind))
-        board_select = discord.ui.Select(placeholder="1. Pick a board...", options=options, row=0)
-        self._watch(board_select, self._board_picked)
-        channel_select = discord.ui.ChannelSelect(
-            placeholder="2. Pick the channel for it...",
-            channel_types=TEXT_CHANNEL_TYPES,
-            min_values=1,
-            max_values=1,
-            default_values=channel_defaults(self.board_channel_id),
-            row=1,
-        )
-        self._watch(channel_select, self._board_channel_picked)
-        self._button("Post Board", discord.ButtonStyle.success, self._post_board, row=2)
+        await self._add_board_controls(guild, 0)
         lines = await boards_lines(self.bot, guild)
-        return clip(
-            "Boards are live messages that update by themselves and carry the buttons people use. "
-            "Pick a board and a channel, then press **Post Board**. Posting a board again moves it.\n\n" + "\n".join(lines),
-            4000,
-        )
-
-    async def _admin_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        role = select.values[0] if select.values else None
-        if role is not None and role.id == guild.id:
-            await self.show(interaction, "@everyone cannot be the admin role.")
-            return
-        await store_optional(self.bot, guild.id, keys.ADMIN_ROLE, role.id if role else None)
-        notice = f"Admin role set to {role.mention}." if role else "Admin role cleared."
-        lost = await lost_admin_warning(self.bot, interaction)
-        await self.show(interaction, f"{notice}\n{lost}" if lost else notice)
-
-    async def _logistics_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        role = select.values[0] if select.values else None
-        if role is not None and role.id == guild.id:
-            await self.show(interaction, "@everyone cannot be the logistics ping role.")
-            return
-        await store_optional(self.bot, guild.id, keys.LOGISTICS_ROLE, role.id if role else None)
-        await self.show(interaction, f"Logistics ping role set to {role.mention}." if role else "Logistics ping role cleared.")
-
-    async def _alerts_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        channel_id = select.values[0].id if select.values else None
-        await store_optional(self.bot, guild.id, keys.ALERT_CHANNEL, channel_id)
-        notice = f"Alerts channel set to <#{channel_id}>." if channel_id else "Alerts channel cleared."
-        warning = channel_warning(guild, channel_id, SEND_PERMISSIONS, "post reminders")
-        await self.show(interaction, f"{notice}\n{warning}" if warning else notice)
-
-    async def _faction_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        label = select.values[0] if select.values else NO_FACTION
-        await store_optional(self.bot, guild.id, keys.FACTION, FACTIONS.get(label))
-        await self.show(interaction, f"Faction set to {faction_label(FACTIONS.get(label))}.")
-
-    async def _tickets_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        current = await self.bot.perms.roles_for(guild.id, "tickets")
-        role_ids = {role.id for role in select.values}
-        if guild.id in current:
-            role_ids.add(guild.id)
-        await self.bot.perms.set_roles(guild.id, "tickets", role_ids)
-        await self.show(interaction, f"Ticket staff: {roles_text(guild, role_ids)}.")
+        return clip(BOARDS_HELP + "\n\n" + "\n".join(lines), 4000)
 
     async def _access_picked(self, interaction: discord.Interaction, select: discord.ui.RoleSelect) -> None:
         if await self.guard(interaction) is None:
@@ -1372,48 +1743,6 @@ class SetupWizard(AdminPanel):
             await self.bot.perms.set_roles(guild.id, group, {guild.id})
         self.pending_access = None
         await self.show(interaction, f"Every member can now use {ALL_ACCESS_GROUPS}.")
-
-    async def _board_picked(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
-        if await self.guard(interaction) is None:
-            return
-        self.board_kind = select.values[0] if select.values else None
-        await self.show(interaction)
-
-    async def _board_channel_picked(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect) -> None:
-        if await self.guard(interaction) is None:
-            return
-        self.board_channel_id = select.values[0].id if select.values else None
-        await self.show(interaction)
-
-    async def _post_board(self, interaction: discord.Interaction) -> None:
-        guild = await self.guard(interaction)
-        if guild is None:
-            return
-        provider = self.bot.boards.providers.get(self.board_kind or "")
-        if provider is None:
-            await self.show(interaction, "Pick a board first.")
-            return
-        if not self.board_channel_id:
-            await self.show(interaction, "Pick a channel first.")
-            return
-        channel = guild.get_channel(self.board_channel_id)
-        if channel is None:
-            await self.show(interaction, f"I cannot see <#{self.board_channel_id}>. Give me the View Channel permission there.")
-            return
-        missing = missing_permissions(channel, guild.me, SEND_PERMISSIONS)
-        if missing:
-            await self.show(interaction, f"I cannot post in {channel.mention}: I am missing {', '.join(missing)} there.")
-            return
-        await interaction.response.defer()
-        try:
-            await self.bot.boards.post(guild, provider.kind, channel)
-        except discord.Forbidden:
-            notice = f"Discord refused to let me post in {channel.mention}. Check my permissions there (View Channel, Send Messages, Embed Links)."
-        except discord.HTTPException as error:
-            notice = f"Could not post the {md(provider.title)} board: {error.text or error}"
-        else:
-            notice = f"**{md(provider.title)}** board posted in {channel.mention}."
-        await self.show(interaction, notice)
 
     async def _back(self, interaction: discord.Interaction) -> None:
         if await self.guard(interaction) is None:
@@ -1444,19 +1773,12 @@ class Admin(commands.Cog):
     def __init__(self, bot: FoxBot):
         self.bot = bot
 
-    @app_commands.command(name="settings", description="Admin: view and change this server's bot settings.")
+    @app_commands.command(name="settings", description="Admin: every bot setting in one menu: roles, permissions, boards, channels and more.")
     @app_commands.guild_only()
     async def settings_command(self, interaction: discord.Interaction) -> None:
         if not await check_admin(interaction):
             return
         await SettingsPanel(self.bot, interaction.guild_id, interaction.user.id).send(interaction)
-
-    @app_commands.command(name="permissions", description="Admin: choose which roles can use each part of the bot.")
-    @app_commands.guild_only()
-    async def permissions_command(self, interaction: discord.Interaction) -> None:
-        if not await check_admin(interaction):
-            return
-        await PermissionsPanel(self.bot, interaction.guild_id, interaction.user.id).send(interaction)
 
     @app_commands.command(name="setup", description="Admin: guided setup of roles, alerts, faction, access and boards.")
     @app_commands.guild_only()

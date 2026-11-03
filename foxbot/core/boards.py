@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import json
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -44,6 +46,16 @@ class BoardProvider(Protocol):
     async def on_button(self, interaction: discord.Interaction, action: str) -> None: ...
 
     async def on_pick(self, interaction: discord.Interaction, value: str) -> None: ...
+
+
+def render_fingerprint(render: BoardRender) -> str:
+    payload = {
+        "embeds": [embed.to_dict() for embed in render.embeds],
+        "options": [(o.label, o.value, o.description, o.default) for o in render.options],
+        "placeholder": render.placeholder,
+        "buttons": [(b.action, b.label, str(b.style)) for b in render.buttons],
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
 
 
 def build_board_view(kind: str, render: BoardRender) -> discord.ui.View:
@@ -118,6 +130,7 @@ class BoardService:
         self._scheduled: set[tuple[int, str]] = set()
         self._tasks: set[asyncio.Task] = set()
         self._locks: defaultdict[tuple[int, str], asyncio.Lock] = defaultdict(asyncio.Lock)
+        self._fingerprints: dict[tuple[int, str], tuple[int, str]] = {}
 
     def register(self, provider: BoardProvider) -> None:
         self.providers[provider.kind] = provider
@@ -125,6 +138,19 @@ class BoardService:
     def start(self) -> None:
         if not self._periodic.is_running():
             self._periodic.start()
+        task = asyncio.get_running_loop().create_task(self.delete_retired_messages())
+        self._tasks.add(task)
+        task.add_done_callback(self._tasks.discard)
+
+    async def delete_retired_messages(self) -> None:
+        await self.bot.wait_until_ready()
+        for row in await self.bot.db.fetchall("SELECT channel_id, message_id FROM retired_messages"):
+            await self._delete_message(row["channel_id"], row["message_id"])
+            await self.bot.db.execute(
+                "DELETE FROM retired_messages WHERE channel_id = ? AND message_id = ?",
+                (row["channel_id"], row["message_id"]),
+            )
+            await asyncio.sleep(1)
 
     def stop(self) -> None:
         self._periodic.cancel()
@@ -146,6 +172,7 @@ class BoardService:
         async with self._locks[(guild.id, kind)]:
             render = await provider.render(guild)
             message = await channel.send(embeds=render.embeds, view=build_board_view(kind, render))
+            self._fingerprints[(guild.id, kind)] = (message.id, render_fingerprint(render))
             old = await self.record(guild.id, kind)
             await self.bot.db.execute(
                 "INSERT INTO boards (guild_id, kind, channel_id, message_id) VALUES (?, ?, ?, ?) "
@@ -197,8 +224,12 @@ class BoardService:
                 return
             try:
                 render = await provider.render(guild)
+                fingerprint = (record["message_id"], render_fingerprint(render))
+                if self._fingerprints.get((guild_id, kind)) == fingerprint:
+                    return
                 message = self.bot.get_partial_messageable(record["channel_id"]).get_partial_message(record["message_id"])
                 await message.edit(embeds=render.embeds, view=build_board_view(kind, render))
+                self._fingerprints[(guild_id, kind)] = fingerprint
             except discord.NotFound:
                 log.info("Board %s in guild %s was deleted; forgetting it", kind, guild_id)
                 await self.bot.db.execute(

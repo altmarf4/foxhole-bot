@@ -106,6 +106,28 @@ async def test_board_add_flow_uses_picker_then_modal(world):
     )
 
 
+async def test_hex_step_is_one_select_with_letter_buttons(world):
+    bot, guild, member, _, channel = world
+    interaction = make_interaction(bot, member, channel=channel)
+    await bot.boards.providers["stockpile"].on_button(interaction, "add")
+    picker = interaction.recorder.last[1]["view"]
+    selects = [item for item in picker.children if isinstance(item, discord.ui.Select)]
+    assert len(selects) == 1
+    assert selects[0].options[0].value == "Acrithia" and len(selects[0].options) <= 25
+    labels = [item.label for item in picker.children if isinstance(item, discord.ui.Button)]
+    assert labels == ["A-H", "K-R", "S-W", "Type it instead"]
+    assert find_button(picker, "A-H").style == discord.ButtonStyle.primary
+
+    switch = make_interaction(bot, member, channel=channel)
+    await find_button(picker, "K-R").callback(switch)
+    assert switch.recorder.last[0] == "edit"
+    options = [o.value for o in find_select(picker, 0).options]
+    assert "Piper's Enclave" in options and "Acrithia" not in options
+    assert find_select(picker, 0).placeholder == "Pick a hex (K-R)..."
+    assert find_button(picker, "K-R").style == discord.ButtonStyle.primary
+    assert find_button(picker, "A-H").style == discord.ButtonStyle.secondary
+
+
 async def test_outsider_cannot_open_add(world):
     bot, guild, _, outsider, channel = world
     interaction = make_interaction(bot, outsider, channel=channel)
@@ -186,7 +208,7 @@ async def test_panel_blocks_outsider(world):
     assert "access" in interaction.recorder.last[1]["content"]
 
 
-async def test_alerts_post_to_board_channel_and_dm_private(world):
+async def test_alerts_go_by_dm_to_owners_and_access(world):
     bot, guild, member, outsider, channel = world
     bot.boards.channel_id_for = AsyncMock(return_value=channel.id)
     public = await create(bot, guild, member)
@@ -194,15 +216,25 @@ async def test_alerts_post_to_board_channel_and_dm_private(world):
     await entries.set_access(bot.db, "stockpile", private["id"], {outsider.id}, set())
     await entries.toggle_subscription(bot.db, "stockpile", public["id"], outsider.id)
     await entries.toggle_subscription(bot.db, "stockpile", public["id"], member.id)
-    bot.get_user = MagicMock(side_effect=lambda uid: guild._members.get(uid))
     later = timeutil.now() + 49 * 3600
     await bot.alerts.check(now=later)
-    assert len(channel.sent) == 1
-    assert "KM1" in channel.sent[0]["embed"].description
+    assert channel.sent == []
     assert outsider.send.await_count == 1
     assert member.send.await_count == 2
+    assert any("KM1" in call.kwargs["embed"].description for call in member.send.await_args_list)
+    assert member.send.await_args.kwargs["embed"].author.name == guild.name
     await bot.alerts.check(now=later + 60)
+    assert member.send.await_count == 2
+
+
+async def test_alerts_fall_back_to_channel_when_nobody_gets_a_dm(world):
+    bot, guild, member, outsider, channel = world
+    bot.boards.channel_id_for = AsyncMock(return_value=channel.id)
+    await create(bot, guild, member)
+    member.send.side_effect = discord.HTTPException(MagicMock(status=403, reason="Forbidden"), "Cannot send messages to this user")
+    await bot.alerts.check(now=timeutil.now() + 49 * 3600)
     assert len(channel.sent) == 1
+    assert "KM1" in channel.sent[0]["embed"].description
 
 
 async def test_slash_add_resolves_location(world):

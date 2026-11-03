@@ -184,7 +184,7 @@ async def test_panel_refresh_records_who_and_resets_alerts(world):
         (row["id"],),
     )
     panel = await open_panel(bot, guild, member, channel, row)
-    assert [b.label for b in panel.children][:5] == ["Refresh Timer", "Edit", "Notes", "Screenshot", "Reminder Pings"]
+    assert [b.label for b in panel.children][:6] == ["Refresh Timer", "Notify Me", "Edit", "Notes", "Screenshot", "Reminder Pings"]
     click = make_interaction(bot, member, channel=channel)
     await find_button(panel, "Refresh Timer").callback(click)
     fresh = await ships.fetch(bot, guild.id, row["id"])
@@ -362,26 +362,27 @@ async def test_open_panel_blocks_outsider(world):
     assert "no longer exists" in missing.recorder.last[1]["content"]
 
 
-async def test_alerts_post_and_dm_only_permitted_subscribers(world):
+async def test_alerts_dm_owner_subscribers_and_reminder_roles(world):
     bot, guild, member, outsider, channel = world
     bot.boards.channel_id_for = AsyncMock(return_value=channel.id)
-    bot.get_user = MagicMock(side_effect=lambda uid: guild._members.get(uid))
     row = await create(bot, guild, member)
     pings = add_role(guild, "Sailors")
+    navy = next(role for role in member.roles if role.name == "Navy")
+    crew = make_member(guild, name="Crew", roles=[pings, navy])
+    stranger = make_member(guild, name="Stranger", roles=[pings])
     await entries.set_alert_roles(bot.db, "ship", row["id"], [pings.id])
     await entries.toggle_subscription(bot.db, "ship", row["id"], member.id)
     await entries.toggle_subscription(bot.db, "ship", row["id"], outsider.id)
     later = timeutil.now() + 47 * 3600
     await bot.alerts.check(now=later)
-    assert len(channel.sent) == 1
-    sent = channel.sent[0]
-    assert sent["embed"].title == "Ship squad lock reminder"
-    assert "HMS Fox (Destroyer)" in sent["embed"].description
-    assert pings.mention in sent["content"]
-    assert member.send.await_count == 1
-    assert outsider.send.await_count == 0
+    assert channel.sent == []
+    sent = member.send.await_args.kwargs["embed"]
+    assert sent.title == "Ship squad lock reminder"
+    assert "HMS Fox (Destroyer)" in sent.description
+    assert member.send.await_count == 1 and crew.send.await_count == 1
+    assert outsider.send.await_count == 0 and stranger.send.await_count == 0
     await bot.alerts.check(now=later + 60)
-    assert len(channel.sent) == 1
+    assert member.send.await_count == 1
 
 
 async def test_alert_action_refreshes_timer(world):

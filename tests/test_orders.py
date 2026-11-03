@@ -108,7 +108,7 @@ def texts(interaction) -> str:
 
 
 async def make_order(w, *, lines="50 Basic Materials\n20 Mortar Shell", title="Front ammo", order_type="Production", user=None, post=True, notes=""):
-    parsed = orders.parse_lines(w.bot.catalog, lines, None)
+    parsed = orders.parse_lines(lines)
     assert not parsed.errors
     order = await orders.create(
         w.bot,
@@ -190,49 +190,45 @@ def assert_embed_limits(embed):
     assert all(len(field.value) <= EMBED_FIELD_LIMIT for field in embed.fields)
 
 
-def test_parse_lines_formats_and_matching():
-    from foxbot.core.catalog import Catalog
-
-    module = __import__("foxbot.features.orders", fromlist=["parse_lines"])
-    catalog = Catalog()
-    result = module.parse_lines(
-        catalog,
-        "50 Basic Materials\n20 x Mortar Shell\n- 10 Soldier Supplies\nGas Mask: 30\n12.7mm 100\n"
-        "1,000 Salvage\n5 cloth\n3 bmats\n7 loughcaster\n2 mortar shells\n\n",
-        "warden",
+def test_parse_lines_takes_the_leading_amount_and_keeps_the_text():
+    orders = __import__("foxbot.features.orders", fromlist=["parse_lines"])
+    result = orders.parse_lines(
+        "50k Scrap\n20c Mortar Shell\n- 10 Soldier Supplies\n1,000 Salvage\n1.5k bmats\n3 x Gas Mask\n7K   rifles\n12 kits\n\n"
     )
     assert not result.errors
-    found = {line.item_name: (line.item_code, line.target) for line in result.lines}
-    assert found["Basic Materials"] == ("Cloth", 55)
-    assert found["Mortar Shell"] == ("MortarAmmo", 22)
-    assert found["Soldier Supplies"] == ("SoldierSupplies", 10)
-    assert found["Gas Mask"] == ("GasMask", 30)
-    assert found["12.7mm"] == ("MGAmmo", 100)
-    assert found["Salvage"] == ("Metal", 1000)
-    assert found["bmats"] == (None, 3)
-    assert found["No.2 Loughcaster"] == ("RifleW", 7)
-    assert result.unmatched == ["bmats"]
-    assert ("loughcaster", "No.2 Loughcaster") in result.guessed
-    assert set(result.merged) == {"Basic Materials", "Mortar Shell"}
-    assert module.catalog_faction("Colonials") == "colonial"
-    assert module.catalog_faction(None) is None
+    assert [(line.text, line.target) for line in result.lines] == [
+        ("50k Scrap", 50_000),
+        ("20c Mortar Shell", 20),
+        ("10 Soldier Supplies", 10),
+        ("1,000 Salvage", 1000),
+        ("1.5k bmats", 1500),
+        ("3 x Gas Mask", 3),
+        ("7K rifles", 7000),
+        ("12 kits", 12),
+    ]
 
 
 def test_parse_lines_errors():
-    from foxbot.core.catalog import Catalog
-
-    module = __import__("foxbot.features.orders", fromlist=["parse_lines"])
-    catalog = Catalog()
-    errors = module.parse_lines(catalog, "-5 Basic Materials\n0 Salvage\n2000000 Salvage\nSalvage", None).errors
-    assert len(errors) == 4
-    assert "positive" in errors[0] and "at least 1" in errors[1] and "1,000,000" in errors[2] and "amount and an item" in errors[3]
-    assert "at least one line" in module.parse_lines(catalog, " \n ", None).errors[0]
+    orders = __import__("foxbot.features.orders", fromlist=["parse_lines"])
+    errors = orders.parse_lines("-5 Basic Materials\n0 Salvage\n2000000 Salvage\nSalvage 50\n50k").errors
+    assert len(errors) == 5
+    assert "negative" in errors[0] and "at least 1" in errors[1] and "1,000,000" in errors[2]
+    assert "start the line with the amount" in errors[3] and "after the amount" in errors[4]
+    assert "at least one line" in orders.parse_lines(" \n ").errors[0]
     too_many = "\n".join(f"{index + 1} thing number {index}" for index in range(21))
-    assert "at most 20 lines" in module.parse_lines(catalog, too_many, None).errors[0]
-    assert "more than 1,000,000" in module.parse_lines(catalog, "900000 Salvage\n900000 Salvage", None).errors[0]
-    assert "80 characters" in module.parse_lines(catalog, "5 " + "x" * 81, None).errors[0]
+    assert "at most 20 lines" in orders.parse_lines(too_many).errors[0]
+    assert "80 characters" in orders.parse_lines("5 " + "x" * 79).errors[0]
     exactly_twenty = "\n".join(f"{index + 1} thing number {index}" for index in range(20))
-    assert not module.parse_lines(catalog, exactly_twenty, None).errors
+    assert not orders.parse_lines(exactly_twenty).errors
+
+
+def test_lines_to_text_round_trips_new_and_old_lines():
+    orders = __import__("foxbot.features.orders", fromlist=["parse_lines"])
+    rows = [
+        {"item_name": "50k Scrap", "target": 50_000},
+        {"item_name": "Basic Materials", "target": 50},
+    ]
+    assert orders.lines_to_text(rows) == "50k Scrap\n50 Basic Materials"
 
 
 async def test_slash_create_opens_modal_and_posts_card(world):
@@ -246,7 +242,7 @@ async def test_slash_create_opens_modal_and_posts_card(world):
     assert_modal_limits(modal)
     assert modal.destination_field is None
     assert modal.title_field.component.default == "Front ammo"
-    set_label_value(modal.lines_field, "50 Basic Materials\n20 x Mortar Shell\n3 bmats")
+    set_label_value(modal.lines_field, "50 Basic Materials\n20c Mortar Shell\n3k bmats")
     set_label_value(modal.notes_field, "Deliver to the *north* depot")
     submit = interact(w, w.creator)
     await modal.on_submit(submit)
@@ -259,9 +255,9 @@ async def test_slash_create_opens_modal_and_posts_card(world):
     assert order["notes"] == "Deliver to the *north* depot"
     lines = await orders.fetch_lines(w.bot, order["id"])
     assert [(l["item_code"], l["item_name"], l["target"], l["done"]) for l in lines] == [
-        ("Cloth", "Basic Materials", 50, 0),
-        ("MortarAmmo", "Mortar Shell", 20, 0),
-        (None, "bmats", 3, 0),
+        (None, "50 Basic Materials", 50, 0),
+        (None, "20c Mortar Shell", 20, 0),
+        (None, "3k bmats", 3000, 0),
     ]
     assert len(w.channel.sent) == 1
     sent = w.channel.sent[0]
@@ -277,7 +273,7 @@ async def test_slash_create_opens_modal_and_posts_card(world):
     assert order["message_id"] is not None and order["channel_id"] == w.channel.id
     reply_text = submit.recorder.last[1]["content"]
     assert orders.jump_link(order) in reply_text
-    assert "Piper's Enclave" in reply_text and "bmats" in reply_text
+    assert "Piper's Enclave" in reply_text
     w.bot.boards.request_refresh.assert_any_call(w.guild.id, "orders")
 
 
@@ -436,7 +432,7 @@ async def test_contribute_button_single_and_multiple_lines(world):
     picker = payload["view"]
     assert not isinstance(picker, orders.LinePanel)
     select = find_select(picker)
-    assert [o.label for o in select.options] == ["Basic Materials", "Mortar Shell"]
+    assert [o.label for o in select.options] == ["50 Basic Materials", "20 Mortar Shell"]
     lines = await orders.fetch_lines(w.bot, multi["id"])
     select_values(select, [str(lines[1]["id"])])
     pick = interact(w, w.helper)
@@ -463,7 +459,7 @@ async def test_panel_switch_line(world):
     interaction = interact(w, w.helper)
     await switch.callback(interaction)
     assert panel.line_id == lines[1]["id"]
-    assert interaction.recorder.last[1]["embed"].title == "Mortar Shell"
+    assert interaction.recorder.last[1]["embed"].title == "20 Mortar Shell"
     await click(w, panel, "+4", w.helper)
     assert [l["done"] for l in await orders.fetch_lines(w.bot, order["id"])] == [0, 4]
 
@@ -570,7 +566,7 @@ async def test_edit_lines_keeps_done_amounts(world):
     fresh = await orders.fetch(w.bot, w.guild.id, order["id"])
     assert (fresh["title"], fresh["hex"], fresh["region"], fresh["notes"]) == ("Renamed", "Piper's Enclave", "Syrinx Pass", "")
     new_lines = await orders.fetch_lines(w.bot, order["id"])
-    assert [(l["item_name"], l["target"], l["done"]) for l in new_lines] == [("Basic Materials", 60, 30), ("Soldier Supplies", 10, 0)]
+    assert [(l["item_name"], l["target"], l["done"]) for l in new_lines] == [("60 basic materials", 60, 30), ("10 Soldier Supplies", 10, 0)]
     assert new_lines[0]["id"] == lines[0]["id"]
     assert await w.bot.db.fetchval("SELECT COUNT(*) FROM order_contributions WHERE line_id = ?", (lines[1]["id"],)) == 0
     card = w.cards.last_embed(order["message_id"])
@@ -798,7 +794,7 @@ async def test_board_new_order_with_destination(world):
     submit = interact(w, w.creator)
     await modal.on_submit(submit)
     content = submit.recorder.last[1]["content"]
-    assert "Syrinx Pass, Piper's Enclave" in content and "No.2 Loughcaster" in content
+    assert "Syrinx Pass, Piper's Enclave" in content
     order = (await orders.list_orders(w.bot, w.guild.id))[0]
     assert (order["hex"], order["region"]) == ("Piper's Enclave", "Syrinx Pass")
 
@@ -864,9 +860,9 @@ async def test_create_autocomplete(world):
 
 async def test_worst_case_card_and_board_fit_discord_limits(world):
     w = world
-    names = [f"Item_{index:02d} *bold* " + "x" * 60 for index in range(20)]
+    names = [f"Item_{index:02d} *bold* " + "x" * 57 for index in range(20)]
     text = "\n".join(f"{1_000_000} {name}" for name in names)
-    parsed = orders.parse_lines(w.bot.catalog, text, None)
+    parsed = orders.parse_lines(text)
     assert not parsed.errors and len(parsed.lines) == 20
     order = await orders.create(
         w.bot,
