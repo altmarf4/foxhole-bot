@@ -365,7 +365,12 @@ ALTER TABLE logi_runs ADD COLUMN cancelled_by INTEGER;
 ALTER TABLE logi_runs ADD COLUMN cancelled_at INTEGER;
 """
 
-MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3]
+SCHEMA_V4 = """
+ALTER TABLE inventory_snapshots ADD COLUMN map_x REAL;
+ALTER TABLE inventory_snapshots ADD COLUMN map_y REAL;
+"""
+
+MIGRATIONS: list[str] = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3, SCHEMA_V4]
 
 
 class Transaction:

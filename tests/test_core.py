@@ -194,3 +194,21 @@ async def test_command_tree_is_valid_for_all_extensions():
     walk(payload)
     assert len(payload) <= 100
     await bot.db.close()
+
+
+async def test_unknown_interaction_is_logged_as_warning(caplog):
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock, MagicMock
+
+    from foxbot.core.ui import report_error
+
+    response = MagicMock(status=404, reason="Not Found")
+    error = discord.NotFound(response, {"code": 10062, "message": "Unknown interaction"})
+    interaction = SimpleNamespace(response=MagicMock(), followup=MagicMock())
+    interaction.response.is_done = MagicMock(return_value=False)
+    interaction.response.send_message = AsyncMock()
+    with caplog.at_level("WARNING", logger="foxbot.core.ui"):
+        await report_error(interaction, error, "/settings")
+    assert any(record.levelname == "WARNING" and "another copy of the bot" in record.getMessage() for record in caplog.records)
+    assert not any(record.levelname == "ERROR" for record in caplog.records)
+    interaction.response.send_message.assert_not_awaited()

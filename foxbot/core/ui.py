@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import logging
 from dataclasses import dataclass
 from typing import Any, Awaitable, Callable, Sequence
@@ -70,7 +71,17 @@ async def deny(interaction: discord.Interaction, text: str) -> None:
         log.debug("Could not send denial message", exc_info=True)
 
 
+UNKNOWN_INTERACTION = 10062
+
+
 async def report_error(interaction: discord.Interaction, error: BaseException, where: str) -> None:
+    if isinstance(error, discord.NotFound) and error.code == UNKNOWN_INTERACTION:
+        log.warning(
+            "Discord said the interaction in %s no longer exists. The bot answered after Discord's 3 second limit, "
+            "or another copy of the bot using the same token answered first.",
+            where,
+        )
+        return
     log.error("Unhandled error in %s", where, exc_info=error)
     try:
         await reply(interaction, "Something went wrong while doing that. The error was logged for the bot admins.")
@@ -236,11 +247,25 @@ class PickerView(BaseView):
 
 
 class EmbedPaginator(BaseView):
-    def __init__(self, embeds: list[discord.Embed], *, owner_id: int):
+    def __init__(
+        self,
+        embeds: list[discord.Embed],
+        *,
+        owner_id: int,
+        attachments: Sequence[tuple[str, bytes]] = (),
+        attachment_pages: set[int] | None = None,
+    ):
         super().__init__(owner_id=owner_id)
         self.embeds = embeds
         self.page = 0
+        self.attachments = list(attachments)
+        self.attachment_pages = attachment_pages
         self._sync()
+
+    def files_for(self, page: int) -> list[discord.File]:
+        if not self.attachments or (self.attachment_pages is not None and page not in self.attachment_pages):
+            return []
+        return [discord.File(io.BytesIO(data), filename=name) for name, data in self.attachments]
 
     def _sync(self) -> None:
         last = len(self.embeds) - 1
@@ -250,14 +275,16 @@ class EmbedPaginator(BaseView):
         self.last_page.disabled = self.page >= last
 
     async def start(self, interaction: discord.Interaction) -> None:
+        files = self.files_for(0) or None
         if len(self.embeds) == 1:
-            await reply(interaction, embed=self.embeds[0])
+            await reply(interaction, embed=self.embeds[0], files=files)
         else:
-            await reply(interaction, embed=self.embeds[0], view=self)
+            await reply(interaction, embed=self.embeds[0], view=self, files=files)
 
     async def _show(self, interaction: discord.Interaction) -> None:
         self._sync()
-        await interaction.response.edit_message(embed=self.embeds[self.page], view=self)
+        extra: dict[str, Any] = {"attachments": self.files_for(self.page)} if self.attachments else {}
+        await interaction.response.edit_message(embed=self.embeds[self.page], view=self, **extra)
 
     @discord.ui.button(label="First", style=discord.ButtonStyle.secondary)
     async def first_page(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:

@@ -1,5 +1,5 @@
 {
-  "fetched_at": 1790977756.782194,
+  "fetched_at": 1791047396.11164,
   "hexes": [
     {
       "key": "AcrithiaHex",
@@ -7,59 +7,87 @@
       "regions": [
         {
           "name": "Camp Omicron",
-          "major": true
+          "major": true,
+          "x": 0.71446663,
+          "y": 0.12350824
         },
         {
           "name": "Heir Apparent",
-          "major": true
+          "major": true,
+          "x": 0.45826307,
+          "y": 0.094163164
         },
         {
           "name": "Legion Ranch",
-          "major": true
+          "major": true,
+          "x": 0.7532782,
+          "y": 0.4639188
         },
         {
           "name": "Nereid Keep",
-          "major": true
+          "major": true,
+          "x": 0.71448785,
+          "y": 0.63494116
         },
         {
           "name": "Patridia",
-          "major": true
+          "major": true,
+          "x": 0.3927823,
+          "y": 0.609666
         },
         {
           "name": "Swordfort",
-          "major": true
+          "major": true,
+          "x": 0.2708097,
+          "y": 0.29338244
         },
         {
           "name": "The Brinehold",
-          "major": true
+          "major": true,
+          "x": 0.49710044,
+          "y": 0.48647487
         },
         {
           "name": "Thetus Ring",
-          "major": true
+          "major": true,
+          "x": 0.42926803,
+          "y": 0.32354346
         },
         {
           "name": "Astero's Spear",
-          "major": false
+          "major": false,
+          "x": 0.6292714,
+          "y": 0.18665193
         },
         {
           "name": "Duelling Kegs",
-          "major": false
+          "major": false,
+          "x": 0.32337892,
+          "y": 0.71220475
         },
         {
           "name": "Fated Heel",
-          "major": false
+          "major": false,
+          "x": 0.58800983,
+          "y": 0.3380633
         },
         {
           "name": "Final March",
-          "major": false
+          "major": false,
+          "x": 0.80758244,
+          "y": 0.29250857
         },
         {
           "name": "Riverlands",
-          "major": false
+          "major": false,
+          "x": 0.49876517,
+          "y": 0.83077586
         },
         {
           "name": "Weary Slumber",
-          "major": false
+          "major": false,
+          "x": 0.31429753,
+          "y": 0.14879908
         }
       ]
     },
@@ -69,71 +97,105 @@
       "regions": [
         {
           "name": "Belaying Trace",
-          "major": true
+          "major": true,
+          "x": 0.2464044,
+          "y": 0.5615137
         },
         {
           "name": "Homesick",
-          "major": true
+          "major": true,
+          "x": 0.3531582,
+          "y": 0.38265672
         },
         {
           "name": "Mercy's Wail",
-          "major": true
+          "major": true,
+          "x": 0.51238513,
+          "y": 0.5703627
         },
         {
           "name": "Rumhold",
-          "major": true
+          "major": true,
+          "x": 0.25670072,
+          "y": 0.24363878
         },
         {
           "name": "Scurvyshire",
-          "major": true
+          "major": true,
+          "x": 0.37265283,
+          "y": 0.20996757
         },
         {
           "name": "The Stone Plank",
-          "major": true
+          "major": true,
+          "x": 0.7455613,
+          "y": 0.44608068
         },
         {
           "name": "The Turncoat",
-          "major": true
+          "major": true,
+          "x": 0.38879034,
+          "y": 0.73078084
         },
         {
           "name": "A Captain's Repose",
-          "major": false
+          "major": false,
+          "x": 0.5932731,
+          "y": 0.8355915
         },
         {
           "name": "Allod's Children",
-          "major": false
+          "major": false,
+          "x": 0.11191041,
+          "y": 0.41417748
         },
         {
           "name": "Blunder Bight",
-          "major": false
+          "major": false,
+          "x": 0.6916226,
+          "y": 0.12754051
         },
         {
           "name": "Breath of Cetus",
-          "major": false
+          "major": false,
+          "x": 0.696068,
+          "y": 0.6411313
         },
         {
           "name": "Gangrenous Hollow",
-          "major": false
+          "major": false,
+          "x": 0.3076385,
+          "y": 0.7364839
         },
         {
           "name": "Harpy's Perch",
-          "major": false
+          "major": false,
+          "x": 0.50235146,
+          "y": 0.3998172
         },
         {
           "name": "The List",
-          "major": false
+          "major": false,
+          "x": 0.22667567,
+          "y": 0.80759597
         },
         {
           "name": "The Rumroad",
-          "major": false
+          "major": false,
+          "x": 0.18821536,
+          "y": 0.28423867
         },
         {
           "name": "Titan's End",
-          "major": false
+          "major": false,
+          "x": 0.53741086,
+          "y": 0.109029606
         },
         {
           "name": "Witch's Last Flight",
-          "major": false
+          "major": false,
+          "x": 0.6181798,
+          "y": 0.26963705
         }
       ]
     },
@@ -143,67 +205,99 @@
       "regions": [
         {
           "name": "Ashtown",
-          "major": true
+          "major": true,
+          "x": 0.5143172,
+          "y": 0.5525154
         },
         {
           "name": "Camp Omega",
-          "major": true
+          "major": true,
+          "x": 0.7096968,
+          "y": 0.12712017
         },
         {
           "name": "Cometa",
-          "major": true
+          "major": true,
+          "x": 0.27839515,
+          "y": 0.22447485
         },
         {
           "name": "Electi",
-          "major": true
+          "major": true,
+          "x": 0.46130008,
+          "y": 0.133538
         },
         {
           "name": "Sootflow",
-          "major": true
+          "major": true,
+          "x": 0.71663564,
+          "y": 0.72119087
         },
         {
           "name": "The Ashfort",
-          "major": true
+          "major": true,
+          "x": 0.75574505,
+          "y": 0.42160434
         },
         {
           "name": "The Calamity",
-          "major": true
+          "major": true,
+          "x": 0.26671404,
+          "y": 0.44761574
         },
         {
           "name": "Gunslinger's Pass",
-          "major": false
+          "major": false,
+          "x": 0.40480655,
+          "y": 0.91855067
         },
         {
           "name": "Mount Blackmoth",
-          "major": false
+          "major": false,
+          "x": 0.59724534,
+          "y": 0.2234254
         },
         {
           "name": "Mount Brimstone",
-          "major": false
+          "major": false,
+          "x": 0.41860235,
+          "y": 0.8069577
         },
         {
           "name": "Omega Valley",
-          "major": false
+          "major": false,
+          "x": 0.75688833,
+          "y": 0.30764285
         },
         {
           "name": "Tar Creek",
-          "major": false
+          "major": false,
+          "x": 0.25911945,
+          "y": 0.5969615
         },
         {
           "name": "The Red River",
-          "major": false
+          "major": false,
+          "x": 0.51841533,
+          "y": 0.3471736
         },
         {
           "name": "The Stillness",
-          "major": false
+          "major": false,
+          "x": 0.37764594,
+          "y": 0.41737863
         },
         {
           "name": "Twin Flames",
-          "major": false
+          "major": false,
+          "x": 0.7930806,
+          "y": 0.5975344
         },
         {
           "name": "Wasteful Calm",
-          "major": false
+          "major": false,
+          "x": 0.45589614,
+          "y": 0.6622806
         }
       ]
     },
@@ -213,47 +307,69 @@
       "regions": [
         {
           "name": "Basinhome",
-          "major": true
+          "major": true,
+          "x": 0.35348263,
+          "y": 0.7858053
         },
         {
           "name": "Cuttail Station",
-          "major": true
+          "major": true,
+          "x": 0.6165509,
+          "y": 0.32046065
         },
         {
           "name": "Lamplight",
-          "major": true
+          "major": true,
+          "x": 0.7055696,
+          "y": 0.5793747
         },
         {
           "name": "Sess",
-          "major": true
+          "major": true,
+          "x": 0.22391447,
+          "y": 0.41179398
         },
         {
           "name": "Stoic",
-          "major": true
+          "major": true,
+          "x": 0.85562885,
+          "y": 0.42999405
         },
         {
           "name": "The Den",
-          "major": true
+          "major": true,
+          "x": 0.4074,
+          "y": 0.5118155
         },
         {
           "name": "Basin Sionnach",
-          "major": false
+          "major": false,
+          "x": 0.37180838,
+          "y": 0.36804
         },
         {
           "name": "Cunning Cross",
-          "major": false
+          "major": false,
+          "x": 0.69363093,
+          "y": 0.22195037
         },
         {
           "name": "Radiant Shore",
-          "major": false
+          "major": false,
+          "x": 0.23862335,
+          "y": 0.66145176
         },
         {
           "name": "The Foxfields",
-          "major": false
+          "major": false,
+          "x": 0.39967486,
+          "y": 0.18785414
         },
         {
           "name": "Torchwood",
-          "major": false
+          "major": false,
+          "x": 0.73248684,
+          "y": 0.7331818
         }
       ]
     },
@@ -263,111 +379,165 @@
       "regions": [
         {
           "name": "Cragstown",
-          "major": true
+          "major": true,
+          "x": 0.51669085,
+          "y": 0.13976866
         },
         {
           "name": "Crumbling Post",
-          "major": true
+          "major": true,
+          "x": 0.35385895,
+          "y": 0.7248818
         },
         {
           "name": "Lochan Berth",
-          "major": true
+          "major": true,
+          "x": 0.56270015,
+          "y": 0.42374668
         },
         {
           "name": "Overlook Hill",
-          "major": true
+          "major": true,
+          "x": 0.5252302,
+          "y": 0.6481513
         },
         {
           "name": "Sc\u00e1th Passing",
-          "major": true
+          "major": true,
+          "x": 0.34909955,
+          "y": 0.53184307
         },
         {
           "name": "Solas Gorge",
-          "major": true
+          "major": true,
+          "x": 0.19406947,
+          "y": 0.33073047
         },
         {
           "name": "The Crumbling Passage",
-          "major": true
+          "major": true,
+          "x": 0.45544657,
+          "y": 0.7847246
         },
         {
           "name": "The Latch",
-          "major": true
+          "major": true,
+          "x": 0.72713715,
+          "y": 0.68313295
         },
         {
           "name": "The Procession",
-          "major": true
+          "major": true,
+          "x": 0.7513888,
+          "y": 0.43929663
         },
         {
           "name": "White Chapel",
-          "major": true
+          "major": true,
+          "x": 0.7634679,
+          "y": 0.2669874
         },
         {
           "name": "Callahan's Eye",
-          "major": false
+          "major": false,
+          "x": 0.30864334,
+          "y": 0.26224336
         },
         {
           "name": "Chapel Access",
-          "major": false
+          "major": false,
+          "x": 0.8670075,
+          "y": 0.52318686
         },
         {
           "name": "Cragsfield",
-          "major": false
+          "major": false,
+          "x": 0.5690361,
+          "y": 0.19898543
         },
         {
           "name": "Cragsroad",
-          "major": false
+          "major": false,
+          "x": 0.44606456,
+          "y": 0.35310647
         },
         {
           "name": "Lingering Lashes",
-          "major": false
+          "major": false,
+          "x": 0.39600572,
+          "y": 0.16319244
         },
         {
           "name": "Lochan",
-          "major": false
+          "major": false,
+          "x": 0.54940885,
+          "y": 0.5079033
         },
         {
           "name": "Lost Tops",
-          "major": false
+          "major": false,
+          "x": 0.2450918,
+          "y": 0.87107843
         },
         {
           "name": "Sioc Approach",
-          "major": false
+          "major": false,
+          "x": 0.6218272,
+          "y": 0.67211956
         },
         {
           "name": "Solas Gateway",
-          "major": false
+          "major": false,
+          "x": 0.23241858,
+          "y": 0.42319626
         },
         {
           "name": "Soured Fields",
-          "major": false
+          "major": false,
+          "x": 0.09100611,
+          "y": 0.532157
         },
         {
           "name": "The Key",
-          "major": false
+          "major": false,
+          "x": 0.7205697,
+          "y": 0.9363465
         },
         {
           "name": "The Lance",
-          "major": false
+          "major": false,
+          "x": 0.38485914,
+          "y": 0.07471772
         },
         {
           "name": "The Rust Road",
-          "major": false
+          "major": false,
+          "x": 0.20239393,
+          "y": 0.69895375
         },
         {
           "name": "The Stern",
-          "major": false
+          "major": false,
+          "x": 0.7807102,
+          "y": 0.7850171
         },
         {
           "name": "Twisted Mumble",
-          "major": false
+          "major": false,
+          "x": 0.6754054,
+          "y": 0.17212075
         },
         {
           "name": "Whispering Gulch",
-          "major": false
+          "major": false,
+          "x": 0.49615276,
+          "y": 1.0449303
         },
         {
           "name": "Winding Crag",
-          "major": false
+          "major": false,
+          "x": 0.52042425,
+          "y": 0.24549948
         }
       ]
     },
@@ -377,63 +547,93 @@
       "regions": [
         {
           "name": "Callum's Keep",
-          "major": true
+          "major": true,
+          "x": 0.3986264,
+          "y": 0.23518516
         },
         {
           "name": "Camp Hollow",
-          "major": true
+          "major": true,
+          "x": 0.75129753,
+          "y": 0.2829856
         },
         {
           "name": "Holdout",
-          "major": true
+          "major": true,
+          "x": 0.70983833,
+          "y": 0.5703603
         },
         {
           "name": "Ire",
-          "major": true
+          "major": true,
+          "x": 0.4794494,
+          "y": 0.8495265
         },
         {
           "name": "Lookout",
-          "major": true
+          "major": true,
+          "x": 0.75171673,
+          "y": 0.7793463
         },
         {
           "name": "Naofa",
-          "major": true
+          "major": true,
+          "x": 0.14666781,
+          "y": 0.503729
         },
         {
           "name": "Scouts Jest",
-          "major": true
+          "major": true,
+          "x": 0.23736292,
+          "y": 0.7437504
         },
         {
           "name": "Hollowhill",
-          "major": false
+          "major": false,
+          "x": 0.6174276,
+          "y": 0.16184537
         },
         {
           "name": "Princefal Burn",
-          "major": false
+          "major": false,
+          "x": 0.19808379,
+          "y": 0.54685104
         },
         {
           "name": "The Dreg",
-          "major": false
+          "major": false,
+          "x": 0.53022766,
+          "y": 0.24204479
         },
         {
           "name": "The Gunwall",
-          "major": false
+          "major": false,
+          "x": 0.4388706,
+          "y": 0.3766741
         },
         {
           "name": "The River Vein",
-          "major": false
+          "major": false,
+          "x": 0.5539442,
+          "y": 0.49919212
         },
         {
           "name": "Trail of the Dead",
-          "major": false
+          "major": false,
+          "x": 0.42227492,
+          "y": 0.623544
         },
         {
           "name": "Valta Downs",
-          "major": false
+          "major": false,
+          "x": 0.64961797,
+          "y": 0.8310381
         },
         {
           "name": "Vex",
-          "major": false
+          "major": false,
+          "x": 0.3795331,
+          "y": 0.8731494
         }
       ]
     },
@@ -443,71 +643,105 @@
       "regions": [
         {
           "name": "Bewailing Fort",
-          "major": true
+          "major": true,
+          "x": 0.1862475,
+          "y": 0.4753392
         },
         {
           "name": "East Narthex",
-          "major": true
+          "major": true,
+          "x": 0.6847072,
+          "y": 0.72327536
         },
         {
           "name": "The Treasury",
-          "major": true
+          "major": true,
+          "x": 0.41098657,
+          "y": 0.49743772
         },
         {
           "name": "The Vault",
-          "major": true
+          "major": true,
+          "x": 0.37365684,
+          "y": 0.252611
         },
         {
           "name": "Third Chapter",
-          "major": true
+          "major": true,
+          "x": 0.563485,
+          "y": 0.2069063
         },
         {
           "name": "Transept",
-          "major": true
+          "major": true,
+          "x": 0.30458647,
+          "y": 0.7428997
         },
         {
           "name": "Watchful Nave",
-          "major": true
+          "major": true,
+          "x": 0.38035214,
+          "y": 0.8657404
         },
         {
           "name": "Weephome",
-          "major": true
+          "major": true,
+          "x": 0.73456705,
+          "y": 0.39799002
         },
         {
           "name": "Penitent Inlet",
-          "major": false
+          "major": false,
+          "x": 0.32504606,
+          "y": 0.45935994
         },
         {
           "name": "Saint's Crossing",
-          "major": false
+          "major": false,
+          "x": 0.6889197,
+          "y": 0.3023229
         },
         {
           "name": "Second Prayer",
-          "major": false
+          "major": false,
+          "x": 0.8228025,
+          "y": 0.40824884
         },
         {
           "name": "Sleeping Choir",
-          "major": false
+          "major": false,
+          "x": 0.7558153,
+          "y": 0.6874023
         },
         {
           "name": "Sly Passage",
-          "major": false
+          "major": false,
+          "x": 0.52440506,
+          "y": 0.8444923
         },
         {
           "name": "The Four Pillars",
-          "major": false
+          "major": false,
+          "x": 0.58946913,
+          "y": 0.12745516
         },
         {
           "name": "The Garth",
-          "major": false
+          "major": false,
+          "x": 0.5345241,
+          "y": 0.5945451
         },
         {
           "name": "The Laity",
-          "major": false
+          "major": false,
+          "x": 0.23438673,
+          "y": 0.6618996
         },
         {
           "name": "Woodlouse Ledge",
-          "major": false
+          "major": false,
+          "x": 0.34729883,
+          "y": 0.14719062
         }
       ]
     },
@@ -517,55 +751,81 @@
       "regions": [
         {
           "name": "Fallen Crown",
-          "major": true
+          "major": true,
+          "x": 0.28871924,
+          "y": 0.43574405
         },
         {
           "name": "Fort Ealar",
-          "major": true
+          "major": true,
+          "x": 0.36983803,
+          "y": 0.71536714
         },
         {
           "name": "Fort Esterwild",
-          "major": true
+          "major": true,
+          "x": 0.715624,
+          "y": 0.5858826
         },
         {
           "name": "Fort Windham",
-          "major": true
+          "major": true,
+          "x": 0.40627274,
+          "y": 0.14023344
         },
         {
           "name": "Sweetholt",
-          "major": true
+          "major": true,
+          "x": 0.7795566,
+          "y": 0.34597865
         },
         {
           "name": "The King",
-          "major": true
+          "major": true,
+          "x": 0.5588858,
+          "y": 0.3841091
         },
         {
           "name": "The Pike",
-          "major": true
+          "major": true,
+          "x": 0.58913374,
+          "y": 0.8464404
         },
         {
           "name": "Bramble Field",
-          "major": false
+          "major": false,
+          "x": 0.39181563,
+          "y": 0.5388692
         },
         {
           "name": "Lost Orphans",
-          "major": false
+          "major": false,
+          "x": 0.26198232,
+          "y": 0.6148583
         },
         {
           "name": "Tallowild",
-          "major": false
+          "major": false,
+          "x": 0.30835137,
+          "y": 0.234913
         },
         {
           "name": "The Bastard's Channel",
-          "major": false
+          "major": false,
+          "x": 0.5353866,
+          "y": 0.52028805
         },
         {
           "name": "The Weathered Advance",
-          "major": false
+          "major": false,
+          "x": 0.36146507,
+          "y": 0.8574389
         },
         {
           "name": "Throne of Druiminn",
-          "major": false
+          "major": false,
+          "x": 0.62811697,
+          "y": 0.16055289
         }
       ]
     },
@@ -575,171 +835,255 @@
       "regions": [
         {
           "name": "Abandoned Ward",
-          "major": true
+          "major": true,
+          "x": 0.4065897,
+          "y": 0.4973474
         },
         {
           "name": "Brine Glen",
-          "major": true
+          "major": true,
+          "x": 0.72561765,
+          "y": 0.7220242
         },
         {
           "name": "Callahan's Boot",
-          "major": true
+          "major": true,
+          "x": 0.5475686,
+          "y": 0.4907771
         },
         {
           "name": "Callahan's Gate",
-          "major": true
+          "major": true,
+          "x": 0.62483287,
+          "y": 0.110333465
         },
         {
           "name": "Iron's End",
-          "major": true
+          "major": true,
+          "x": 0.46120775,
+          "y": 0.26207438
         },
         {
           "name": "Liberation Point",
-          "major": true
+          "major": true,
+          "x": 0.24296169,
+          "y": 0.5517707
         },
         {
           "name": "Sun's Hollow",
-          "major": true
+          "major": true,
+          "x": 0.27335224,
+          "y": 0.7215378
         },
         {
           "name": "The Pits",
-          "major": true
+          "major": true,
+          "x": 0.4651194,
+          "y": 0.6297798
         },
         {
           "name": "The Salt Farms",
-          "major": true
+          "major": true,
+          "x": 0.4569705,
+          "y": 0.8376134
         },
         {
           "name": "The Salt March",
-          "major": true
+          "major": true,
+          "x": 0.82289404,
+          "y": 0.48192352
         },
         {
           "name": "The Spine",
-          "major": true
+          "major": true,
+          "x": 0.30697387,
+          "y": 0.23582822
         },
         {
           "name": "Biting Tarn",
-          "major": false
+          "major": false,
+          "x": 0.82187194,
+          "y": 0.70537686
         },
         {
           "name": "Border Concourse",
-          "major": false
+          "major": false,
+          "x": 0.8157356,
+          "y": 0.39016595
         },
         {
           "name": "Border Thicket",
-          "major": false
+          "major": false,
+          "x": 0.575372,
+          "y": 0.32447058
         },
         {
           "name": "Callahan's Belt",
-          "major": false
+          "major": false,
+          "x": 0.65850776,
+          "y": 0.31060126
         },
         {
           "name": "Carpal Trail",
-          "major": false
+          "major": false,
+          "x": 0.29142216,
+          "y": 0.419198
         },
         {
           "name": "Cemetary Junction",
-          "major": false
+          "major": false,
+          "x": 0.3243318,
+          "y": 0.5793932
         },
         {
           "name": "Cemetary Lane",
-          "major": false
+          "major": false,
+          "x": 0.38247642,
+          "y": 0.6585629
         },
         {
           "name": "Coracoid Footpath",
-          "major": false
+          "major": false,
+          "x": 0.107194014,
+          "y": 0.40021968
         },
         {
           "name": "Crumbling Passage",
-          "major": false
+          "major": false,
+          "x": 0.41715685,
+          "y": 0.094843924
         },
         {
           "name": "Hope's Causeway",
-          "major": false
+          "major": false,
+          "x": 0.52830327,
+          "y": 0.57945776
         },
         {
           "name": "Jaspar Range",
-          "major": false
+          "major": false,
+          "x": 0.28807592,
+          "y": 0.6632166
         },
         {
           "name": "Mandible Crossroads",
-          "major": false
+          "major": false,
+          "x": 0.20130293,
+          "y": 0.33566573
         },
         {
           "name": "Marrow Copse",
-          "major": false
+          "major": false,
+          "x": 0.35198447,
+          "y": 0.3130791
         },
         {
           "name": "Mercy Meadow",
-          "major": false
+          "major": false,
+          "x": 0.12712973,
+          "y": 0.54193884
         },
         {
           "name": "Mercy's End",
-          "major": false
+          "major": false,
+          "x": 0.6229164,
+          "y": 0.8306555
         },
         {
           "name": "Overgrown Pasture",
-          "major": false
+          "major": false,
+          "x": 0.15952048,
+          "y": 0.6434271
         },
         {
           "name": "Path to the Sun",
-          "major": false
+          "major": false,
+          "x": 0.2729478,
+          "y": 0.8931891
         },
         {
           "name": "Pommel Annex",
-          "major": false
+          "major": false,
+          "x": 0.48857507,
+          "y": 0.39334437
         },
         {
           "name": "Sunhaven Gateway",
-          "major": false
+          "major": false,
+          "x": 0.38722476,
+          "y": 0.56053424
         },
         {
           "name": "Tarsal Pathway",
-          "major": false
+          "major": false,
+          "x": 0.20509845,
+          "y": 0.41586992
         },
         {
           "name": "The Abbey Drag",
-          "major": false
+          "major": false,
+          "x": 0.7539659,
+          "y": 0.12900522
         },
         {
           "name": "The Blade",
-          "major": false
+          "major": false,
+          "x": 0.5743842,
+          "y": 0.38184917
         },
         {
           "name": "The Boneyard",
-          "major": false
+          "major": false,
+          "x": 0.5943891,
+          "y": 0.27163824
         },
         {
           "name": "The Crossing",
-          "major": false
+          "major": false,
+          "x": 0.41764602,
+          "y": 0.4466156
         },
         {
           "name": "The Great March",
-          "major": false
+          "major": false,
+          "x": 0.35632595,
+          "y": 0.88145
         },
         {
           "name": "The Iron Passage",
-          "major": false
+          "major": false,
+          "x": 0.48119673,
+          "y": 0.31544363
         },
         {
           "name": "The Iron Road",
-          "major": false
+          "major": false,
+          "x": 0.52781564,
+          "y": 0.13242057
         },
         {
           "name": "The Plaza",
-          "major": false
+          "major": false,
+          "x": 0.42960146,
+          "y": 0.40103972
         },
         {
           "name": "The Salt Trail",
-          "major": false
+          "major": false,
+          "x": 0.40397635,
+          "y": 0.7451171
         },
         {
           "name": "The Shorn Fields",
-          "major": false
+          "major": false,
+          "x": 0.45553347,
+          "y": 0.91392154
         },
         {
           "name": "The Steppes",
-          "major": false
+          "major": false,
+          "x": 0.66786224,
+          "y": 0.5271883
         }
       ]
     },
@@ -749,79 +1093,117 @@
       "regions": [
         {
           "name": "Bootnap",
-          "major": true
+          "major": true,
+          "x": 0.80842125,
+          "y": 0.5582795
         },
         {
           "name": "Coaldrifter Stead",
-          "major": true
+          "major": true,
+          "x": 0.66231805,
+          "y": 0.82284665
         },
         {
           "name": "Eastmarch",
-          "major": true
+          "major": true,
+          "x": 0.2335479,
+          "y": 0.5278097
         },
         {
           "name": "Loggerhead",
-          "major": true
+          "major": true,
+          "x": 0.4150385,
+          "y": 0.20794752
         },
         {
           "name": "Singing Serpents",
-          "major": true
+          "major": true,
+          "x": 0.6632067,
+          "y": 0.31274968
         },
         {
           "name": "Splinter Pens",
-          "major": true
+          "major": true,
+          "x": 0.47195154,
+          "y": 0.8008652
         },
         {
           "name": "The Baths",
-          "major": true
+          "major": true,
+          "x": 0.5683618,
+          "y": 0.52607054
         },
         {
           "name": "The Saltcaps",
-          "major": true
+          "major": true,
+          "x": 0.63300836,
+          "y": 0.16928926
         },
         {
           "name": "The Wash",
-          "major": true
+          "major": true,
+          "x": 0.38150814,
+          "y": 0.5121856
         },
         {
           "name": "Vessel",
-          "major": true
+          "major": true,
+          "x": 0.36351255,
+          "y": 0.715022
         },
         {
           "name": "Wisp's Warning",
-          "major": true
+          "major": true,
+          "x": 0.33081633,
+          "y": 0.29379123
         },
         {
           "name": "Esterfal",
-          "major": false
+          "major": false,
+          "x": 0.7868035,
+          "y": 0.6955586
         },
         {
           "name": "Fleetsfall River",
-          "major": false
+          "major": false,
+          "x": 0.48596796,
+          "y": 0.08352051
         },
         {
           "name": "Linger",
-          "major": false
+          "major": false,
+          "x": 0.4844155,
+          "y": 0.3447626
         },
         {
           "name": "Sop Fields",
-          "major": false
+          "major": false,
+          "x": 0.51988655,
+          "y": 0.6732017
         },
         {
           "name": "Sprite's Game",
-          "major": false
+          "major": false,
+          "x": 0.32643563,
+          "y": 0.4329372
         },
         {
           "name": "The Other Vein",
-          "major": false
+          "major": false,
+          "x": 0.120904915,
+          "y": 0.6001116
         },
         {
           "name": "The Turtlerocks",
-          "major": false
+          "major": false,
+          "x": 0.5794284,
+          "y": 0.35845056
         },
         {
           "name": "The Willow Wood",
-          "major": false
+          "major": false,
+          "x": 0.30738774,
+          "y": 0.8374743
         }
       ]
     },
@@ -831,99 +1213,147 @@
       "regions": [
         {
           "name": "Brackish Point",
-          "major": true
+          "major": true,
+          "x": 0.30299953,
+          "y": 0.15477471
         },
         {
           "name": "Enduring Wake",
-          "major": true
+          "major": true,
+          "x": 0.20581831,
+          "y": 0.6122418
         },
         {
           "name": "Iron Junction",
-          "major": true
+          "major": true,
+          "x": 0.35952666,
+          "y": 0.7956661
         },
         {
           "name": "Saltbrook Channel",
-          "major": true
+          "major": true,
+          "x": 0.303757,
+          "y": 0.38162574
         },
         {
           "name": "S\u00eddhe Fall",
-          "major": true
+          "major": true,
+          "x": 0.48438844,
+          "y": 0.29702434
         },
         {
           "name": "The Old Jack Tar",
-          "major": true
+          "major": true,
+          "x": 0.1797868,
+          "y": 0.41211194
         },
         {
           "name": "The Overland",
-          "major": true
+          "major": true,
+          "x": 0.57504135,
+          "y": 0.7966601
         },
         {
           "name": "Tuatha Watchpost",
-          "major": true
+          "major": true,
+          "x": 0.853922,
+          "y": 0.5507405
         },
         {
           "name": "Wellchurch",
-          "major": true
+          "major": true,
+          "x": 0.5146297,
+          "y": 0.45945293
         },
         {
           "name": "Woodbind",
-          "major": true
+          "major": true,
+          "x": 0.69931203,
+          "y": 0.7336695
         },
         {
           "name": "Balor's Crown",
-          "major": false
+          "major": false,
+          "x": 0.6720318,
+          "y": 0.28519696
         },
         {
           "name": "Battered Landing",
-          "major": false
+          "major": false,
+          "x": 0.3055171,
+          "y": 0.55011296
         },
         {
           "name": "Dannan Coast",
-          "major": false
+          "major": false,
+          "x": 0.5379241,
+          "y": 0.100875914
         },
         {
           "name": "Dearg's Fang",
-          "major": false
+          "major": false,
+          "x": 0.59473014,
+          "y": 0.36644128
         },
         {
           "name": "Kelpie's Mane",
-          "major": false
+          "major": false,
+          "x": 0.7760368,
+          "y": 0.63521427
         },
         {
           "name": "Kelpie's Tail",
-          "major": false
+          "major": false,
+          "x": 0.7194254,
+          "y": 0.6748694
         },
         {
           "name": "Liegehearth",
-          "major": false
+          "major": false,
+          "x": 0.30281493,
+          "y": 0.4512878
         },
         {
           "name": "Merrow's Rest",
-          "major": false
+          "major": false,
+          "x": 0.7893252,
+          "y": 0.77107877
         },
         {
           "name": "The Dark Road",
-          "major": false
+          "major": false,
+          "x": 0.83693856,
+          "y": 0.49502707
         },
         {
           "name": "The Evil Eye",
-          "major": false
+          "major": false,
+          "x": 0.70691365,
+          "y": 0.45178506
         },
         {
           "name": "The North Star",
-          "major": false
+          "major": false,
+          "x": 0.30252346,
+          "y": 0.26164305
         },
         {
           "name": "The Selkie Bluffs",
-          "major": false
+          "major": false,
+          "x": 0.57922477,
+          "y": 0.54058766
         },
         {
           "name": "The Styx",
-          "major": false
+          "major": false,
+          "x": 0.464723,
+          "y": 0.6391649
         },
         {
           "name": "The Whispering Waves",
-          "major": false
+          "major": false,
+          "x": 0.66084594,
+          "y": 0.5801161
         }
       ]
     },
@@ -933,131 +1363,195 @@
       "regions": [
         {
           "name": "Huskhollow",
-          "major": true
+          "major": true,
+          "x": 0.5860919,
+          "y": 0.56278074
         },
         {
           "name": "Macha's Keening",
-          "major": true
+          "major": true,
+          "x": 0.70205057,
+          "y": 0.7824685
         },
         {
           "name": "Mara",
-          "major": true
+          "major": true,
+          "x": 0.8549705,
+          "y": 0.48427492
         },
         {
           "name": "Pleading Wharf",
-          "major": true
+          "major": true,
+          "x": 0.6262762,
+          "y": 0.71746904
         },
         {
           "name": "Scarp of Ambrose",
-          "major": true
+          "major": true,
+          "x": 0.4770394,
+          "y": 0.37934086
         },
         {
           "name": "Scythe",
-          "major": true
+          "major": true,
+          "x": 0.78855526,
+          "y": 0.34850213
         },
         {
           "name": "Terra",
-          "major": true
+          "major": true,
+          "x": 0.6119086,
+          "y": 0.40515536
         },
         {
           "name": "The Bone Haft",
-          "major": true
+          "major": true,
+          "x": 0.50207216,
+          "y": 0.22624204
         },
         {
           "name": "The Jade Cove",
-          "major": true
+          "major": true,
+          "x": 0.4322609,
+          "y": 0.6490256
         },
         {
           "name": "Transient Valley",
-          "major": true
+          "major": true,
+          "x": 0.6561139,
+          "y": 0.1455342
         },
         {
           "name": "Victa",
-          "major": true
+          "major": true,
+          "x": 0.4417568,
+          "y": 0.8744741
         },
         {
           "name": "Apollo's Landing",
-          "major": false
+          "major": false,
+          "x": 0.4314927,
+          "y": 0.57976526
         },
         {
           "name": "Cackling Strand",
-          "major": false
+          "major": false,
+          "x": 0.37053815,
+          "y": 0.19182852
         },
         {
           "name": "Carrion Fields",
-          "major": false
+          "major": false,
+          "x": 0.61662257,
+          "y": 0.45785448
         },
         {
           "name": "Cora Lushlands",
-          "major": false
+          "major": false,
+          "x": 0.54585594,
+          "y": 0.8671113
         },
         {
           "name": "Cormac Beach",
-          "major": false
+          "major": false,
+          "x": 0.4727384,
+          "y": 0.78347987
         },
         {
           "name": "Gulf of the Daughters",
-          "major": false
+          "major": false,
+          "x": 0.016857829,
+          "y": 0.5832988
         },
         {
           "name": "Hermes Inlet",
-          "major": false
+          "major": false,
+          "x": 0.2707489,
+          "y": 0.432295
         },
         {
           "name": "Iuxta Gulf",
-          "major": false
+          "major": false,
+          "x": 0.77839315,
+          "y": 0.14600633
         },
         {
           "name": "Kardia",
-          "major": false
+          "major": false,
+          "x": 0.6261059,
+          "y": 0.86518013
         },
         {
           "name": "Liberation Street",
-          "major": false
+          "major": false,
+          "x": 0.8314815,
+          "y": 0.8458243
         },
         {
           "name": "McCarthy Fields",
-          "major": false
+          "major": false,
+          "x": 0.6015004,
+          "y": 0.7810918
         },
         {
           "name": "Mooring Dens",
-          "major": false
+          "major": false,
+          "x": 0.5923805,
+          "y": 0.2851551
         },
         {
           "name": "Sickle Hill",
-          "major": false
+          "major": false,
+          "x": 0.4659355,
+          "y": 0.44424376
         },
         {
           "name": "Skeleton Road",
-          "major": false
+          "major": false,
+          "x": 0.59403133,
+          "y": 0.35402372
         },
         {
           "name": "Sunder Beach",
-          "major": false
+          "major": false,
+          "x": 0.35613468,
+          "y": 0.4198639
         },
         {
           "name": "The Bay of Artemis",
-          "major": false
+          "major": false,
+          "x": 0.35195225,
+          "y": 0.6874335
         },
         {
           "name": "The Heart Road",
-          "major": false
+          "major": false,
+          "x": 0.66623056,
+          "y": 0.9169244
         },
         {
           "name": "The Mirror",
-          "major": false
+          "major": false,
+          "x": 0.8247223,
+          "y": 0.41111118
         },
         {
           "name": "The Reaping Fields",
-          "major": false
+          "major": false,
+          "x": 0.6509468,
+          "y": 0.51992047
         },
         {
           "name": "The River Mercy",
-          "major": false
+          "major": false,
+          "x": 0.57574064,
+          "y": 0.6521498
         },
         {
           "name": "The Snag",
-          "major": false
+          "major": false,
+          "x": 0.89351374,
+          "y": 0.7870541
         }
       ]
     },
@@ -1067,71 +1561,105 @@
       "regions": [
         {
           "name": "Arcadia",
-          "major": true
+          "major": true,
+          "x": 0.38920873,
+          "y": 0.73095393
         },
         {
           "name": "Black Well",
-          "major": true
+          "major": true,
+          "x": 0.3884959,
+          "y": 0.3066156
         },
         {
           "name": "Dankana Post",
-          "major": true
+          "major": true,
+          "x": 0.28446555,
+          "y": 0.60298705
         },
         {
           "name": "Eidolo",
-          "major": true
+          "major": true,
+          "x": 0.46337456,
+          "y": 0.52302
         },
         {
           "name": "Fort Ember",
-          "major": true
+          "major": true,
+          "x": 0.6044854,
+          "y": 0.3248994
         },
         {
           "name": "Hangman's Court",
-          "major": true
+          "major": true,
+          "x": 0.7246986,
+          "y": 0.44283482
         },
         {
           "name": "Oceanwatch",
-          "major": true
+          "major": true,
+          "x": 0.4720286,
+          "y": 0.12933528
         },
         {
           "name": "Peripti Landing",
-          "major": true
+          "major": true,
+          "x": 0.29418412,
+          "y": 0.4540274
         },
         {
           "name": "The Satyr Stone",
-          "major": true
+          "major": true,
+          "x": 0.6965429,
+          "y": 0.80090946
         },
         {
           "name": "Bident Crossroads",
-          "major": false
+          "major": false,
+          "x": 0.43450263,
+          "y": 0.6158199
         },
         {
           "name": "Heart of Rites",
-          "major": false
+          "major": false,
+          "x": 0.35531422,
+          "y": 0.46871832
         },
         {
           "name": "House Roloi",
-          "major": false
+          "major": false,
+          "x": 0.26010418,
+          "y": 0.77387524
         },
         {
           "name": "Lake Nerites",
-          "major": false
+          "major": false,
+          "x": 0.32699662,
+          "y": 0.54289067
         },
         {
           "name": "Liberty Hill",
-          "major": false
+          "major": false,
+          "x": 0.36738095,
+          "y": 0.35783792
         },
         {
           "name": "Progonos Watch",
-          "major": false
+          "major": false,
+          "x": 0.50500673,
+          "y": 0.44088435
         },
         {
           "name": "The Rite Road",
-          "major": false
+          "major": false,
+          "x": 0.45041037,
+          "y": 0.38507676
         },
         {
           "name": "Torch of Demeter",
-          "major": false
+          "major": false,
+          "x": 0.42485484,
+          "y": 0.6818757
         }
       ]
     },
@@ -1141,67 +1669,99 @@
       "regions": [
         {
           "name": "Argosa",
-          "major": true
+          "major": true,
+          "x": 0.7429409,
+          "y": 0.44385427
         },
         {
           "name": "Exile",
-          "major": true
+          "major": true,
+          "x": 0.42578155,
+          "y": 0.73800045
         },
         {
           "name": "Fleecewatch",
-          "major": true
+          "major": true,
+          "x": 0.39515048,
+          "y": 0.1398176
         },
         {
           "name": "Isawa",
-          "major": true
+          "major": true,
+          "x": 0.54864764,
+          "y": 0.1970142
         },
         {
           "name": "Lipsia",
-          "major": true
+          "major": true,
+          "x": 0.7286327,
+          "y": 0.75959414
         },
         {
           "name": "Protos",
-          "major": true
+          "major": true,
+          "x": 0.29480112,
+          "y": 0.4396915
         },
         {
           "name": "Saegio",
-          "major": true
+          "major": true,
+          "x": 0.56165975,
+          "y": 0.4809213
         },
         {
           "name": "The Axehead",
-          "major": true
+          "major": true,
+          "x": 0.26360834,
+          "y": 0.6095882
         },
         {
           "name": "Ursa Base",
-          "major": true
+          "major": true,
+          "x": 0.6612842,
+          "y": 0.2427636
         },
         {
           "name": "Barreller's Way",
-          "major": false
+          "major": false,
+          "x": 0.6633694,
+          "y": 0.46910247
         },
         {
           "name": "Den of Thieves",
-          "major": false
+          "major": false,
+          "x": 0.2886002,
+          "y": 0.28499076
         },
         {
           "name": "Peripti Depths",
-          "major": false
+          "major": false,
+          "x": 0.48257208,
+          "y": 0.80496967
         },
         {
           "name": "Perpetua Channel",
-          "major": false
+          "major": false,
+          "x": 0.47322682,
+          "y": 0.37199098
         },
         {
           "name": "Pig Island",
-          "major": false
+          "major": false,
+          "x": 0.49813956,
+          "y": 0.51225114
         },
         {
           "name": "Primus Trames",
-          "major": false
+          "major": false,
+          "x": 0.5917489,
+          "y": 0.85785306
         },
         {
           "name": "Vicit Bay",
-          "major": false
+          "major": false,
+          "x": 0.39551902,
+          "y": 0.5515155
         }
       ]
     },
@@ -1211,127 +1771,189 @@
       "regions": [
         {
           "name": "Camp Senti",
-          "major": true
+          "major": true,
+          "x": 0.37455705,
+          "y": 0.362185
         },
         {
           "name": "Dendr\u00f3 Field",
-          "major": true
+          "major": true,
+          "x": 0.77124,
+          "y": 0.46152595
         },
         {
           "name": "Leto",
-          "major": true
+          "major": true,
+          "x": 0.24598461,
+          "y": 0.5040848
         },
         {
           "name": "Lionsfort",
-          "major": true
+          "major": true,
+          "x": 0.69568443,
+          "y": 0.12216068
         },
         {
           "name": "Myrmidon's Stay",
-          "major": true
+          "major": true,
+          "x": 0.6058823,
+          "y": 0.22973543
         },
         {
           "name": "Remnant Villa",
-          "major": true
+          "major": true,
+          "x": 0.5511068,
+          "y": 0.43947107
         },
         {
           "name": "Sitaria",
-          "major": true
+          "major": true,
+          "x": 0.537554,
+          "y": 0.6178947
         },
         {
           "name": "The Swan",
-          "major": true
+          "major": true,
+          "x": 0.40979624,
+          "y": 0.8734635
         },
         {
           "name": "Violethome",
-          "major": true
+          "major": true,
+          "x": 0.31300274,
+          "y": 0.19231363
         },
         {
           "name": "Dalton Meadow",
-          "major": false
+          "major": false,
+          "x": 0.09930786,
+          "y": 0.6400397
         },
         {
           "name": "Eristown",
-          "major": false
+          "major": false,
+          "x": 0.78114384,
+          "y": 0.8727914
         },
         {
           "name": "Fateless Grove",
-          "major": false
+          "major": false,
+          "x": 0.45355204,
+          "y": 0.090748146
         },
         {
           "name": "Fengari",
-          "major": false
+          "major": false,
+          "x": 0.60990554,
+          "y": 0.74922425
         },
         {
           "name": "Halting Valley",
-          "major": false
+          "major": false,
+          "x": 0.78852123,
+          "y": 0.3462852
         },
         {
           "name": "Jack Field",
-          "major": false
+          "major": false,
+          "x": 0.41658077,
+          "y": 0.94294405
         },
         {
           "name": "Jackboot Creek",
-          "major": false
+          "major": false,
+          "x": 0.2494908,
+          "y": 0.64345753
         },
         {
           "name": "Legacy Pasture",
-          "major": false
+          "major": false,
+          "x": 0.7758614,
+          "y": 0.7780664
         },
         {
           "name": "Milowood",
-          "major": false
+          "major": false,
+          "x": 0.7739539,
+          "y": 0.6969876
         },
         {
           "name": "Mors Range",
-          "major": false
+          "major": false,
+          "x": 0.69876003,
+          "y": 0.72293276
         },
         {
           "name": "Remnant Acreage",
-          "major": false
+          "major": false,
+          "x": 0.52338797,
+          "y": 0.51566833
         },
         {
           "name": "Schala Estate",
-          "major": false
+          "major": false,
+          "x": 0.33548036,
+          "y": 0.635879
         },
         {
           "name": "Scrabbling Motte",
-          "major": false
+          "major": false,
+          "x": 0.19585963,
+          "y": 0.17810662
         },
         {
           "name": "Serpent Charm",
-          "major": false
+          "major": false,
+          "x": 0.28096482,
+          "y": 0.836178
         },
         {
           "name": "The Black Wing",
-          "major": false
+          "major": false,
+          "x": 0.48719403,
+          "y": 0.7353476
         },
         {
           "name": "The Great March",
-          "major": false
+          "major": false,
+          "x": 0.6500651,
+          "y": 0.7322658
         },
         {
           "name": "The Midmarch",
-          "major": false
+          "major": false,
+          "x": 0.29200715,
+          "y": 0.02563422
         },
         {
           "name": "The River Senti",
-          "major": false
+          "major": false,
+          "x": 0.30557615,
+          "y": 0.37844858
         },
         {
           "name": "The Spice Road",
-          "major": false
+          "major": false,
+          "x": 0.37501228,
+          "y": 0.4377948
         },
         {
           "name": "The White Wing",
-          "major": false
+          "major": false,
+          "x": 0.5537074,
+          "y": 0.83839923
         },
         {
           "name": "Violet Fields",
-          "major": false
+          "major": false,
+          "x": 0.13429698,
+          "y": 0.32858482
         },
         {
           "name": "Zealous Approach",
-          "major": false
+          "major": false,
+          "x": 0.4341586,
+          "y": 0.6098335
         }
       ]
     },
@@ -1341,55 +1963,81 @@
       "regions": [
         {
           "name": "Kuoppa",
-          "major": true
+          "major": true,
+          "x": 0.3424357,
+          "y": 0.4579873
         },
         {
           "name": "Lost Kaivo",
-          "major": true
+          "major": true,
+          "x": 0.5176128,
+          "y": 0.615884
         },
         {
           "name": "Rikki Sarana",
-          "major": true
+          "major": true,
+          "x": 0.25081313,
+          "y": 0.2735655
         },
         {
           "name": "Rotko Camp",
-          "major": true
+          "major": true,
+          "x": 0.35759872,
+          "y": 0.18996492
         },
         {
           "name": "Salaoja Road",
-          "major": true
+          "major": true,
+          "x": 0.18523423,
+          "y": 0.5378892
         },
         {
           "name": "Suojus",
-          "major": true
+          "major": true,
+          "x": 0.59378743,
+          "y": 0.19512919
         },
         {
           "name": "The Parras",
-          "major": true
+          "major": true,
+          "x": 0.6763039,
+          "y": 0.4319331
         },
         {
           "name": "Likainoja",
-          "major": false
+          "major": false,
+          "x": 0.262873,
+          "y": 0.45032746
         },
         {
           "name": "Maanp\u00e4\u00e4",
-          "major": false
+          "major": false,
+          "x": 0.2768235,
+          "y": 0.73960555
         },
         {
           "name": "Mutalanko",
-          "major": false
+          "major": false,
+          "x": 0.3259028,
+          "y": 0.14502895
         },
         {
           "name": "Roskisranta",
-          "major": false
+          "major": false,
+          "x": 0.56773067,
+          "y": 0.63379925
         },
         {
           "name": "Sumun Koti Spillway",
-          "major": false
+          "major": false,
+          "x": 0.4577964,
+          "y": 0.38796514
         },
         {
           "name": "\u00c4mp\u00e4ri",
-          "major": false
+          "major": false,
+          "x": 0.5936032,
+          "y": 0.34961763
         }
       ]
     },
@@ -1399,123 +2047,183 @@
       "regions": [
         {
           "name": "Barronswall",
-          "major": true
+          "major": true,
+          "x": 0.39372203,
+          "y": 0.40942293
         },
         {
           "name": "Barrony Ranch",
-          "major": true
+          "major": true,
+          "x": 0.3733477,
+          "y": 0.1098376
         },
         {
           "name": "Deeplaw Post",
-          "major": true
+          "major": true,
+          "x": 0.24315597,
+          "y": 0.43437782
         },
         {
           "name": "Fort Providence",
-          "major": true
+          "major": true,
+          "x": 0.75807965,
+          "y": 0.3792637
         },
         {
           "name": "Greenfield Orchard",
-          "major": true
+          "major": true,
+          "x": 0.7317328,
+          "y": 0.20453982
         },
         {
           "name": "Oleander Homestead",
-          "major": true
+          "major": true,
+          "x": 0.8278165,
+          "y": 0.4906847
         },
         {
           "name": "Proex\u00ed",
-          "major": true
+          "major": true,
+          "x": 0.65262276,
+          "y": 0.8350459
         },
         {
           "name": "The Blemish",
-          "major": true
+          "major": true,
+          "x": 0.6491603,
+          "y": 0.4668125
         },
         {
           "name": "The Breach",
-          "major": true
+          "major": true,
+          "x": 0.36424437,
+          "y": 0.2708485
         },
         {
           "name": "The Plough",
-          "major": true
+          "major": true,
+          "x": 0.54745007,
+          "y": 0.24971269
         },
         {
           "name": "18th Sideroad",
-          "major": false
+          "major": false,
+          "x": 0.5635743,
+          "y": 0.07919855
         },
         {
           "name": "Barronshire",
-          "major": false
+          "major": false,
+          "x": 0.30404317,
+          "y": 0.5293029
         },
         {
           "name": "Barrony Road",
-          "major": false
+          "major": false,
+          "x": 0.4902308,
+          "y": 0.20186654
         },
         {
           "name": "Cageroad",
-          "major": false
+          "major": false,
+          "x": 0.08390267,
+          "y": 0.58169395
         },
         {
           "name": "Crater Basin",
-          "major": false
+          "major": false,
+          "x": 0.27787402,
+          "y": 0.20430255
         },
         {
           "name": "Erimos Ranch",
-          "major": false
+          "major": false,
+          "x": 0.5130686,
+          "y": 0.84595346
         },
         {
           "name": "Harvester's Range",
-          "major": false
+          "major": false,
+          "x": 0.47385046,
+          "y": 0.5450412
         },
         {
           "name": "Janus Field",
-          "major": false
+          "major": false,
+          "x": 0.41109726,
+          "y": 0.87362325
         },
         {
           "name": "Kos Meadows",
-          "major": false
+          "major": false,
+          "x": 0.23384759,
+          "y": 0.87482136
         },
         {
           "name": "Loftmire",
-          "major": false
+          "major": false,
+          "x": 0.5516043,
+          "y": 0.44199702
         },
         {
           "name": "Lower Barrony Field",
-          "major": false
+          "major": false,
+          "x": 0.4626953,
+          "y": 0.31559077
         },
         {
           "name": "Oleander Fields",
-          "major": false
+          "major": false,
+          "x": 0.67658395,
+          "y": 0.639753
         },
         {
           "name": "Pandora Compound",
-          "major": false
+          "major": false,
+          "x": 0.44034275,
+          "y": 0.7100705
         },
         {
           "name": "Providence Field",
-          "major": false
+          "major": false,
+          "x": 0.6118128,
+          "y": 0.3481131
         },
         {
           "name": "The Fuming Pen",
-          "major": false
+          "major": false,
+          "x": 0.19509101,
+          "y": 0.6871336
         },
         {
           "name": "The Orchard Wall",
-          "major": false
+          "major": false,
+          "x": 0.69853735,
+          "y": 0.24974519
         },
         {
           "name": "The Rollcage",
-          "major": false
+          "major": false,
+          "x": 0.15662682,
+          "y": 0.34313864
         },
         {
           "name": "The Salt Crossing",
-          "major": false
+          "major": false,
+          "x": 0.78533167,
+          "y": 0.07084702
         },
         {
           "name": "Upper Barrony Field",
-          "major": false
+          "major": false,
+          "x": 0.47143874,
+          "y": 0.092723675
         },
         {
           "name": "Upper Heartlands",
-          "major": false
+          "major": false,
+          "x": 0.32511675,
+          "y": 0.11369127
         }
       ]
     },
@@ -1525,55 +2233,81 @@
       "regions": [
         {
           "name": "Fort Red",
-          "major": true
+          "major": true,
+          "x": 0.8647111,
+          "y": 0.41167375
         },
         {
           "name": "Fort Rider",
-          "major": true
+          "major": true,
+          "x": 0.35139802,
+          "y": 0.85675204
         },
         {
           "name": "Great Warden Dam",
-          "major": true
+          "major": true,
+          "x": 0.6554019,
+          "y": 0.35621113
         },
         {
           "name": "Hungry Wolf",
-          "major": true
+          "major": true,
+          "x": 0.17645623,
+          "y": 0.46003953
         },
         {
           "name": "Little Lamb",
-          "major": true
+          "major": true,
+          "x": 0.5877111,
+          "y": 0.81540585
         },
         {
           "name": "Sickleshire",
-          "major": true
+          "major": true,
+          "x": 0.69961804,
+          "y": 0.65790194
         },
         {
           "name": "Slipgate Outpost",
-          "major": true
+          "major": true,
+          "x": 0.40390867,
+          "y": 0.38564897
         },
         {
           "name": "Teller Farm",
-          "major": true
+          "major": true,
+          "x": 0.40042853,
+          "y": 0.6461763
         },
         {
           "name": "Austriaca Reservoir",
-          "major": false
+          "major": false,
+          "x": 0.5030339,
+          "y": 0.5478375
         },
         {
           "name": "Checkpoint Titim",
-          "major": false
+          "major": false,
+          "x": 0.5060007,
+          "y": 0.41285184
         },
         {
           "name": "Snakewall",
-          "major": false
+          "major": false,
+          "x": 0.3858706,
+          "y": 0.13108893
         },
         {
           "name": "The Hunting Grounds",
-          "major": false
+          "major": false,
+          "x": 0.21771893,
+          "y": 0.6758163
         },
         {
           "name": "Viperwalk",
-          "major": false
+          "major": false,
+          "x": 0.76696825,
+          "y": 0.8055809
         }
       ]
     },
@@ -1583,59 +2317,87 @@
       "regions": [
         {
           "name": "Baccae Ridge",
-          "major": true
+          "major": true,
+          "x": 0.45051804,
+          "y": 0.7249121
         },
         {
           "name": "Camp Tau",
-          "major": true
+          "major": true,
+          "x": 0.68705684,
+          "y": 0.5941432
         },
         {
           "name": "Hallow",
-          "major": true
+          "major": true,
+          "x": 0.48302066,
+          "y": 0.4527824
         },
         {
           "name": "Lost Greensward",
-          "major": true
+          "major": true,
+          "x": 0.5571165,
+          "y": 0.9006367
         },
         {
           "name": "Night's Regret",
-          "major": true
+          "major": true,
+          "x": 0.21532287,
+          "y": 0.4738651
         },
         {
           "name": "Sourtooth",
-          "major": true
+          "major": true,
+          "x": 0.6443212,
+          "y": 0.098580986
         },
         {
           "name": "Sweethearth",
-          "major": true
+          "major": true,
+          "x": 0.654568,
+          "y": 0.21487646
         },
         {
           "name": "Bleary",
-          "major": false
+          "major": false,
+          "x": 0.21060354,
+          "y": 0.5777004
         },
         {
           "name": "Clarity Meadow",
-          "major": false
+          "major": false,
+          "x": 0.6976708,
+          "y": 0.777257
         },
         {
           "name": "Ichorus Amphitheatre",
-          "major": false
+          "major": false,
+          "x": 0.32009768,
+          "y": 0.3045658
         },
         {
           "name": "South March",
-          "major": false
+          "major": false,
+          "x": 0.40086308,
+          "y": 0.52384686
         },
         {
           "name": "The Stumble",
-          "major": false
+          "major": false,
+          "x": 0.37351593,
+          "y": 0.13980024
         },
         {
           "name": "The Vineroad",
-          "major": false
+          "major": false,
+          "x": 0.8237945,
+          "y": 0.40639648
         },
         {
           "name": "Vinum Rillet",
-          "major": false
+          "major": false,
+          "x": 0.3182327,
+          "y": 0.81660587
         }
       ]
     },
@@ -1645,71 +2407,105 @@
       "regions": [
         {
           "name": "Den of Knaves",
-          "major": true
+          "major": true,
+          "x": 0.7129238,
+          "y": 0.32082525
         },
         {
           "name": "Eastknife",
-          "major": true
+          "major": true,
+          "x": 0.6887851,
+          "y": 0.5304522
         },
         {
           "name": "Gibbet Fields",
-          "major": true
+          "major": true,
+          "x": 0.67552125,
+          "y": 0.69022655
         },
         {
           "name": "Scarlethold",
-          "major": true
+          "major": true,
+          "x": 0.38535228,
+          "y": 0.7844939
         },
         {
           "name": "Slipchain",
-          "major": true
+          "major": true,
+          "x": 0.2058332,
+          "y": 0.44086462
         },
         {
           "name": "Southblade",
-          "major": true
+          "major": true,
+          "x": 0.58631134,
+          "y": 0.8250882
         },
         {
           "name": "The Bailie",
-          "major": true
+          "major": true,
+          "x": 0.4612563,
+          "y": 0.19076172
         },
         {
           "name": "The Manacle",
-          "major": true
+          "major": true,
+          "x": 0.38011876,
+          "y": 0.4641421
         },
         {
           "name": "Blackguard's Wood",
-          "major": false
+          "major": false,
+          "x": 0.6868487,
+          "y": 0.17017397
         },
         {
           "name": "Bloodcroft",
-          "major": false
+          "major": false,
+          "x": 0.49353236,
+          "y": 0.7844939
         },
         {
           "name": "Celes Thicket",
-          "major": false
+          "major": false,
+          "x": 0.3977919,
+          "y": 0.9276398
         },
         {
           "name": "Concubine",
-          "major": false
+          "major": false,
+          "x": 0.40652373,
+          "y": 0.12856048
         },
         {
           "name": "Jester's Foil",
-          "major": false
+          "major": false,
+          "x": 0.24492875,
+          "y": 0.34223396
         },
         {
           "name": "Leafless Whim",
-          "major": false
+          "major": false,
+          "x": 0.17418413,
+          "y": 0.65651125
         },
         {
           "name": "Ocelot Bridge",
-          "major": false
+          "major": false,
+          "x": 0.57395965,
+          "y": 0.43087277
         },
         {
           "name": "The River Blaise",
-          "major": false
+          "major": false,
+          "x": 0.5494889,
+          "y": 0.5984972
         },
         {
           "name": "Wolfsbait",
-          "major": false
+          "major": false,
+          "x": 0.1547705,
+          "y": 0.53635985
         }
       ]
     },
@@ -1719,51 +2515,75 @@
       "regions": [
         {
           "name": "Faden Point",
-          "major": true
+          "major": true,
+          "x": 0.36492845,
+          "y": 0.20000526
         },
         {
           "name": "Lumia",
-          "major": true
+          "major": true,
+          "x": 0.39375672,
+          "y": 0.5652876
         },
         {
           "name": "Martti",
-          "major": true
+          "major": true,
+          "x": 0.3664483,
+          "y": 0.819528
         },
         {
           "name": "Menneen",
-          "major": true
+          "major": true,
+          "x": 0.26423877,
+          "y": 0.5158102
         },
         {
           "name": "Suosalo",
-          "major": true
+          "major": true,
+          "x": 0.47674507,
+          "y": 0.36991963
         },
         {
           "name": "Talven",
-          "major": true
+          "major": true,
+          "x": 0.7429367,
+          "y": 0.38458812
         },
         {
           "name": "Diskanttileke",
-          "major": false
+          "major": false,
+          "x": 0.4984284,
+          "y": 0.7432242
         },
         {
           "name": "Pitk\u00e4j\u00e4nne",
-          "major": false
+          "major": false,
+          "x": 0.30753502,
+          "y": 0.6890467
         },
         {
           "name": "Sointuvasalmi",
-          "major": false
+          "major": false,
+          "x": 0.34110248,
+          "y": 0.2995752
         },
         {
           "name": "Staccatosola",
-          "major": false
+          "major": false,
+          "x": 0.5657119,
+          "y": 0.18780534
         },
         {
           "name": "Ukkos Gulf",
-          "major": false
+          "major": false,
+          "x": 0.6824638,
+          "y": 0.8255172
         },
         {
           "name": "Virebridge",
-          "major": false
+          "major": false,
+          "x": 0.79757553,
+          "y": 0.49828428
         }
       ]
     },
@@ -1773,83 +2593,123 @@
       "regions": [
         {
           "name": "Fort Duncan",
-          "major": true
+          "major": true,
+          "x": 0.73673666,
+          "y": 0.7660624
         },
         {
           "name": "Hardline",
-          "major": true
+          "major": true,
+          "x": 0.35991466,
+          "y": 0.58879375
         },
         {
           "name": "Lathair",
-          "major": true
+          "major": true,
+          "x": 0.7258961,
+          "y": 0.3119082
         },
         {
           "name": "Outwich Ranch",
-          "major": true
+          "major": true,
+          "x": 0.8370126,
+          "y": 0.4868126
         },
         {
           "name": "Rotdust",
-          "major": true
+          "major": true,
+          "x": 0.5856841,
+          "y": 0.15178874
         },
         {
           "name": "The Crimson Gardens",
-          "major": true
+          "major": true,
+          "x": 0.22958569,
+          "y": 0.62841123
         },
         {
           "name": "The First Coin",
-          "major": true
+          "major": true,
+          "x": 0.40840903,
+          "y": 0.7184508
         },
         {
           "name": "The Last Grove",
-          "major": true
+          "major": true,
+          "x": 0.38268816,
+          "y": 0.8845894
         },
         {
           "name": "The Long Whine",
-          "major": true
+          "major": true,
+          "x": 0.35783502,
+          "y": 0.209964
         },
         {
           "name": "The Prairie Bazaar",
-          "major": true
+          "major": true,
+          "x": 0.6143232,
+          "y": 0.7404008
         },
         {
           "name": "Ulster Falls",
-          "major": true
+          "major": true,
+          "x": 0.46410957,
+          "y": 0.45022747
         },
         {
           "name": "Blackroad",
-          "major": false
+          "major": false,
+          "x": 0.46516654,
+          "y": 0.16474915
         },
         {
           "name": "Gallant Gough Boulevard",
-          "major": false
+          "major": false,
+          "x": 0.09820685,
+          "y": 0.43021995
         },
         {
           "name": "Merciful Strait",
-          "major": false
+          "major": false,
+          "x": 0.8419282,
+          "y": 0.67530245
         },
         {
           "name": "Mudhole",
-          "major": false
+          "major": false,
+          "x": 0.5700142,
+          "y": 0.30238822
         },
         {
           "name": "Nathair",
-          "major": false
+          "major": false,
+          "x": 0.5938587,
+          "y": 0.41346693
         },
         {
           "name": "Solas Burn",
-          "major": false
+          "major": false,
+          "x": 0.73095423,
+          "y": 0.22541259
         },
         {
           "name": "The Drone",
-          "major": false
+          "major": false,
+          "x": 0.19357644,
+          "y": 0.22261861
         },
         {
           "name": "The Great Scale",
-          "major": false
+          "major": false,
+          "x": 0.4111321,
+          "y": 0.29084763
         },
         {
           "name": "The River Mercy",
-          "major": false
+          "major": false,
+          "x": 0.64159554,
+          "y": 0.6174841
         }
       ]
     },
@@ -1859,91 +2719,135 @@
       "regions": [
         {
           "name": "Feirmor",
-          "major": true
+          "major": true,
+          "x": 0.5025071,
+          "y": 0.43424636
         },
         {
           "name": "Market Road",
-          "major": true
+          "major": true,
+          "x": 0.20417798,
+          "y": 0.5151306
         },
         {
           "name": "Mercy's Wish",
-          "major": true
+          "major": true,
+          "x": 0.45450157,
+          "y": 0.13036008
         },
         {
           "name": "Moon's Copse",
-          "major": true
+          "major": true,
+          "x": 0.77075344,
+          "y": 0.5080013
         },
         {
           "name": "The Roilfort",
-          "major": true
+          "major": true,
+          "x": 0.5841027,
+          "y": 0.75919765
         },
         {
           "name": "Tomb of the First",
-          "major": true
+          "major": true,
+          "x": 0.26635438,
+          "y": 0.20696227
         },
         {
           "name": "Westmarch",
-          "major": true
+          "major": true,
+          "x": 0.62941134,
+          "y": 0.15675731
         },
         {
           "name": "Bastard's Blade",
-          "major": false
+          "major": false,
+          "x": 0.21080314,
+          "y": 0.80878794
         },
         {
           "name": "Chattering Prairie",
-          "major": false
+          "major": false,
+          "x": 0.6458292,
+          "y": 0.30650327
         },
         {
           "name": "Escape",
-          "major": false
+          "major": false,
+          "x": 0.7199372,
+          "y": 0.9053458
         },
         {
           "name": "Fallen Fields",
-          "major": false
+          "major": false,
+          "x": 0.51105756,
+          "y": 0.5317777
         },
         {
           "name": "Lake Severspring",
-          "major": false
+          "major": false,
+          "x": 0.13459364,
+          "y": 0.67867845
         },
         {
           "name": "Loch Mor",
-          "major": false
+          "major": false,
+          "x": 0.46350145,
+          "y": 0.2706248
         },
         {
           "name": "Missing Bones",
-          "major": false
+          "major": false,
+          "x": 0.8544347,
+          "y": 0.30717325
         },
         {
           "name": "Ousterdown",
-          "major": false
+          "major": false,
+          "x": 0.20533797,
+          "y": 0.66187173
         },
         {
           "name": "Pockfields",
-          "major": false
+          "major": false,
+          "x": 0.5352733,
+          "y": 0.66082114
         },
         {
           "name": "Rip",
-          "major": false
+          "major": false,
+          "x": 0.48696944,
+          "y": 0.7814131
         },
         {
           "name": "Tear",
-          "major": false
+          "major": false,
+          "x": 0.6765988,
+          "y": 0.7775864
         },
         {
           "name": "The Founding Fields",
-          "major": false
+          "major": false,
+          "x": 0.51761055,
+          "y": 0.9304205
         },
         {
           "name": "The Glean",
-          "major": false
+          "major": false,
+          "x": 0.14058694,
+          "y": 0.49662516
         },
         {
           "name": "The Reaping Road",
-          "major": false
+          "major": false,
+          "x": 0.30018386,
+          "y": 0.03367163
         },
         {
           "name": "Widow's Wail",
-          "major": false
+          "major": false,
+          "x": 0.33518988,
+          "y": 0.76240003
         }
       ]
     },
@@ -1953,51 +2857,75 @@
       "regions": [
         {
           "name": "Aetherwood",
-          "major": true
+          "major": true,
+          "x": 0.6404501,
+          "y": 0.81776637
         },
         {
           "name": "Astutia",
-          "major": true
+          "major": true,
+          "x": 0.7251627,
+          "y": 0.22410367
         },
         {
           "name": "Cyrus",
-          "major": true
+          "major": true,
+          "x": 0.3056476,
+          "y": 0.46279287
         },
         {
           "name": "Erebus Islet",
-          "major": true
+          "major": true,
+          "x": 0.54390067,
+          "y": 0.59410506
         },
         {
           "name": "Fort Guile",
-          "major": true
+          "major": true,
+          "x": 0.5939864,
+          "y": 0.16284257
         },
         {
           "name": "M\u0101rudia",
-          "major": true
+          "major": true,
+          "x": 0.26935896,
+          "y": 0.81669015
         },
         {
           "name": "The Squall",
-          "major": true
+          "major": true,
+          "x": 0.40719265,
+          "y": 0.10004899
         },
         {
           "name": "Dancing Waves",
-          "major": false
+          "major": false,
+          "x": 0.60594493,
+          "y": 0.3157688
         },
         {
           "name": "Duelling Daggers",
-          "major": false
+          "major": false,
+          "x": 0.6721475,
+          "y": 0.62107474
         },
         {
           "name": "Floria Pass",
-          "major": false
+          "major": false,
+          "x": 0.4247602,
+          "y": 0.72103286
         },
         {
           "name": "Mount Lynel",
-          "major": false
+          "major": false,
+          "x": 0.43127146,
+          "y": 0.4007348
         },
         {
           "name": "Rolling Die",
-          "major": false
+          "major": false,
+          "x": 0.7906513,
+          "y": 0.2986235
         }
       ]
     },
@@ -2007,79 +2935,117 @@
       "regions": [
         {
           "name": "Checkpoint Bua",
-          "major": true
+          "major": true,
+          "x": 0.6373692,
+          "y": 0.4179943
         },
         {
           "name": "Lockheed",
-          "major": true
+          "major": true,
+          "x": 0.6407603,
+          "y": 0.8987701
         },
         {
           "name": "Maiden's Veil",
-          "major": true
+          "major": true,
+          "x": 0.51757264,
+          "y": 0.5214072
         },
         {
           "name": "Mox",
-          "major": true
+          "major": true,
+          "x": 0.71036744,
+          "y": 0.11743515
         },
         {
           "name": "Oster Wall",
-          "major": true
+          "major": true,
+          "x": 0.7994043,
+          "y": 0.47127146
         },
         {
           "name": "Sanctum",
-          "major": true
+          "major": true,
+          "x": 0.22553757,
+          "y": 0.2721918
         },
         {
           "name": "The Spitrocks",
-          "major": true
+          "major": true,
+          "x": 0.3551116,
+          "y": 0.7273359
         },
         {
           "name": "Bleating Plateau",
-          "major": false
+          "major": false,
+          "x": 0.2703532,
+          "y": 0.5908183
         },
         {
           "name": "Bubble Basin",
-          "major": false
+          "major": false,
+          "x": 0.38355634,
+          "y": 0.42492712
         },
         {
           "name": "Deepfleet Valley",
-          "major": false
+          "major": false,
+          "x": 0.5971318,
+          "y": 0.65876913
         },
         {
           "name": "Gaping Maw",
-          "major": false
+          "major": false,
+          "x": 0.5627757,
+          "y": 0.12033677
         },
         {
           "name": "Lockheed Breakers",
-          "major": false
+          "major": false,
+          "x": 0.55278087,
+          "y": 0.84404916
         },
         {
           "name": "Lughbone Dam",
-          "major": false
+          "major": false,
+          "x": 0.60572416,
+          "y": 0.41988385
         },
         {
           "name": "Mount Mac Tire",
-          "major": false
+          "major": false,
+          "x": 0.30355966,
+          "y": 0.91705936
         },
         {
           "name": "Pilgrimage",
-          "major": false
+          "major": false,
+          "x": 0.39667153,
+          "y": 0.10186438
         },
         {
           "name": "Slender Cove",
-          "major": false
+          "major": false,
+          "x": 0.7217157,
+          "y": 0.28977296
         },
         {
           "name": "The Claim",
-          "major": false
+          "major": false,
+          "x": 0.7366861,
+          "y": 0.6668448
         },
         {
           "name": "The Clutch",
-          "major": false
+          "major": false,
+          "x": 0.5142641,
+          "y": 0.27500752
         },
         {
           "name": "The Curse",
-          "major": false
+          "major": false,
+          "x": 0.62511504,
+          "y": 0.5131462
         }
       ]
     },
@@ -2089,79 +3055,117 @@
       "regions": [
         {
           "name": "Borderlane",
-          "major": true
+          "major": true,
+          "x": 0.64305896,
+          "y": 0.06935562
         },
         {
           "name": "Gravekeeper's Holdfast",
-          "major": true
+          "major": true,
+          "x": 0.4243501,
+          "y": 0.68474805
         },
         {
           "name": "Headstone",
-          "major": true
+          "major": true,
+          "x": 0.47550824,
+          "y": 0.5106607
         },
         {
           "name": "Luch's Workshop",
-          "major": true
+          "major": true,
+          "x": 0.7218184,
+          "y": 0.20239134
         },
         {
           "name": "MacConmara Barrows",
-          "major": true
+          "major": true,
+          "x": 0.5829396,
+          "y": 0.8054959
         },
         {
           "name": "Morrighan's Grave",
-          "major": true
+          "major": true,
+          "x": 0.7286388,
+          "y": 0.6069982
         },
         {
           "name": "Ogmaran",
-          "major": true
+          "major": true,
+          "x": 0.4312115,
+          "y": 0.17043234
         },
         {
           "name": "Reaching River",
-          "major": true
+          "major": true,
+          "x": 0.22631325,
+          "y": 0.2707589
         },
         {
           "name": "The Cut",
-          "major": true
+          "major": true,
+          "x": 0.2518527,
+          "y": 0.74158436
         },
         {
           "name": "The Spade",
-          "major": true
+          "major": true,
+          "x": 0.24432048,
+          "y": 0.43665987
         },
         {
           "name": "The Wind Hills",
-          "major": true
+          "major": true,
+          "x": 0.37567636,
+          "y": 0.89409083
         },
         {
           "name": "Wiccwalk",
-          "major": true
+          "major": true,
+          "x": 0.77282596,
+          "y": 0.7926232
         },
         {
           "name": "Lyon's Wood",
-          "major": false
+          "major": false,
+          "x": 0.88474876,
+          "y": 0.3929681
         },
         {
           "name": "Moon's Walk",
-          "major": false
+          "major": false,
+          "x": 0.42077473,
+          "y": 0.3419856
         },
         {
           "name": "Riverhill",
-          "major": false
+          "major": false,
+          "x": 0.6587685,
+          "y": 0.23843731
         },
         {
           "name": "Sc\u00e1th Copse",
-          "major": false
+          "major": false,
+          "x": 0.8642956,
+          "y": 0.55962217
         },
         {
           "name": "The Graveyard",
-          "major": false
+          "major": false,
+          "x": 0.3741754,
+          "y": 0.5396971
         },
         {
           "name": "The Mound",
-          "major": false
+          "major": false,
+          "x": 0.5293958,
+          "y": 0.6347808
         },
         {
           "name": "Wiccwood",
-          "major": false
+          "major": false,
+          "x": 0.64314055,
+          "y": 0.4514375
         }
       ]
     },
@@ -2171,51 +3175,75 @@
       "regions": [
         {
           "name": "Allsight",
-          "major": true
+          "major": true,
+          "x": 0.5831203,
+          "y": 0.14839464
         },
         {
           "name": "Bastard's Block",
-          "major": true
+          "major": true,
+          "x": 0.60732245,
+          "y": 0.3378211
         },
         {
           "name": "Callum's Descent",
-          "major": true
+          "major": true,
+          "x": 0.33839643,
+          "y": 0.7846021
         },
         {
           "name": "Eversus",
-          "major": true
+          "major": true,
+          "x": 0.3591508,
+          "y": 0.121744014
         },
         {
           "name": "Lividus",
-          "major": true
+          "major": true,
+          "x": 0.61497265,
+          "y": 0.5383431
         },
         {
           "name": "Quietus",
-          "major": true
+          "major": true,
+          "x": 0.29447103,
+          "y": 0.36270502
         },
         {
           "name": "Crimson Thread",
-          "major": false
+          "major": false,
+          "x": 0.39541408,
+          "y": 0.23941962
         },
         {
           "name": "Rising Calm",
-          "major": false
+          "major": false,
+          "x": 0.47730553,
+          "y": 0.38211408
         },
         {
           "name": "The Bastard Sea",
-          "major": false
+          "major": false,
+          "x": 0.3520537,
+          "y": 0.6329891
         },
         {
           "name": "Ultimus",
-          "major": false
+          "major": false,
+          "x": 0.74739987,
+          "y": 0.1559431
         },
         {
           "name": "Velian Storm",
-          "major": false
+          "major": false,
+          "x": 0.6330108,
+          "y": 0.4218454
         },
         {
           "name": "Warmonger Bay",
-          "major": false
+          "major": false,
+          "x": 0.72384614,
+          "y": 0.73181903
         }
       ]
     },
@@ -2225,75 +3253,111 @@
       "regions": [
         {
           "name": "Blackcoat Way",
-          "major": true
+          "major": true,
+          "x": 0.3481871,
+          "y": 0.6928178
         },
         {
           "name": "Blinding Stones",
-          "major": true
+          "major": true,
+          "x": 0.39120665,
+          "y": 0.20742789
         },
         {
           "name": "Grief Mother",
-          "major": true
+          "major": true,
+          "x": 0.70076466,
+          "y": 0.64825827
         },
         {
           "name": "Mistle Shrine",
-          "major": true
+          "major": true,
+          "x": 0.8272536,
+          "y": 0.4370878
         },
         {
           "name": "Princefal",
-          "major": true
+          "major": true,
+          "x": 0.56019706,
+          "y": 0.5336197
         },
         {
           "name": "The Scrying Belt",
-          "major": true
+          "major": true,
+          "x": 0.5950697,
+          "y": 0.23161027
         },
         {
           "name": "Tomb Father",
-          "major": true
+          "major": true,
+          "x": 0.41435826,
+          "y": 0.8720155
         },
         {
           "name": "Unruly",
-          "major": true
+          "major": true,
+          "x": 0.66272694,
+          "y": 0.07702675
         },
         {
           "name": "Blackburn Canal",
-          "major": false
+          "major": false,
+          "x": 0.3770939,
+          "y": 0.8266504
         },
         {
           "name": "Graven Falls",
-          "major": false
+          "major": false,
+          "x": 0.5353815,
+          "y": 0.93596256
         },
         {
           "name": "Interloper's Hook",
-          "major": false
+          "major": false,
+          "x": 0.115867175,
+          "y": 0.6093004
         },
         {
           "name": "Nevish Trail",
-          "major": false
+          "major": false,
+          "x": 0.35606655,
+          "y": 0.07994193
         },
         {
           "name": "Plumage",
-          "major": false
+          "major": false,
+          "x": 0.683647,
+          "y": 0.78385293
         },
         {
           "name": "Princefal Burn",
-          "major": false
+          "major": false,
+          "x": 0.54545474,
+          "y": 0.70760274
         },
         {
           "name": "Tear Road",
-          "major": false
+          "major": false,
+          "x": 0.3759352,
+          "y": 0.47364816
         },
         {
           "name": "The Aging Ocean",
-          "major": false
+          "major": false,
+          "x": 0.16097441,
+          "y": 0.43393996
         },
         {
           "name": "The Arrow",
-          "major": false
+          "major": false,
+          "x": 0.7917901,
+          "y": 0.5627346
         },
         {
           "name": "The Burndocks",
-          "major": false
+          "major": false,
+          "x": 0.71211976,
+          "y": 0.41616037
         }
       ]
     },
@@ -2303,83 +3367,123 @@
       "regions": [
         {
           "name": "Fort Fogwood",
-          "major": true
+          "major": true,
+          "x": 0.7877533,
+          "y": 0.44151908
         },
         {
           "name": "Gold",
-          "major": true
+          "major": true,
+          "x": 0.20602363,
+          "y": 0.42764127
         },
         {
           "name": "Grisly Refuge",
-          "major": true
+          "major": true,
+          "x": 0.35761848,
+          "y": 0.16928288
         },
         {
           "name": "Integrum",
-          "major": true
+          "major": true,
+          "x": 0.36254406,
+          "y": 0.80967134
         },
         {
           "name": "Partisan Island",
-          "major": true
+          "major": true,
+          "x": 0.7380649,
+          "y": 0.66234607
         },
         {
           "name": "Posterus",
-          "major": true
+          "major": true,
+          "x": 0.5713095,
+          "y": 0.7933425
         },
         {
           "name": "Silver",
-          "major": true
+          "major": true,
+          "x": 0.48876172,
+          "y": 0.5460644
         },
         {
           "name": "The Conclave",
-          "major": true
+          "major": true,
+          "x": 0.59638935,
+          "y": 0.20631017
         },
         {
           "name": "The Dirk",
-          "major": true
+          "major": true,
+          "x": 0.32627067,
+          "y": 0.69577914
         },
         {
           "name": "Barrenson",
-          "major": false
+          "major": false,
+          "x": 0.24767084,
+          "y": 0.2208438
         },
         {
           "name": "Bronze",
-          "major": false
+          "major": false,
+          "x": 0.66815794,
+          "y": 0.4888049
         },
         {
           "name": "Castor",
-          "major": false
+          "major": false,
+          "x": 0.4789629,
+          "y": 0.09901617
         },
         {
           "name": "Cat Step",
-          "major": false
+          "major": false,
+          "x": 0.6744288,
+          "y": 0.7488926
         },
         {
           "name": "Kofteri Channel",
-          "major": false
+          "major": false,
+          "x": 0.5092714,
+          "y": 0.39937374
         },
         {
           "name": "Lion's Head Pass",
-          "major": false
+          "major": false,
+          "x": 0.45677686,
+          "y": 0.8037557
         },
         {
           "name": "Obitum",
-          "major": false
+          "major": false,
+          "x": 0.6195281,
+          "y": 0.3360275
         },
         {
           "name": "Pollux",
-          "major": false
+          "major": false,
+          "x": 0.43340716,
+          "y": 0.0915714
         },
         {
           "name": "Reliqua Lagoon",
-          "major": false
+          "major": false,
+          "x": 0.65778786,
+          "y": 0.6379261
         },
         {
           "name": "Sandalwood Beach",
-          "major": false
+          "major": false,
+          "x": 0.67388934,
+          "y": 0.14898765
         },
         {
           "name": "Skull Beach",
-          "major": false
+          "major": false,
+          "x": 0.26718807,
+          "y": 0.4458782
         }
       ]
     },
@@ -2389,47 +3493,69 @@
       "regions": [
         {
           "name": "Ilmari Bridge",
-          "major": true
+          "major": true,
+          "x": 0.6580935,
+          "y": 0.39452603
         },
         {
           "name": "Iltaku",
-          "major": true
+          "major": true,
+          "x": 0.7603526,
+          "y": 0.54999423
         },
         {
           "name": "Koskinla",
-          "major": true
+          "major": true,
+          "x": 0.29484403,
+          "y": 0.32867146
         },
         {
           "name": "Kulkue",
-          "major": true
+          "major": true,
+          "x": 0.6552321,
+          "y": 0.76339555
         },
         {
           "name": "Y\u00f6ohja",
-          "major": true
+          "major": true,
+          "x": 0.53662115,
+          "y": 0.5121389
         },
         {
           "name": "Arkku",
-          "major": false
+          "major": false,
+          "x": 0.22820088,
+          "y": 0.5326722
         },
         {
           "name": "Jumak\u00e4\u00e4rme",
-          "major": false
+          "major": false,
+          "x": 0.69808686,
+          "y": 0.24607655
         },
         {
           "name": "Kaant\u00f6rm\u00e4",
-          "major": false
+          "major": false,
+          "x": 0.6649445,
+          "y": 0.63924634
         },
         {
           "name": "The Corpse Road",
-          "major": false
+          "major": false,
+          "x": 0.5628603,
+          "y": 0.6643968
         },
         {
           "name": "Verisuisto",
-          "major": false
+          "major": false,
+          "x": 0.6380515,
+          "y": 0.4387205
         },
         {
           "name": "\u00c4idintyyni",
-          "major": false
+          "major": false,
+          "x": 0.3712616,
+          "y": 0.72215617
         }
       ]
     },
@@ -2439,47 +3565,69 @@
       "regions": [
         {
           "name": "Beholder's Span",
-          "major": true
+          "major": true,
+          "x": 0.5799522,
+          "y": 0.308248
         },
         {
           "name": "Cisterna Run",
-          "major": true
+          "major": true,
+          "x": 0.7415734,
+          "y": 0.31065243
         },
         {
           "name": "Dexam",
-          "major": true
+          "major": true,
+          "x": 0.58648497,
+          "y": 0.81379586
         },
         {
           "name": "Garland",
-          "major": true
+          "major": true,
+          "x": 0.51274353,
+          "y": 0.11661802
         },
         {
           "name": "The Brink",
-          "major": true
+          "major": true,
+          "x": 0.54019576,
+          "y": 0.56618124
         },
         {
           "name": "The Waif",
-          "major": true
+          "major": true,
+          "x": 0.19902845,
+          "y": 0.59313
         },
         {
           "name": "Achates Hills",
-          "major": false
+          "major": false,
+          "x": 0.30642992,
+          "y": 0.73719925
         },
         {
           "name": "Lapis Coastlands",
-          "major": false
+          "major": false,
+          "x": 0.6393892,
+          "y": 0.08847798
         },
         {
           "name": "Lazuli Hills",
-          "major": false
+          "major": false,
+          "x": 0.3202487,
+          "y": 0.0073971567
         },
         {
           "name": "Opallios Flight",
-          "major": false
+          "major": false,
+          "x": 0.5126475,
+          "y": 0.6492916
         },
         {
           "name": "The Adamant",
-          "major": false
+          "major": false,
+          "x": 0.53117424,
+          "y": 0.3921712
         }
       ]
     },
@@ -2489,63 +3637,93 @@
       "regions": [
         {
           "name": "Arise",
-          "major": true
+          "major": true,
+          "x": 0.44631964,
+          "y": 0.42305315
         },
         {
           "name": "Dormio",
-          "major": true
+          "major": true,
+          "x": 0.8107748,
+          "y": 0.59095985
         },
         {
           "name": "Finis",
-          "major": true
+          "major": true,
+          "x": 0.3178356,
+          "y": 0.5401409
         },
         {
           "name": "Initium",
-          "major": true
+          "major": true,
+          "x": 0.6155851,
+          "y": 0.3369217
         },
         {
           "name": "Teichotima",
-          "major": true
+          "major": true,
+          "x": 0.32080472,
+          "y": 0.78004307
         },
         {
           "name": "The Steel Road",
-          "major": true
+          "major": true,
+          "x": 0.5859939,
+          "y": 0.11162431
         },
         {
           "name": "World Star",
-          "major": true
+          "major": true,
+          "x": 0.63621795,
+          "y": 0.7767595
         },
         {
           "name": "Cado",
-          "major": false
+          "major": false,
+          "x": 0.2512543,
+          "y": 0.5381689
         },
         {
           "name": "Exorior",
-          "major": false
+          "major": false,
+          "x": 0.5724993,
+          "y": 0.8865212
         },
         {
           "name": "Noventus Passage",
-          "major": false
+          "major": false,
+          "x": 0.48205286,
+          "y": 0.095706396
         },
         {
           "name": "Obsidio Island",
-          "major": false
+          "major": false,
+          "x": 0.21929407,
+          "y": 0.27333707
         },
         {
           "name": "Temple Field",
-          "major": false
+          "major": false,
+          "x": 0.71719706,
+          "y": 0.52028936
         },
         {
           "name": "The Dreamer's Road",
-          "major": false
+          "major": false,
+          "x": 0.57505506,
+          "y": 0.48412567
         },
         {
           "name": "The Echo",
-          "major": false
+          "major": false,
+          "x": 0.73223627,
+          "y": 0.6672341
         },
         {
           "name": "The Sundering",
-          "major": false
+          "major": false,
+          "x": 0.46707276,
+          "y": 0.6354855
         }
       ]
     },
@@ -2555,59 +3733,87 @@
       "regions": [
         {
           "name": "Dryfeld",
-          "major": true
+          "major": true,
+          "x": 0.281482,
+          "y": 0.3940425
         },
         {
           "name": "Leiri Hermanni",
-          "major": true
+          "major": true,
+          "x": 0.52594763,
+          "y": 0.6734353
         },
         {
           "name": "The Droll",
-          "major": true
+          "major": true,
+          "x": 0.5743719,
+          "y": 0.4771007
         },
         {
           "name": "The Pippeli Stones",
-          "major": true
+          "major": true,
+          "x": 0.77051914,
+          "y": 0.37835345
         },
         {
           "name": "Underlook",
-          "major": true
+          "major": true,
+          "x": 0.37200743,
+          "y": 0.17020741
         },
         {
           "name": "Vendett",
-          "major": true
+          "major": true,
+          "x": 0.35645863,
+          "y": 0.5538068
         },
         {
           "name": "Windburn Landing",
-          "major": true
+          "major": true,
+          "x": 0.6297259,
+          "y": 0.18420938
         },
         {
           "name": "Ensiferum",
-          "major": false
+          "major": false,
+          "x": 0.47256702,
+          "y": 0.6497426
         },
         {
           "name": "Ikimeri",
-          "major": false
+          "major": false,
+          "x": 0.46169534,
+          "y": 0.8226134
         },
         {
           "name": "Kaamos Lea",
-          "major": false
+          "major": false,
+          "x": 0.18810944,
+          "y": 0.29887763
         },
         {
           "name": "Lumivy\u00f6ry Hillscape",
-          "major": false
+          "major": false,
+          "x": 0.5029514,
+          "y": 0.076378316
         },
         {
           "name": "Parkukoti",
-          "major": false
+          "major": false,
+          "x": 0.46254733,
+          "y": 0.35943258
         },
         {
           "name": "Rolling Boulders",
-          "major": false
+          "major": false,
+          "x": 0.74153787,
+          "y": 0.2596079
         },
         {
           "name": "Wire Tail Islet",
-          "major": false
+          "major": false,
+          "x": 0.7593853,
+          "y": 0.78424484
         }
       ]
     },
@@ -2617,47 +3823,69 @@
       "regions": [
         {
           "name": "Camp Surista",
-          "major": true
+          "major": true,
+          "x": 0.5580439,
+          "y": 0.7888256
         },
         {
           "name": "It\u00e4\u00e4n",
-          "major": true
+          "major": true,
+          "x": 0.4066018,
+          "y": 0.7409032
         },
         {
           "name": "Kohina Base",
-          "major": true
+          "major": true,
+          "x": 0.7553912,
+          "y": 0.3873181
         },
         {
           "name": "Little Raakkua",
-          "major": true
+          "major": true,
+          "x": 0.57255554,
+          "y": 0.42005637
         },
         {
           "name": "Pariah",
-          "major": true
+          "major": true,
+          "x": 0.7055025,
+          "y": 0.72636664
         },
         {
           "name": "Kuunvaara",
-          "major": false
+          "major": false,
+          "x": 0.643007,
+          "y": 0.87777555
         },
         {
           "name": "Peitt\u00e4v\u00e4 Ascent",
-          "major": false
+          "major": false,
+          "x": 0.3600173,
+          "y": 0.86844057
         },
         {
           "name": "Sanguine Comet",
-          "major": false
+          "major": false,
+          "x": 0.8117662,
+          "y": 0.44928592
         },
         {
           "name": "Syd\u00e4nkolo",
-          "major": false
+          "major": false,
+          "x": 0.84806645,
+          "y": 0.75296277
         },
         {
           "name": "Syker\u00f6 Bay",
-          "major": false
+          "major": false,
+          "x": 0.46910933,
+          "y": 0.50373834
         },
         {
           "name": "Yaga's Leg",
-          "major": false
+          "major": false,
+          "x": 0.33700144,
+          "y": 0.20604205
         }
       ]
     },
@@ -2667,55 +3895,81 @@
       "regions": [
         {
           "name": "Aegocerus Fortress",
-          "major": true
+          "major": true,
+          "x": 0.6556824,
+          "y": 0.79182994
         },
         {
           "name": "House of Lyterius",
-          "major": true
+          "major": true,
+          "x": 0.34690276,
+          "y": 0.2666632
         },
         {
           "name": "Maenalius Cove",
-          "major": true
+          "major": true,
+          "x": 0.24910371,
+          "y": 0.6228737
         },
         {
           "name": "Pan's Villa",
-          "major": true
+          "major": true,
+          "x": 0.68959564,
+          "y": 0.5064528
         },
         {
           "name": "Reedhurst",
-          "major": true
+          "major": true,
+          "x": 0.46567765,
+          "y": 0.4486747
         },
         {
           "name": "Syrinx Pass",
-          "major": true
+          "major": true,
+          "x": 0.410132,
+          "y": 0.8087702
         },
         {
           "name": "Balefire River",
-          "major": false
+          "major": false,
+          "x": 0.38998514,
+          "y": 0.70674205
         },
         {
           "name": "Fulgur Forelands",
-          "major": false
+          "major": false,
+          "x": 0.52784586,
+          "y": 0.9065411
         },
         {
           "name": "Hook and Crow",
-          "major": false
+          "major": false,
+          "x": 0.4850771,
+          "y": 0.23663516
         },
         {
           "name": "Levin Row",
-          "major": false
+          "major": false,
+          "x": 0.2650081,
+          "y": 0.37784296
         },
         {
           "name": "Nitid Mountains",
-          "major": false
+          "major": false,
+          "x": 0.41492775,
+          "y": 0.5750565
         },
         {
           "name": "Nomios Crossroads",
-          "major": false
+          "major": false,
+          "x": 0.16252905,
+          "y": 0.52072155
         },
         {
           "name": "The Cairn",
-          "major": false
+          "major": false,
+          "x": 0.5327937,
+          "y": 0.72078156
         }
       ]
     },
@@ -2725,147 +3979,219 @@
       "regions": [
         {
           "name": "Brodytown",
-          "major": true
+          "major": true,
+          "x": 0.44412765,
+          "y": 0.3227743
         },
         {
           "name": "Dwyerstown",
-          "major": true
+          "major": true,
+          "x": 0.15061852,
+          "y": 0.36391303
         },
         {
           "name": "Elksford",
-          "major": true
+          "major": true,
+          "x": 0.33049652,
+          "y": 0.4971746
         },
         {
           "name": "Fort Mac Conaill",
-          "major": true
+          "major": true,
+          "x": 0.70212996,
+          "y": 0.8482764
         },
         {
           "name": "Harpy",
-          "major": true
+          "major": true,
+          "x": 0.44333068,
+          "y": 0.9163655
         },
         {
           "name": "Ice Ranch",
-          "major": true
+          "major": true,
+          "x": 0.70420206,
+          "y": 0.3878927
         },
         {
           "name": "Limestone Holdfast",
-          "major": true
+          "major": true,
+          "x": 0.29389253,
+          "y": 0.15557751
         },
         {
           "name": "Mousetrap",
-          "major": true
+          "major": true,
+          "x": 0.8401006,
+          "y": 0.53316337
         },
         {
           "name": "Nightchurch",
-          "major": true
+          "major": true,
+          "x": 0.37822467,
+          "y": 0.74487805
         },
         {
           "name": "Reprieve",
-          "major": true
+          "major": true,
+          "x": 0.54468614,
+          "y": 0.67606056
         },
         {
           "name": "The Ark",
-          "major": true
+          "major": true,
+          "x": 0.74158484,
+          "y": 0.5578975
         },
         {
           "name": "Camp Eos",
-          "major": false
+          "major": false,
+          "x": 0.7520739,
+          "y": 0.70374876
         },
         {
           "name": "Caragtais",
-          "major": false
+          "major": false,
+          "x": 0.45057085,
+          "y": 0.5294064
         },
         {
           "name": "Duffy's Farm",
-          "major": false
+          "major": false,
+          "x": 0.2719318,
+          "y": 0.56807905
         },
         {
           "name": "Dugan's Approach",
-          "major": false
+          "major": false,
+          "x": 0.6922709,
+          "y": 0.1538672
         },
         {
           "name": "Dwyersfield",
-          "major": false
+          "major": false,
+          "x": 0.2087289,
+          "y": 0.26713523
         },
         {
           "name": "Featherfield",
-          "major": false
+          "major": false,
+          "x": 0.4406717,
+          "y": 0.798611
         },
         {
           "name": "Fisherman's Floe",
-          "major": false
+          "major": false,
+          "x": 0.6400806,
+          "y": 0.5572313
         },
         {
           "name": "Hookhall",
-          "major": false
+          "major": false,
+          "x": 0.36672696,
+          "y": 0.6498256
         },
         {
           "name": "Humidus",
-          "major": false
+          "major": false,
+          "x": 0.27232808,
+          "y": 0.66734344
         },
         {
           "name": "Mac Conaill's Pass",
-          "major": false
+          "major": false,
+          "x": 0.61724085,
+          "y": 0.985965
         },
         {
           "name": "Pitfall",
-          "major": false
+          "major": false,
+          "x": 0.87784535,
+          "y": 0.37858298
         },
         {
           "name": "Puncta",
-          "major": false
+          "major": false,
+          "x": 0.18530942,
+          "y": 0.5888269
         },
         {
           "name": "Scorpion",
-          "major": false
+          "major": false,
+          "x": 0.33854625,
+          "y": 0.86316854
         },
         {
           "name": "The Bait",
-          "major": false
+          "major": false,
+          "x": 0.708999,
+          "y": 0.5577328
         },
         {
           "name": "The Cairns",
-          "major": false
+          "major": false,
+          "x": 0.60312855,
+          "y": 0.23888308
         },
         {
           "name": "The Chicken Coop",
-          "major": false
+          "major": false,
+          "x": 0.32071957,
+          "y": 0.4145506
         },
         {
           "name": "The Deckard",
-          "major": false
+          "major": false,
+          "x": 0.4275156,
+          "y": 0.041210115
         },
         {
           "name": "The Knot",
-          "major": false
+          "major": false,
+          "x": 0.44904447,
+          "y": 0.6583204
         },
         {
           "name": "The Reaching Heights",
-          "major": false
+          "major": false,
+          "x": 0.546316,
+          "y": 0.547519
         },
         {
           "name": "The Rime Ledge",
-          "major": false
+          "major": false,
+          "x": 0.89936477,
+          "y": 0.74528646
         },
         {
           "name": "The Rousing Fields",
-          "major": false
+          "major": false,
+          "x": 0.23695965,
+          "y": 0.46786177
         },
         {
           "name": "The Scar",
-          "major": false
+          "major": false,
+          "x": 0.29426545,
+          "y": 0.5436782
         },
         {
           "name": "The Squeeze",
-          "major": false
+          "major": false,
+          "x": 0.3175878,
+          "y": 1.0565143
         },
         {
           "name": "Th\u00fdlak",
-          "major": false
+          "major": false,
+          "x": 0.11808629,
+          "y": 0.7405652
         },
         {
           "name": "Windy Way",
-          "major": false
+          "major": false,
+          "x": 0.22708872,
+          "y": 0.078611076
         }
       ]
     },
@@ -2875,83 +4201,123 @@
       "regions": [
         {
           "name": "Breakwater",
-          "major": true
+          "major": true,
+          "x": 0.7303377,
+          "y": 0.4948302
         },
         {
           "name": "Clay Coffer",
-          "major": true
+          "major": true,
+          "x": 0.6689306,
+          "y": 0.80417037
         },
         {
           "name": "Fort Rictus",
-          "major": true
+          "major": true,
+          "x": 0.31985363,
+          "y": 0.19995931
         },
         {
           "name": "Keelhaul",
-          "major": true
+          "major": true,
+          "x": 0.4221427,
+          "y": 0.7107329
         },
         {
           "name": "Scuttletown",
-          "major": true
+          "major": true,
+          "x": 0.27876934,
+          "y": 0.45872074
         },
         {
           "name": "The Bilge",
-          "major": true
+          "major": true,
+          "x": 0.51629263,
+          "y": 0.14708644
         },
         {
           "name": "Thimble Base",
-          "major": true
+          "major": true,
+          "x": 0.33860835,
+          "y": 0.872634
         },
         {
           "name": "Billhook Reach",
-          "major": false
+          "major": false,
+          "x": 0.7386341,
+          "y": 0.28479356
         },
         {
           "name": "Binnacle Pitch",
-          "major": false
+          "major": false,
+          "x": 0.20794858,
+          "y": 0.7788281
         },
         {
           "name": "Blackjack Junction",
-          "major": false
+          "major": false,
+          "x": 0.4424266,
+          "y": 0.51454234
         },
         {
           "name": "Blissfin Beach",
-          "major": false
+          "major": false,
+          "x": 0.82837766,
+          "y": 0.37167186
         },
         {
           "name": "Cape Balderstone",
-          "major": false
+          "major": false,
+          "x": 0.22160113,
+          "y": 0.31315333
         },
         {
           "name": "Jeweller's Bay",
-          "major": false
+          "major": false,
+          "x": 0.7348795,
+          "y": 0.42902645
         },
         {
           "name": "Mount Haulwind",
-          "major": false
+          "major": false,
+          "x": 0.58524585,
+          "y": 0.563418
         },
         {
           "name": "Privateer's Bounty",
-          "major": false
+          "major": false,
+          "x": 0.48428428,
+          "y": 0.24685703
         },
         {
           "name": "Sharkfin River",
-          "major": false
+          "major": false,
+          "x": 0.6809418,
+          "y": 0.2482856
         },
         {
           "name": "The Bustle",
-          "major": false
+          "major": false,
+          "x": 0.33234635,
+          "y": 0.472862
         },
         {
           "name": "The Foreward Fathom",
-          "major": false
+          "major": false,
+          "x": 0.7567202,
+          "y": 0.56061375
         },
         {
           "name": "The Furl",
-          "major": false
+          "major": false,
+          "x": 0.49399126,
+          "y": 0.8615662
         },
         {
           "name": "The Whaler",
-          "major": false
+          "major": false,
+          "x": 0.12975131,
+          "y": 0.5750582
         }
       ]
     },
@@ -2961,59 +4327,87 @@
       "regions": [
         {
           "name": "Camp Upsilon",
-          "major": true
+          "major": true,
+          "x": 0.26564604,
+          "y": 0.27070302
         },
         {
           "name": "Cannonsmoke",
-          "major": true
+          "major": true,
+          "x": 0.44220516,
+          "y": 0.64473647
         },
         {
           "name": "Climb",
-          "major": true
+          "major": true,
+          "x": 0.70969653,
+          "y": 0.14353998
         },
         {
           "name": "Fort Matchwood",
-          "major": true
+          "major": true,
+          "x": 0.5452665,
+          "y": 0.3911263
         },
         {
           "name": "Judicium",
-          "major": true
+          "major": true,
+          "x": 0.72171146,
+          "y": 0.36718932
         },
         {
           "name": "Minos",
-          "major": true
+          "major": true,
+          "x": 0.36771578,
+          "y": 0.47254315
         },
         {
           "name": "Penance",
-          "major": true
+          "major": true,
+          "x": 0.50271493,
+          "y": 0.16619161
         },
         {
           "name": "Victoria Hill",
-          "major": true
+          "major": true,
+          "x": 0.77345693,
+          "y": 0.56334525
         },
         {
           "name": "Fragment Knolls",
-          "major": false
+          "major": false,
+          "x": 0.17780334,
+          "y": 0.36585018
         },
         {
           "name": "Gunpowder Lane",
-          "major": false
+          "major": false,
+          "x": 0.61301905,
+          "y": 0.24346162
         },
         {
           "name": "Perish",
-          "major": false
+          "major": false,
+          "x": 0.28602916,
+          "y": 0.74904984
         },
         {
           "name": "Red Crossing",
-          "major": false
+          "major": false,
+          "x": 0.61810666,
+          "y": 0.83563036
         },
         {
           "name": "The Red River",
-          "major": false
+          "major": false,
+          "x": 0.52190596,
+          "y": 0.70736283
         },
         {
           "name": "Twelve Drops",
-          "major": false
+          "major": false,
+          "x": 0.7133824,
+          "y": 0.4577753
         }
       ]
     },
@@ -3023,79 +4417,117 @@
       "regions": [
         {
           "name": "Barronhome",
-          "major": true
+          "major": true,
+          "x": 0.60463125,
+          "y": 0.70886564
         },
         {
           "name": "Cinderwick",
-          "major": true
+          "major": true,
+          "x": 0.47070783,
+          "y": 0.28858405
         },
         {
           "name": "Light's End",
-          "major": true
+          "major": true,
+          "x": 0.3591681,
+          "y": 0.7078175
         },
         {
           "name": "Talonsfort",
-          "major": true
+          "major": true,
+          "x": 0.35820884,
+          "y": 0.13484778
         },
         {
           "name": "The Pendant",
-          "major": true
+          "major": true,
+          "x": 0.7150595,
+          "y": 0.33893856
         },
         {
           "name": "The Robin's Nest",
-          "major": true
+          "major": true,
+          "x": 0.7684787,
+          "y": 0.58302045
         },
         {
           "name": "The Whetstone",
-          "major": true
+          "major": true,
+          "x": 0.3226086,
+          "y": 0.46409044
         },
         {
           "name": "Aeyrie Bay",
-          "major": false
+          "major": false,
+          "x": 0.25765997,
+          "y": 0.5815297
         },
         {
           "name": "Creeping Drought",
-          "major": false
+          "major": false,
+          "x": 0.552408,
+          "y": 0.47649437
         },
         {
           "name": "Glimmerhaven",
-          "major": false
+          "major": false,
+          "x": 0.32666522,
+          "y": 0.6324297
         },
         {
           "name": "Groggy Pinion",
-          "major": false
+          "major": false,
+          "x": 0.24321643,
+          "y": 0.19780892
         },
         {
           "name": "Lord's Cellar",
-          "major": false
+          "major": false,
+          "x": 0.75890756,
+          "y": 0.821465
         },
         {
           "name": "Lye Fields",
-          "major": false
+          "major": false,
+          "x": 0.45805374,
+          "y": 0.69130063
         },
         {
           "name": "Riven Downs",
-          "major": false
+          "major": false,
+          "x": 0.72029334,
+          "y": 0.15452237
         },
         {
           "name": "Simmerset",
-          "major": false
+          "major": false,
+          "x": 0.4681685,
+          "y": 0.8700067
         },
         {
           "name": "Slumbering Meadow",
-          "major": false
+          "major": false,
+          "x": 0.48295644,
+          "y": 0.10353899
         },
         {
           "name": "Suture Lowlands",
-          "major": false
+          "major": false,
+          "x": 0.1462633,
+          "y": 0.4258121
         },
         {
           "name": "Waspwood",
-          "major": false
+          "major": false,
+          "x": 0.36388937,
+          "y": 0.33813342
         },
         {
           "name": "Wormskive",
-          "major": false
+          "major": false,
+          "x": 0.81779635,
+          "y": 0.44278026
         }
       ]
     },
@@ -3105,95 +4537,141 @@
       "regions": [
         {
           "name": "Firstmarch",
-          "major": true
+          "major": true,
+          "x": 0.84196997,
+          "y": 0.38732836
         },
         {
           "name": "Gorgon Grove",
-          "major": true
+          "major": true,
+          "x": 0.22335887,
+          "y": 0.35604578
         },
         {
           "name": "Limewood Holdfast",
-          "major": true
+          "major": true,
+          "x": 0.47156802,
+          "y": 0.4749517
         },
         {
           "name": "Reflection",
-          "major": true
+          "major": true,
+          "x": 0.21630011,
+          "y": 0.60432374
         },
         {
           "name": "Savages",
-          "major": true
+          "major": true,
+          "x": 0.39030778,
+          "y": 0.1846902
         },
         {
           "name": "Silk Farms",
-          "major": true
+          "major": true,
+          "x": 0.4394004,
+          "y": 0.66509956
         },
         {
           "name": "Simo's Run",
-          "major": true
+          "major": true,
+          "x": 0.71478575,
+          "y": 0.8589753
         },
         {
           "name": "The Bell Toll",
-          "major": true
+          "major": true,
+          "x": 0.6211396,
+          "y": 0.3829189
         },
         {
           "name": "The Grave of Erastos",
-          "major": true
+          "major": true,
+          "x": 0.6505256,
+          "y": 0.15729238
         },
         {
           "name": "The Vanguard",
-          "major": true
+          "major": true,
+          "x": 0.69273907,
+          "y": 0.6221794
         },
         {
           "name": "A Careless Net",
-          "major": false
+          "major": false,
+          "x": 0.43234968,
+          "y": 0.8701505
         },
         {
           "name": "A New Spring",
-          "major": false
+          "major": false,
+          "x": 0.65531296,
+          "y": 0.26313987
         },
         {
           "name": "Autumn Pyres",
-          "major": false
+          "major": false,
+          "x": 0.5103819,
+          "y": 0.3264112
         },
         {
           "name": "Final Step",
-          "major": false
+          "major": false,
+          "x": 0.30303696,
+          "y": 0.1718076
         },
         {
           "name": "Hades Ladder",
-          "major": false
+          "major": false,
+          "x": 0.4075216,
+          "y": 0.2975581
         },
         {
           "name": "Legion's Dawn",
-          "major": false
+          "major": false,
+          "x": 0.34624228,
+          "y": 0.9482727
         },
         {
           "name": "Manky Hills",
-          "major": false
+          "major": false,
+          "x": 0.81251085,
+          "y": 0.59283257
         },
         {
           "name": "Southreach",
-          "major": false
+          "major": false,
+          "x": 0.4774761,
+          "y": 0.09446996
         },
         {
           "name": "The Blue",
-          "major": false
+          "major": false,
+          "x": 0.5409541,
+          "y": 0.8753167
         },
         {
           "name": "The First Rung",
-          "major": false
+          "major": false,
+          "x": 0.35477364,
+          "y": 0.44228175
         },
         {
           "name": "The Foolish Maidens",
-          "major": false
+          "major": false,
+          "x": 0.075329885,
+          "y": 0.57303905
         },
         {
           "name": "The Plunging",
-          "major": false
+          "major": false,
+          "x": 0.19269316,
+          "y": 0.75184214
         },
         {
           "name": "Widow's Web",
-          "major": false
+          "major": false,
+          "x": 0.5278859,
+          "y": 0.6728514
         }
       ]
     },
@@ -3203,59 +4681,87 @@
       "regions": [
         {
           "name": "Fort Blather",
-          "major": true
+          "major": true,
+          "x": 0.74179506,
+          "y": 0.8028215
         },
         {
           "name": "Hush",
-          "major": true
+          "major": true,
+          "x": 0.45665428,
+          "y": 0.22281247
         },
         {
           "name": "Inari Base",
-          "major": true
+          "major": true,
+          "x": 0.74317586,
+          "y": 0.15739217
         },
         {
           "name": "Sotto Bank",
-          "major": true
+          "major": true,
+          "x": 0.5626012,
+          "y": 0.5431819
         },
         {
           "name": "Stem",
-          "major": true
+          "major": true,
+          "x": 0.39363724,
+          "y": 0.71316886
         },
         {
           "name": "The Filament",
-          "major": true
+          "major": true,
+          "x": 0.30684024,
+          "y": 0.47614998
         },
         {
           "name": "Tine",
-          "major": true
+          "major": true,
+          "x": 0.62117475,
+          "y": 0.32557455
         },
         {
           "name": "Wound",
-          "major": true
+          "major": true,
+          "x": 0.88332975,
+          "y": 0.4517844
         },
         {
           "name": "Calmland",
-          "major": false
+          "major": false,
+          "x": 0.83024323,
+          "y": 0.29554182
         },
         {
           "name": "Cursed Court",
-          "major": false
+          "major": false,
+          "x": 0.49168083,
+          "y": 0.4426604
         },
         {
           "name": "Mount Rell",
-          "major": false
+          "major": false,
+          "x": 0.1787769,
+          "y": 0.56465214
         },
         {
           "name": "Mute",
-          "major": false
+          "major": false,
+          "x": 0.30032888,
+          "y": 0.29290342
         },
         {
           "name": "Reaching River",
-          "major": false
+          "major": false,
+          "x": 0.7099959,
+          "y": 0.67985946
         },
         {
           "name": "Rell Foothills",
-          "major": false
+          "major": false,
+          "x": 0.31728965,
+          "y": 0.66578835
         }
       ]
     },
@@ -3265,75 +4771,111 @@
       "regions": [
         {
           "name": "Acies Overlook",
-          "major": true
+          "major": true,
+          "x": 0.54675734,
+          "y": 0.21768357
         },
         {
           "name": "Alchimio Estate",
-          "major": true
+          "major": true,
+          "x": 0.38099903,
+          "y": 0.82105845
         },
         {
           "name": "Base Ferveret",
-          "major": true
+          "major": true,
+          "x": 0.64359087,
+          "y": 0.64350903
         },
         {
           "name": "Base Sagitta",
-          "major": true
+          "major": true,
+          "x": 0.82470584,
+          "y": 0.557183
         },
         {
           "name": "The Flair",
-          "major": true
+          "major": true,
+          "x": 0.32935584,
+          "y": 0.22535613
         },
         {
           "name": "The Spearhead",
-          "major": true
+          "major": true,
+          "x": 0.5968192,
+          "y": 0.33618543
         },
         {
           "name": "The Wane",
-          "major": true
+          "major": true,
+          "x": 0.65546787,
+          "y": 0.82682943
         },
         {
           "name": "Ustio",
-          "major": true
+          "major": true,
+          "x": 0.44756553,
+          "y": 0.5223967
         },
         {
           "name": "Verge Wing",
-          "major": true
+          "major": true,
+          "x": 0.18868819,
+          "y": 0.47480085
         },
         {
           "name": "Burnish Beach",
-          "major": false
+          "major": false,
+          "x": 0.6574877,
+          "y": 0.3254976
         },
         {
           "name": "Desolation Beach",
-          "major": false
+          "major": false,
+          "x": 0.5923088,
+          "y": 0.5392233
         },
         {
           "name": "Foreland",
-          "major": false
+          "major": false,
+          "x": 0.56535083,
+          "y": 0.26199642
         },
         {
           "name": "Isle of Eros",
-          "major": false
+          "major": false,
+          "x": 0.43933237,
+          "y": 0.4522753
         },
         {
           "name": "Stema Approach",
-          "major": false
+          "major": false,
+          "x": 0.8047542,
+          "y": 0.8447248
         },
         {
           "name": "The Coil",
-          "major": false
+          "major": false,
+          "x": 0.5251296,
+          "y": 0.40668237
         },
         {
           "name": "The North Wind",
-          "major": false
+          "major": false,
+          "x": 0.3277939,
+          "y": 0.09158743
         },
         {
           "name": "The Wending Tether",
-          "major": false
+          "major": false,
+          "x": 0.32975417,
+          "y": 0.5703861
         },
         {
           "name": "The West Line",
-          "major": false
+          "major": false,
+          "x": 0.73648494,
+          "y": 0.23043896
         }
       ]
     },
@@ -3343,71 +4885,105 @@
       "regions": [
         {
           "name": "Breaker Town",
-          "major": true
+          "major": true,
+          "x": 0.35331258,
+          "y": 0.44916558
         },
         {
           "name": "Briar",
-          "major": true
+          "major": true,
+          "x": 0.3287869,
+          "y": 0.22730115
         },
         {
           "name": "Fort Hoarfrost",
-          "major": true
+          "major": true,
+          "x": 0.60775054,
+          "y": 0.58868766
         },
         {
           "name": "Port of Rime",
-          "major": true
+          "major": true,
+          "x": 0.6745212,
+          "y": 0.3345703
         },
         {
           "name": "The Old Mourn",
-          "major": true
+          "major": true,
+          "x": 0.28750673,
+          "y": 0.766004
         },
         {
           "name": "The Pale House",
-          "major": true
+          "major": true,
+          "x": 0.18694079,
+          "y": 0.439909
         },
         {
           "name": "The South Wind",
-          "major": true
+          "major": true,
+          "x": 0.6103042,
+          "y": 0.83921206
         },
         {
           "name": "Thornhold",
-          "major": true
+          "major": true,
+          "x": 0.23308882,
+          "y": 0.595859
         },
         {
           "name": "Vulpine Watch",
-          "major": true
+          "major": true,
+          "x": 0.4286188,
+          "y": 0.72822374
         },
         {
           "name": "Broken Zephyr",
-          "major": false
+          "major": false,
+          "x": 0.4067395,
+          "y": 0.87126213
         },
         {
           "name": "Calving",
-          "major": false
+          "major": false,
+          "x": 0.83334476,
+          "y": 0.5485096
         },
         {
           "name": "Crystalfleet Inlet",
-          "major": false
+          "major": false,
+          "x": 0.44950658,
+          "y": 0.6240362
         },
         {
           "name": "Desiccated Front",
-          "major": false
+          "major": false,
+          "x": 0.48045745,
+          "y": 0.46486002
         },
         {
           "name": "Diarmaid's Plan",
-          "major": false
+          "major": false,
+          "x": 0.29483473,
+          "y": 0.05575947
         },
         {
           "name": "Glassy Flats",
-          "major": false
+          "major": false,
+          "x": 0.28270105,
+          "y": 0.627241
         },
         {
           "name": "Revenant's Walk",
-          "major": false
+          "major": false,
+          "x": 0.5058695,
+          "y": 0.2373997
         },
         {
           "name": "Searing Blind",
-          "major": false
+          "major": false,
+          "x": 0.17697759,
+          "y": 0.37411928
         }
       ]
     },
@@ -3417,63 +4993,93 @@
       "regions": [
         {
           "name": "Buckler Sound",
-          "major": true
+          "major": true,
+          "x": 0.51059383,
+          "y": 0.5146678
         },
         {
           "name": "Fading Lights",
-          "major": true
+          "major": true,
+          "x": 0.73406035,
+          "y": 0.69156134
         },
         {
           "name": "The Cord",
-          "major": true
+          "major": true,
+          "x": 0.5624944,
+          "y": 0.69426215
         },
         {
           "name": "The Dais",
-          "major": true
+          "major": true,
+          "x": 0.59315604,
+          "y": 0.102234095
         },
         {
           "name": "The Heir's Knife",
-          "major": true
+          "major": true,
+          "x": 0.2763725,
+          "y": 0.780616
         },
         {
           "name": "The Long Fast",
-          "major": true
+          "major": true,
+          "x": 0.41714057,
+          "y": 0.8898146
         },
         {
           "name": "The Reach",
-          "major": true
+          "major": true,
+          "x": 0.701072,
+          "y": 0.20528859
         },
         {
           "name": "Trammel Pool",
-          "major": true
+          "major": true,
+          "x": 0.77552485,
+          "y": 0.46081984
         },
         {
           "name": "World's End",
-          "major": true
+          "major": true,
+          "x": 0.2149299,
+          "y": 0.55217665
         },
         {
           "name": "Daihbi Point",
-          "major": false
+          "major": false,
+          "x": 0.30176052,
+          "y": 0.11618838
         },
         {
           "name": "Longing",
-          "major": false
+          "major": false,
+          "x": 0.36998627,
+          "y": 0.73207545
         },
         {
           "name": "The Loneliest Shore",
-          "major": false
+          "major": false,
+          "x": 0.525158,
+          "y": 0.25433654
         },
         {
           "name": "The Pram",
-          "major": false
+          "major": false,
+          "x": 0.39138335,
+          "y": 0.47735217
         },
         {
           "name": "The Roiling Comets",
-          "major": false
+          "major": false,
+          "x": 0.85634106,
+          "y": 0.5443087
         },
         {
           "name": "The Whorl",
-          "major": false
+          "major": false,
+          "x": 0.3053683,
+          "y": 0.34644526
         }
       ]
     },
@@ -3483,87 +5089,129 @@
       "regions": [
         {
           "name": "Blackwatch",
-          "major": true
+          "major": true,
+          "x": 0.8498147,
+          "y": 0.40786892
         },
         {
           "name": "Isle of Psyche",
-          "major": true
+          "major": true,
+          "x": 0.15159309,
+          "y": 0.51369226
         },
         {
           "name": "Liar's Haven",
-          "major": true
+          "major": true,
+          "x": 0.68130624,
+          "y": 0.6398232
         },
         {
           "name": "Plana Fada",
-          "major": true
+          "major": true,
+          "x": 0.32775733,
+          "y": 0.8202186
         },
         {
           "name": "Reef",
-          "major": true
+          "major": true,
+          "x": 0.70574933,
+          "y": 0.3034757
         },
         {
           "name": "Surge Gate",
-          "major": true
+          "major": true,
+          "x": 0.39956635,
+          "y": 0.45218205
         },
         {
           "name": "The Gale",
-          "major": true
+          "major": true,
+          "x": 0.55610585,
+          "y": 0.71643656
         },
         {
           "name": "The Iris",
-          "major": true
+          "major": true,
+          "x": 0.6266644,
+          "y": 0.48053998
         },
         {
           "name": "The Rush",
-          "major": true
+          "major": true,
+          "x": 0.526945,
+          "y": 0.33975324
         },
         {
           "name": "Anchor",
-          "major": false
+          "major": false,
+          "x": 0.29604387,
+          "y": 0.33267847
         },
         {
           "name": "Cirris Valve",
-          "major": false
+          "major": false,
+          "x": 0.7130552,
+          "y": 0.48503992
         },
         {
           "name": "Eros Lagoon",
-          "major": false
+          "major": false,
+          "x": 0.14958856,
+          "y": 0.4612728
         },
         {
           "name": "Liar's League",
-          "major": false
+          "major": false,
+          "x": 0.7747576,
+          "y": 0.49161983
         },
         {
           "name": "Lost Airchal",
-          "major": false
+          "major": false,
+          "x": 0.69053644,
+          "y": 0.828817
         },
         {
           "name": "Pale Cnap",
-          "major": false
+          "major": false,
+          "x": 0.28975487,
+          "y": 0.103957765
         },
         {
           "name": "Sclera",
-          "major": false
+          "major": false,
+          "x": 0.53417295,
+          "y": 0.5819011
         },
         {
           "name": "Skodio Isle",
-          "major": false
+          "major": false,
+          "x": 0.44565293,
+          "y": 0.15507607
         },
         {
           "name": "Stratos Valve",
-          "major": false
+          "major": false,
+          "x": 0.5054258,
+          "y": 0.49301273
         },
         {
           "name": "Surge Field",
-          "major": false
+          "major": false,
+          "x": 0.61058897,
+          "y": 0.58133745
         },
         {
           "name": "Sweetworm",
-          "major": false
+          "major": false,
+          "x": 0.28520337,
+          "y": 0.6765304
         },
         {
           "name": "The Outwood",
-          "major": false
+          "major": false,
+          "x": 0.6131708,
+          "y": 0.39710408
         }
       ]
     },
@@ -3573,71 +5221,105 @@
       "regions": [
         {
           "name": "Bloody Palm Fort",
-          "major": true
+          "major": true,
+          "x": 0.8150946,
+          "y": 0.52829623
         },
         {
           "name": "Cerberus Wake",
-          "major": true
+          "major": true,
+          "x": 0.26287487,
+          "y": 0.7303848
         },
         {
           "name": "Theriz\u00f3",
-          "major": true
+          "major": true,
+          "x": 0.4532967,
+          "y": 0.7386244
         },
         {
           "name": "Thunderbolt",
-          "major": true
+          "major": true,
+          "x": 0.34465387,
+          "y": 0.0903161
         },
         {
           "name": "Warlord's Stead",
-          "major": true
+          "major": true,
+          "x": 0.25277558,
+          "y": 0.35900182
         },
         {
           "name": "Winding Bolas",
-          "major": true
+          "major": true,
+          "x": 0.77879095,
+          "y": 0.2834924
         },
         {
           "name": "Aspisa",
-          "major": false
+          "major": false,
+          "x": 0.46133813,
+          "y": 0.92605644
         },
         {
           "name": "Bay of the Ward",
-          "major": false
+          "major": false,
+          "x": 0.5289373,
+          "y": 0.35276157
         },
         {
           "name": "Dogbone",
-          "major": false
+          "major": false,
+          "x": 0.20944826,
+          "y": 0.42446396
         },
         {
           "name": "Martyr's Fang",
-          "major": false
+          "major": false,
+          "x": 0.48804128,
+          "y": 0.43367526
         },
         {
           "name": "Rising Loom",
-          "major": false
+          "major": false,
+          "x": 0.489286,
+          "y": 0.7042201
         },
         {
           "name": "Sever",
-          "major": false
+          "major": false,
+          "x": 0.8255831,
+          "y": 0.40565625
         },
         {
           "name": "The Legion's Bounty",
-          "major": false
+          "major": false,
+          "x": 0.29455715,
+          "y": 0.62074506
         },
         {
           "name": "The Phalanx",
-          "major": false
+          "major": false,
+          "x": 0.37561497,
+          "y": 0.6187968
         },
         {
           "name": "The Respite",
-          "major": false
+          "major": false,
+          "x": 0.40430403,
+          "y": 0.742963
         },
         {
           "name": "Three Siblings",
-          "major": false
+          "major": false,
+          "x": 0.7733233,
+          "y": 0.7450966
         },
         {
           "name": "Thunder Plains",
-          "major": false
+          "major": false,
+          "x": 0.2921307,
+          "y": 0.26187712
         }
       ]
     },
@@ -3647,63 +5329,93 @@
       "regions": [
         {
           "name": "Fort Barley",
-          "major": true
+          "major": true,
+          "x": 0.4517946,
+          "y": 0.36775875
         },
         {
           "name": "Headsman's Villa",
-          "major": true
+          "major": true,
+          "x": 0.19618103,
+          "y": 0.44883764
         },
         {
           "name": "Plankhouse",
-          "major": true
+          "major": true,
+          "x": 0.34952953,
+          "y": 0.6265077
         },
         {
           "name": "Second Man",
-          "major": true
+          "major": true,
+          "x": 0.32955098,
+          "y": 0.85392964
         },
         {
           "name": "Tethys Base",
-          "major": true
+          "major": true,
+          "x": 0.58998483,
+          "y": 0.54314834
         },
         {
           "name": "The Old Captain",
-          "major": true
+          "major": true,
+          "x": 0.83037317,
+          "y": 0.57597953
         },
         {
           "name": "Titancall",
-          "major": true
+          "major": true,
+          "x": 0.5383058,
+          "y": 0.80675787
         },
         {
           "name": "Captain's Dread",
-          "major": false
+          "major": false,
+          "x": 0.69483316,
+          "y": 0.23571695
         },
         {
           "name": "Cavitatis",
-          "major": false
+          "major": false,
+          "x": 0.43523237,
+          "y": 0.6119927
         },
         {
           "name": "Grapeshot Islands",
-          "major": false
+          "major": false,
+          "x": 0.56575376,
+          "y": 0.23027809
         },
         {
           "name": "Mount Talio",
-          "major": false
+          "major": false,
+          "x": 0.41691506,
+          "y": 0.4296799
         },
         {
           "name": "Rusty Anchor",
-          "major": false
+          "major": false,
+          "x": 0.2610594,
+          "y": 0.33529818
         },
         {
           "name": "Tears of Tethys",
-          "major": false
+          "major": false,
+          "x": 0.59436184,
+          "y": 0.50297385
         },
         {
           "name": "The Tusk",
-          "major": false
+          "major": false,
+          "x": 0.29434407,
+          "y": 0.15143251
         },
         {
           "name": "The Wary Nymphae",
-          "major": false
+          "major": false,
+          "x": 0.7113685,
+          "y": 0.80710125
         }
       ]
     },
@@ -3713,55 +5425,81 @@
       "regions": [
         {
           "name": "Azmar",
-          "major": true
+          "major": true,
+          "x": 0.3785969,
+          "y": 0.8437445
         },
         {
           "name": "Bandolier Base",
-          "major": true
+          "major": true,
+          "x": 0.23924962,
+          "y": 0.49938223
         },
         {
           "name": "Duelist's Scarp",
-          "major": true
+          "major": true,
+          "x": 0.38989255,
+          "y": 0.2219096
         },
         {
           "name": "Lugria",
-          "major": true
+          "major": true,
+          "x": 0.4895104,
+          "y": 0.331722
         },
         {
           "name": "Northern Sky Hold",
-          "major": true
+          "major": true,
+          "x": 0.6375391,
+          "y": 0.2415531
         },
         {
           "name": "Onioncap",
-          "major": true
+          "major": true,
+          "x": 0.82647866,
+          "y": 0.54000795
         },
         {
           "name": "Scrapegrace",
-          "major": true
+          "major": true,
+          "x": 0.6047484,
+          "y": 0.8396364
         },
         {
           "name": "Epomisward",
-          "major": false
+          "major": false,
+          "x": 0.64282537,
+          "y": 0.17459065
         },
         {
           "name": "Harpe Balliwick",
-          "major": false
+          "major": false,
+          "x": 0.4566291,
+          "y": 0.05714712
         },
         {
           "name": "Sauroter Livery",
-          "major": false
+          "major": false,
+          "x": 0.7967819,
+          "y": 0.6127301
         },
         {
           "name": "Strigil Croft",
-          "major": false
+          "major": false,
+          "x": 0.24613892,
+          "y": 0.36371276
         },
         {
           "name": "The Thorax",
-          "major": false
+          "major": false,
+          "x": 0.44823062,
+          "y": 0.5828269
         },
         {
           "name": "Velia Grip",
-          "major": false
+          "major": false,
+          "x": 0.74950254,
+          "y": 0.36138487
         }
       ]
     },
@@ -3771,99 +5509,147 @@
       "regions": [
         {
           "name": "Amethyst",
-          "major": true
+          "major": true,
+          "x": 0.8178504,
+          "y": 0.38884524
         },
         {
           "name": "Atropos' Fate",
-          "major": true
+          "major": true,
+          "x": 0.5730031,
+          "y": 0.7843336
         },
         {
           "name": "Clotho's Refuge",
-          "major": true
+          "major": true,
+          "x": 0.61337584,
+          "y": 0.32398352
         },
         {
           "name": "Goldenroot Ranch",
-          "major": true
+          "major": true,
+          "x": 0.15671077,
+          "y": 0.5505076
         },
         {
           "name": "Hermit's Rest",
-          "major": true
+          "major": true,
+          "x": 0.67122585,
+          "y": 0.6176634
         },
         {
           "name": "Lachesis' Tally",
-          "major": true
+          "major": true,
+          "x": 0.840556,
+          "y": 0.54475015
         },
         {
           "name": "Sentry",
-          "major": true
+          "major": true,
+          "x": 0.395983,
+          "y": 0.8252861
         },
         {
           "name": "Stray",
-          "major": true
+          "major": true,
+          "x": 0.6767252,
+          "y": 0.1845278
         },
         {
           "name": "The Foundry",
-          "major": true
+          "major": true,
+          "x": 0.27597004,
+          "y": 0.2246597
         },
         {
           "name": "Thunderfoot",
-          "major": true
+          "major": true,
+          "x": 0.34593302,
+          "y": 0.51468116
         },
         {
           "name": "Vagrant Bastion",
-          "major": true
+          "major": true,
+          "x": 0.5076587,
+          "y": 0.1616039
         },
         {
           "name": "Adze Crossroads",
-          "major": false
+          "major": false,
+          "x": 0.357383,
+          "y": 0.38652703
         },
         {
           "name": "Dredgefield",
-          "major": false
+          "major": false,
+          "x": 0.7840042,
+          "y": 0.85631174
         },
         {
           "name": "Golden Concourse",
-          "major": false
+          "major": false,
+          "x": 0.15095828,
+          "y": 0.71263796
         },
         {
           "name": "Leatherback Pathway",
-          "major": false
+          "major": false,
+          "x": 0.7109991,
+          "y": 0.37403926
         },
         {
           "name": "Steely Fields",
-          "major": false
+          "major": false,
+          "x": 0.16732694,
+          "y": 0.32295418
         },
         {
           "name": "Terrapin Woods",
-          "major": false
+          "major": false,
+          "x": 0.73006326,
+          "y": 0.49094966
         },
         {
           "name": "The Dredgewood",
-          "major": false
+          "major": false,
+          "x": 0.78483456,
+          "y": 0.66172403
         },
         {
           "name": "The Frontier",
-          "major": false
+          "major": false,
+          "x": 0.61156416,
+          "y": 0.721657
         },
         {
           "name": "The Gap",
-          "major": false
+          "major": false,
+          "x": 0.42371795,
+          "y": 0.5318492
         },
         {
           "name": "The Strands",
-          "major": false
+          "major": false,
+          "x": 0.5069804,
+          "y": 0.23784174
         },
         {
           "name": "Thunder Row",
-          "major": false
+          "major": false,
+          "x": 0.26085073,
+          "y": 0.66316617
         },
         {
           "name": "Wasting Holt",
-          "major": false
+          "major": false,
+          "x": 0.5504174,
+          "y": 0.9400169
         },
         {
           "name": "Weaver's Trail",
-          "major": false
+          "major": false,
+          "x": 0.55006844,
+          "y": 0.44620684
         }
       ]
     },
@@ -3873,91 +5659,135 @@
       "regions": [
         {
           "name": "Blackthroat",
-          "major": true
+          "major": true,
+          "x": 0.38273838,
+          "y": 0.82834363
         },
         {
           "name": "Earl Crowley",
-          "major": true
+          "major": true,
+          "x": 0.816489,
+          "y": 0.5138778
         },
         {
           "name": "Fleck Crossing",
-          "major": true
+          "major": true,
+          "x": 0.5321962,
+          "y": 0.5375857
         },
         {
           "name": "Fort Viper",
-          "major": true
+          "major": true,
+          "x": 0.3418565,
+          "y": 0.599041
         },
         {
           "name": "Kirknell",
-          "major": true
+          "major": true,
+          "x": 0.28270397,
+          "y": 0.548087
         },
         {
           "name": "Moltworth",
-          "major": true
+          "major": true,
+          "x": 0.6234502,
+          "y": 0.71039724
         },
         {
           "name": "Serenity's Blight",
-          "major": true
+          "major": true,
+          "x": 0.44389725,
+          "y": 0.3511407
         },
         {
           "name": "The Friars",
-          "major": true
+          "major": true,
+          "x": 0.26904154,
+          "y": 0.8157426
         },
         {
           "name": "Afric's Approach",
-          "major": false
+          "major": false,
+          "x": 0.26043177,
+          "y": 0.6742477
         },
         {
           "name": "Austriaca River",
-          "major": false
+          "major": false,
+          "x": 0.48925853,
+          "y": 0.8535161
         },
         {
           "name": "Deadsteps",
-          "major": false
+          "major": false,
+          "x": 0.5428198,
+          "y": 0.21101783
         },
         {
           "name": "Earl's Welcome",
-          "major": false
+          "major": false,
+          "x": 0.14588471,
+          "y": 0.40977678
         },
         {
           "name": "Hardcaps",
-          "major": false
+          "major": false,
+          "x": 0.45871973,
+          "y": 0.032195564
         },
         {
           "name": "Lake Mioira",
-          "major": false
+          "major": false,
+          "x": 0.21370772,
+          "y": 0.10093846
         },
         {
           "name": "Path of the Charmed",
-          "major": false
+          "major": false,
+          "x": 0.681991,
+          "y": 0.9418296
         },
         {
           "name": "Snakehead Lake",
-          "major": false
+          "major": false,
+          "x": 0.40173814,
+          "y": 0.20830554
         },
         {
           "name": "The Bloody Bowery",
-          "major": false
+          "major": false,
+          "x": 0.27641982,
+          "y": 0.45773628
         },
         {
           "name": "The Lady's Lake",
-          "major": false
+          "major": false,
+          "x": 0.19556984,
+          "y": 0.6328041
         },
         {
           "name": "The Rockaway",
-          "major": false
+          "major": false,
+          "x": 0.78050023,
+          "y": 0.7048233
         },
         {
           "name": "The Slithering Scales",
-          "major": false
+          "major": false,
+          "x": 0.5787324,
+          "y": 0.43142855
         },
         {
           "name": "The Tongue",
-          "major": false
+          "major": false,
+          "x": 0.69369084,
+          "y": 0.1546878
         },
         {
           "name": "Twin Fangs",
-          "major": false
+          "major": false,
+          "x": 0.37024617,
+          "y": 0.40132323
         }
       ]
     },
@@ -3967,91 +5797,135 @@
       "regions": [
         {
           "name": "Crow's Nest",
-          "major": true
+          "major": true,
+          "x": 0.27000988,
+          "y": 0.52244484
         },
         {
           "name": "Foxcatcher",
-          "major": true
+          "major": true,
+          "x": 0.5164818,
+          "y": 0.7780801
         },
         {
           "name": "Frostmarch",
-          "major": true
+          "major": true,
+          "x": 0.15492144,
+          "y": 0.4631941
         },
         {
           "name": "Huntsfort",
-          "major": true
+          "major": true,
+          "x": 0.48584694,
+          "y": 0.5349745
         },
         {
           "name": "Necropolis",
-          "major": true
+          "major": true,
+          "x": 0.34740227,
+          "y": 0.688721
         },
         {
           "name": "Shattered Advance",
-          "major": true
+          "major": true,
+          "x": 0.38944197,
+          "y": 0.30851248
         },
         {
           "name": "Spirit Watch",
-          "major": true
+          "major": true,
+          "x": 0.6523898,
+          "y": 0.7255189
         },
         {
           "name": "The Weathering Halls",
-          "major": true
+          "major": true,
+          "x": 0.46095482,
+          "y": 0.157184
         },
         {
           "name": "Wightwalk",
-          "major": true
+          "major": true,
+          "x": 0.69054574,
+          "y": 0.49786863
         },
         {
           "name": "Barrowsfield",
-          "major": false
+          "major": false,
+          "x": 0.43067294,
+          "y": 0.4653978
         },
         {
           "name": "Dullahan's Crest",
-          "major": false
+          "major": false,
+          "x": 0.14920744,
+          "y": 0.61690384
         },
         {
           "name": "Eapoe",
-          "major": false
+          "major": false,
+          "x": 0.4408721,
+          "y": 0.6718143
         },
         {
           "name": "Kirkyard",
-          "major": false
+          "major": false,
+          "x": 0.29680702,
+          "y": 0.622848
         },
         {
           "name": "Revenant's Path",
-          "major": false
+          "major": false,
+          "x": 0.83726317,
+          "y": 0.58904344
         },
         {
           "name": "Rime Wastes",
-          "major": false
+          "major": false,
+          "x": 0.2378497,
+          "y": 0.39045998
         },
         {
           "name": "Shadeport",
-          "major": false
+          "major": false,
+          "x": 0.7080908,
+          "y": 0.41980824
         },
         {
           "name": "The Ivory Bank",
-          "major": false
+          "major": false,
+          "x": 0.42168927,
+          "y": 0.92702323
         },
         {
           "name": "The Ivory Sea",
-          "major": false
+          "major": false,
+          "x": 0.17670101,
+          "y": 0.7257215
         },
         {
           "name": "The Spear",
-          "major": false
+          "major": false,
+          "x": 0.5642589,
+          "y": 0.2829563
         },
         {
           "name": "The Stand",
-          "major": false
+          "major": false,
+          "x": 0.089226045,
+          "y": 0.36507604
         },
         {
           "name": "The Weathered Wall",
-          "major": false
+          "major": false,
+          "x": 0.18046375,
+          "y": 0.18551047
         },
         {
           "name": "Wraith's Gate",
-          "major": false
+          "major": false,
+          "x": 0.5287201,
+          "y": 0.43321595
         }
       ]
     },
@@ -4061,151 +5935,225 @@
       "regions": [
         {
           "name": "Holdfast",
-          "major": true
+          "major": true,
+          "x": 0.46443552,
+          "y": 0.27771717
         },
         {
           "name": "Kingstone",
-          "major": true
+          "major": true,
+          "x": 0.64355624,
+          "y": 0.41088805
         },
         {
           "name": "Longstone",
-          "major": true
+          "major": true,
+          "x": 0.6454746,
+          "y": 0.7234395
         },
         {
           "name": "Lord's Mouth",
-          "major": true
+          "major": true,
+          "x": 0.82933867,
+          "y": 0.4307491
         },
         {
           "name": "Lost Partition",
-          "major": true
+          "major": true,
+          "x": 0.8150013,
+          "y": 0.5756538
         },
         {
           "name": "Rancher's Fast",
-          "major": true
+          "major": true,
+          "x": 0.69447815,
+          "y": 0.18181983
         },
         {
           "name": "The Gallows",
-          "major": true
+          "major": true,
+          "x": 0.3637351,
+          "y": 0.1061458
         },
         {
           "name": "Westgate Keep",
-          "major": true
+          "major": true,
+          "x": 0.59599173,
+          "y": 0.56367874
         },
         {
           "name": "Wyattwick",
-          "major": true
+          "major": true,
+          "x": 0.29039606,
+          "y": 0.81640434
         },
         {
           "name": "Zeus' Demise",
-          "major": true
+          "major": true,
+          "x": 0.4019617,
+          "y": 0.7723668
         },
         {
           "name": "Candle Hills",
-          "major": false
+          "major": false,
+          "x": 0.3809478,
+          "y": 0.876076
         },
         {
           "name": "Cattle March",
-          "major": false
+          "major": false,
+          "x": 0.43200865,
+          "y": 0.178799
         },
         {
           "name": "Ceo Highlands",
-          "major": false
+          "major": false,
+          "x": 0.6742479,
+          "y": 0.9047628
         },
         {
           "name": "Coasthill",
-          "major": false
+          "major": false,
+          "x": 0.7492962,
+          "y": 0.5232728
         },
         {
           "name": "Cobber's Lane",
-          "major": false
+          "major": false,
+          "x": 0.81818783,
+          "y": 0.3048373
         },
         {
           "name": "Fand's Chain",
-          "major": false
+          "major": false,
+          "x": 0.25625914,
+          "y": 0.14081238
         },
         {
           "name": "Fields of Badb",
-          "major": false
+          "major": false,
+          "x": 0.51419544,
+          "y": 0.15018566
         },
         {
           "name": "Flidais' Pasture",
-          "major": false
+          "major": false,
+          "x": 0.6924164,
+          "y": 0.22017962
         },
         {
           "name": "Handsome Hideaway",
-          "major": false
+          "major": false,
+          "x": 0.33405593,
+          "y": 0.4992943
         },
         {
           "name": "Hillcrest",
-          "major": false
+          "major": false,
+          "x": 0.64205915,
+          "y": 0.6253394
         },
         {
           "name": "Inkwell Lane",
-          "major": false
+          "major": false,
+          "x": 0.5928621,
+          "y": 0.10583429
         },
         {
           "name": "Kardia Road",
-          "major": false
+          "major": false,
+          "x": 0.5908896,
+          "y": 0.178799
         },
         {
           "name": "Killian Quarter",
-          "major": false
+          "major": false,
+          "x": 0.7891662,
+          "y": 0.16007636
         },
         {
           "name": "Reaver's Cove",
-          "major": false
+          "major": false,
+          "x": 0.4750435,
+          "y": 0.5243521
         },
         {
           "name": "Sanctified Path",
-          "major": false
+          "major": false,
+          "x": 0.63349,
+          "y": 0.8222307
         },
         {
           "name": "S\u00edoch\u00e1na Valley",
-          "major": false
+          "major": false,
+          "x": 0.5804643,
+          "y": 0.8998509
         },
         {
           "name": "Taswell Point",
-          "major": false
+          "major": false,
+          "x": 0.54965186,
+          "y": 0.79319614
         },
         {
           "name": "The Aging Ocean",
-          "major": false
+          "major": false,
+          "x": 0.114025585,
+          "y": 0.663528
         },
         {
           "name": "The Bulwark",
-          "major": false
+          "major": false,
+          "x": 0.76893073,
+          "y": 0.6432597
         },
         {
           "name": "The Divide",
-          "major": false
+          "major": false,
+          "x": 0.48302627,
+          "y": 0.8998509
         },
         {
           "name": "The Hem",
-          "major": false
+          "major": false,
+          "x": 0.7906987,
+          "y": 0.74425286
         },
         {
           "name": "The King's Road",
-          "major": false
+          "major": false,
+          "x": 0.7325495,
+          "y": 0.4098496
         },
         {
           "name": "The Knight's Edge",
-          "major": false
+          "major": false,
+          "x": 0.579454,
+          "y": 0.28919458
         },
         {
           "name": "Triton's Curse",
-          "major": false
+          "major": false,
+          "x": 0.2009395,
+          "y": 0.88355315
         },
         {
           "name": "Warden Walk",
-          "major": false
+          "major": false,
+          "x": 0.8698958,
+          "y": 0.5327038
         },
         {
           "name": "Western Heartlands",
-          "major": false
+          "major": false,
+          "x": 0.7199143,
+          "y": 0.343739
         },
         {
           "name": "Wire Road",
-          "major": false
+          "major": false,
+          "x": 0.69118434,
+          "y": 0.2610858
         }
       ]
     },
@@ -4215,55 +6163,81 @@
       "regions": [
         {
           "name": "Adripio",
-          "major": true
+          "major": true,
+          "x": 0.66581273,
+          "y": 0.5378169
         },
         {
           "name": "Argan Isle",
-          "major": true
+          "major": true,
+          "x": 0.26862493,
+          "y": 0.49600297
         },
         {
           "name": "Garion Slip",
-          "major": true
+          "major": true,
+          "x": 0.46805745,
+          "y": 0.55587137
         },
         {
           "name": "Latro Manor",
-          "major": true
+          "major": true,
+          "x": 0.6784458,
+          "y": 0.27855852
         },
         {
           "name": "Ratchet",
-          "major": true
+          "major": true,
+          "x": 0.8060116,
+          "y": 0.51670545
         },
         {
           "name": "Scallyhold",
-          "major": true
+          "major": true,
+          "x": 0.35190904,
+          "y": 0.77904105
         },
         {
           "name": "Toad's Plinth",
-          "major": true
+          "major": true,
+          "x": 0.6396617,
+          "y": 0.8201927
         },
         {
           "name": "Blue Jack Rut",
-          "major": false
+          "major": false,
+          "x": 0.81212574,
+          "y": 0.5947501
         },
         {
           "name": "Flintknap",
-          "major": false
+          "major": false,
+          "x": 0.74891585,
+          "y": 0.20556827
         },
         {
           "name": "Holystone Fell",
-          "major": false
+          "major": false,
+          "x": 0.5329779,
+          "y": 0.7754465
         },
         {
           "name": "The Capstan",
-          "major": false
+          "major": false,
+          "x": 0.45271972,
+          "y": 0.37134892
         },
         {
           "name": "Wyrd Bridge",
-          "major": false
+          "major": false,
+          "x": 0.365045,
+          "y": 0.55842406
         },
         {
           "name": "Yeaning Hideaway",
-          "major": false
+          "major": false,
+          "x": 0.2915546,
+          "y": 0.6446441
         }
       ]
     }

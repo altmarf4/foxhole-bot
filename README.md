@@ -62,7 +62,9 @@ Town capture alerts are off until an admin turns them on in `/settings` under Wa
 ## Updating game data
 
 - Hex and town names refresh from the War API automatically once a day. The war board and capture alerts check the War API every 5 minutes.
-- After a Foxhole update adds items, run `python tools/build_item_catalog.py` and restart the bot.
+- After a Foxhole update adds items, run `python tools/build_item_catalog.py`, then `python tools/build_item_icons.py`, and restart the bot.
+- After a Foxhole update changes the map, run `python tools/build_maps.py` (hex maps, world map and layout) and restart the bot.
+- Inventory screens show item and vehicle icons in a grid like the in-game stockpile window. This needs Pillow, which is in `requirements.txt`; on an existing install run `.venv/bin/python -m pip install -r requirements.txt` (Windows: `.venv\Scripts\python.exe -m pip install -r requirements.txt`). Without Pillow the bot still works and shows text only.
 
 ## Development
 

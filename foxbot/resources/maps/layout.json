@@ -1,0 +1,220 @@
+{
+ "hex_width": 200,
+ "hex_height": 173,
+ "width": 2032,
+ "height": 1245,
+ "hexes": {
+  "AcrithiaHex": {
+   "cx": 1166.0,
+   "cy": 1055.13
+  },
+  "AllodsBightHex": {
+   "cx": 1316.0,
+   "cy": 795.32
+  },
+  "AshFieldsHex": {
+   "cx": 716.0,
+   "cy": 968.53
+  },
+  "BasinSionnachHex": {
+   "cx": 1016.0,
+   "cy": 102.5
+  },
+  "CallahansPassageHex": {
+   "cx": 1016.0,
+   "cy": 448.91
+  },
+  "CallumsCapeHex": {
+   "cx": 716.0,
+   "cy": 275.71
+  },
+  "ClahstraHex": {
+   "cx": 1316.0,
+   "cy": 622.12
+  },
+  "ClansheadValleyHex": {
+   "cx": 1316.0,
+   "cy": 275.71
+  },
+  "DeadLandsHex": {
+   "cx": 1016.0,
+   "cy": 622.12
+  },
+  "DrownedValeHex": {
+   "cx": 1166.0,
+   "cy": 708.72
+  },
+  "EndlessShoreHex": {
+   "cx": 1466.0,
+   "cy": 708.72
+  },
+  "FarranacCoastHex": {
+   "cx": 566.0,
+   "cy": 535.51
+  },
+  "FishermansRowHex": {
+   "cx": 416.0,
+   "cy": 622.12
+  },
+  "GodcroftsHex": {
+   "cx": 1616.0,
+   "cy": 448.91
+  },
+  "GreatMarchHex": {
+   "cx": 1016.0,
+   "cy": 968.53
+  },
+  "GutterHex": {
+   "cx": 416.0,
+   "cy": 448.91
+  },
+  "HeartlandsHex": {
+   "cx": 866.0,
+   "cy": 881.92
+  },
+  "HowlCountyHex": {
+   "cx": 1166.0,
+   "cy": 189.1
+  },
+  "KalokaiHex": {
+   "cx": 1016.0,
+   "cy": 1141.73
+  },
+  "KingsCageHex": {
+   "cx": 716.0,
+   "cy": 622.12
+  },
+  "KuuraStrandHex": {
+   "cx": 416.0,
+   "cy": 275.71
+  },
+  "LinnMercyHex": {
+   "cx": 866.0,
+   "cy": 535.51
+  },
+  "LochMorHex": {
+   "cx": 866.0,
+   "cy": 708.72
+  },
+  "LykosIsleHex": {
+   "cx": 1766.0,
+   "cy": 535.51
+  },
+  "MarbanHollow": {
+   "cx": 1166.0,
+   "cy": 535.51
+  },
+  "MooringCountyHex": {
+   "cx": 866.0,
+   "cy": 362.31
+  },
+  "MorgensCrossingHex": {
+   "cx": 1466.0,
+   "cy": 362.31
+  },
+  "NevishLineHex": {
+   "cx": 566.0,
+   "cy": 362.31
+  },
+  "OarbreakerHex": {
+   "cx": 266.0,
+   "cy": 708.72
+  },
+  "OlavisWakeHex": {
+   "cx": 116.0,
+   "cy": 448.91
+  },
+  "OnyxHex": {
+   "cx": 1616.0,
+   "cy": 968.53
+  },
+  "OriginHex": {
+   "cx": 566.0,
+   "cy": 881.92
+  },
+  "PalantineBermHex": {
+   "cx": 266.0,
+   "cy": 535.51
+  },
+  "PariPeakHex": {
+   "cx": 266.0,
+   "cy": 362.31
+  },
+  "PipersEnclaveHex": {
+   "cx": 1916.0,
+   "cy": 795.32
+  },
+  "ReachingTrailHex": {
+   "cx": 1016.0,
+   "cy": 275.71
+  },
+  "ReaversPassHex": {
+   "cx": 1466.0,
+   "cy": 881.92
+  },
+  "RedRiverHex": {
+   "cx": 866.0,
+   "cy": 1055.13
+  },
+  "SableportHex": {
+   "cx": 716.0,
+   "cy": 795.32
+  },
+  "ShackledChasmHex": {
+   "cx": 1166.0,
+   "cy": 881.92
+  },
+  "SpeakingWoodsHex": {
+   "cx": 866.0,
+   "cy": 189.1
+  },
+  "StemaLandingHex": {
+   "cx": 416.0,
+   "cy": 795.32
+  },
+  "StlicanShelfHex": {
+   "cx": 1466.0,
+   "cy": 535.51
+  },
+  "StonecradleHex": {
+   "cx": 716.0,
+   "cy": 448.91
+  },
+  "TempestIslandHex": {
+   "cx": 1616.0,
+   "cy": 622.12
+  },
+  "TerminusHex": {
+   "cx": 1316.0,
+   "cy": 968.53
+  },
+  "TheFingersHex": {
+   "cx": 1766.0,
+   "cy": 708.72
+  },
+  "TyrantFoothillsHex": {
+   "cx": 1766.0,
+   "cy": 881.92
+  },
+  "UmbralWildwoodHex": {
+   "cx": 1016.0,
+   "cy": 795.32
+  },
+  "ViperPitHex": {
+   "cx": 1166.0,
+   "cy": 362.31
+  },
+  "WeatheredExpanseHex": {
+   "cx": 1316.0,
+   "cy": 448.91
+  },
+  "WestgateHex": {
+   "cx": 566.0,
+   "cy": 708.72
+  },
+  "WrestaHex": {
+   "cx": 1616.0,
+   "cy": 795.32
+  }
+ }
+}

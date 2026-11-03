@@ -569,6 +569,14 @@ def picker_options(rows: list[dict], now: int) -> list[PickOption]:
     ]
 
 
+async def start_from_export(bot: FoxBot, interaction: discord.Interaction) -> None:
+    module = bot.extensions.get("foxbot.features.inventory")
+    if module is None:
+        await deny(interaction, "Adding stockpiles from CSV needs the inventory feature, which is not loaded.")
+        return
+    await module.start_stockpile_from_export(bot, interaction)
+
+
 async def show_all(bot: FoxBot, interaction: discord.Interaction) -> None:
     if not await check_group(interaction, GROUP):
         return
@@ -647,6 +655,7 @@ class StockpileBoard:
                 BoardButton("add", "Add Stockpile", discord.ButtonStyle.success),
                 BoardButton("all", "All Stockpiles"),
                 BoardButton("private", "Private Stockpiles"),
+                BoardButton("csv", "Add from CSV", discord.ButtonStyle.success),
             ],
         )
 
@@ -657,6 +666,8 @@ class StockpileBoard:
             await show_all(self.bot, interaction)
         elif action == "private":
             await show_private(self.bot, interaction)
+        elif action == "csv":
+            await start_from_export(self.bot, interaction)
         else:
             await deny(interaction, "That button is no longer supported.")
 
@@ -814,6 +825,10 @@ class Stockpiles(commands.Cog):
     async def add_type_autocomplete(self, interaction: discord.Interaction, current: str):
         types = await self.bot.settings.get(interaction.guild_id, keys.STORAGE_TYPES)
         return [app_commands.Choice(name=t, value=t) for t in types if current.lower() in t.lower()][:25]
+
+    @group.command(name="add-csv", description="Add a stockpile from the in-game Copy to Clipboard text.")
+    async def add_csv(self, interaction: discord.Interaction) -> None:
+        await start_from_export(self.bot, interaction)
 
     @group.command(name="open", description="Open a stockpile's panel to refresh, edit or delete it.")
     @app_commands.describe(stockpile="Search by name, code or location")

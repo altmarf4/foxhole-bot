@@ -75,6 +75,8 @@ def best_match(key: str, candidates: dict):
 class Region:
     name: str
     major: bool
+    x: float | None = field(default=None, compare=False)
+    y: float | None = field(default=None, compare=False)
 
 
 @dataclass
@@ -112,7 +114,7 @@ class LocationService:
             return False
         hexes = {}
         for item in raw.get("hexes", []):
-            regions = [Region(r["name"], bool(r.get("major"))) for r in item.get("regions", [])]
+            regions = [Region(r["name"], bool(r.get("major")), r.get("x"), r.get("y")) for r in item.get("regions", [])]
             hexes[normalise(item["name"])] = Hex(item["key"], item["name"], regions)
         if not hexes:
             return False
@@ -127,14 +129,17 @@ class LocationService:
                 {
                     "key": h.key,
                     "name": h.name,
-                    "regions": [{"name": r.name, "major": r.major} for r in h.regions],
+                    "regions": [{"name": r.name, "major": r.major, "x": r.x, "y": r.y} for r in h.regions],
                 }
                 for h in sorted(self.hexes.values(), key=lambda h: h.name)
             ],
         }
 
+    def has_positions(self) -> bool:
+        return any(region.x is not None for hex_ in self.hexes.values() for region in hex_.regions)
+
     async def start(self) -> None:
-        if not self._load_file(self.cache_path):
+        if not self._load_file(self.cache_path) or not self.has_positions():
             self._load_file(SEED_PATH)
         self._session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30))
         self._task = asyncio.create_task(self._refresh_loop())
@@ -174,7 +179,9 @@ class LocationService:
                     continue
                 major = item.get("mapMarkerType") == "Major"
                 if text not in regions or major:
-                    regions[text] = Region(text, major)
+                    x, y = item.get("x"), item.get("y")
+                    position = (float(x), float(y)) if isinstance(x, (int, float)) and isinstance(y, (int, float)) else (None, None)
+                    regions[text] = Region(text, major, *position)
             name = hex_display_name(map_name)
             ordered = sorted(regions.values(), key=lambda r: (not r.major, r.name))
             hexes[normalise(name)] = Hex(map_name, name, ordered)
@@ -188,6 +195,23 @@ class LocationService:
 
     def hex_names(self) -> list[str]:
         return sorted(h.name for h in self.hexes.values())
+
+    def exact_hex(self, hex_name: str) -> Hex | None:
+        return self.hexes.get(normalise(hex_name)) if hex_name else None
+
+    def map_key(self, hex_name: str) -> str | None:
+        hex_ = self.exact_hex(hex_name)
+        return hex_.key if hex_ is not None else None
+
+    def position(self, hex_name: str, region: str) -> tuple[float, float] | None:
+        hex_ = self.exact_hex(hex_name)
+        key = normalise(region) if region else ""
+        if hex_ is None or not key:
+            return None
+        for candidate in hex_.regions:
+            if normalise(candidate.name) == key and candidate.x is not None and candidate.y is not None:
+                return candidate.x, candidate.y
+        return None
 
     def find_hex(self, text: str) -> Hex | None:
         return best_match(normalise(text), self.hexes)

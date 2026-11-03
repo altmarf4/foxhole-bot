@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import hashlib
-import json
 import logging
 import sys
 
@@ -86,16 +84,7 @@ class FoxBot(commands.Bot):
             synced = await self.tree.sync(guild=guild)
             log.info("Synced %d commands to development guild %s", len(synced), self.config.dev_guild_id)
             return
-        digest = hashlib.sha256(json.dumps(self.command_payload(), sort_keys=True, default=str).encode()).hexdigest()
-        stored = await self.db.fetchval("SELECT value FROM meta WHERE key = 'command_hash'")
-        if stored == digest:
-            log.info("Slash commands unchanged; skipping sync")
-            return
         synced = await self.tree.sync()
-        await self.db.execute(
-            "INSERT INTO meta (key, value) VALUES ('command_hash', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value",
-            (digest,),
-        )
         log.info("Synced %d global commands (new commands can take a few minutes to appear)", len(synced))
 
     async def on_ready(self) -> None:

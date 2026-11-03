@@ -115,6 +115,8 @@ class ParsedStock:
     name: str = ""
     game_time: int | None = None
     has_header: bool = False
+    map_x: float | None = None
+    map_y: float | None = None
     lines: list[RawLine] = field(default_factory=list)
     items: list[ParsedItem] = field(default_factory=list)
     unknown: list[str] = field(default_factory=list)
@@ -234,7 +236,17 @@ def parse_header(line: str) -> ParsedStock | None:
         name=parts[3],
         game_time=parse_clipboard_time(match.group("stamp")),
         has_header=True,
+        map_x=parse_coordinate(match.group("x")),
+        map_y=parse_coordinate(match.group("y")),
     )
+
+
+def parse_coordinate(text: str | None) -> float | None:
+    try:
+        value = float(str(text).replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+    return value if 0.0 <= value <= 1.0 else None
 
 
 def parse_item_line(line: str) -> RawLine | None:

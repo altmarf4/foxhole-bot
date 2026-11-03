@@ -123,7 +123,7 @@ async def test_board_render(world):
     assert "861781" in text and "KM1" in text
     assert "Secret" not in text
     assert [o.label for o in render.options] == ["KM1 - Pan's Villa, Piper's Enclave"]
-    assert {b.action for b in render.buttons} == {"add", "all", "private"}
+    assert {b.action for b in render.buttons} == {"add", "all", "private", "csv"}
 
 
 async def test_panel_refresh_records_who(world):

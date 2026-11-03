@@ -1,6 +1,8 @@
 import codecs
 import csv
 import io
+import re
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
@@ -290,6 +292,21 @@ async def add_stockpile(w, member=None, **overrides):
     return await w.stockpiles.create(w.bot, w.guild.id, **values)
 
 
+ACTION_LABELS = {"Track as stockpile", "Track as private stockpile", "Link to existing", "Keep unlinked"}
+
+
+async def open_tab(w, view, label, member=None):
+    click = make_interaction(w.bot, member or w.member, channel=w.channel)
+    await find_button(view, label).callback(click)
+    kind, payload = click.recorder.last
+    assert kind == "edit"
+    return payload
+
+
+def action_labels(view) -> set[str]:
+    return {getattr(item, "label", None) for item in view.children} & ACTION_LABELS
+
+
 async def snapshots(w):
     return await w.bot.db.fetchall("SELECT * FROM inventory_snapshots ORDER BY id")
 
@@ -325,13 +342,16 @@ async def test_unmatched_import_offers_actions_and_keep(world):
     assert kind == "send" and payload["ephemeral"]
     embed = payload["embed"]
     text = all_text(embed)
-    assert "Not tracked" in text and "Public" in text
-    assert "first import" in text
+    assert "Not linked to a tracked stockpile" in text and "Public" in text
+    assert "not linked to a tracked stockpile" in payload["content"]
     assert "6 item types" in text
+    changes = await open_tab(w, payload["view"], "Changes")
+    assert "first import of this stockpile" in changes["embed"].description
     assert len(embed) <= EMBED_TOTAL_LIMIT
     view = payload["view"]
-    labels = {item.label for item in view.children}
+    labels = {getattr(item, "label", None) for item in view.children}
     assert {"Track as stockpile", "Track as private stockpile", "Link to existing", "Keep unlinked"} <= labels
+    assert find_select(view) and find_button(view, "Page 1/1").disabled
     rows = await snapshots(w)
     assert len(rows) == 1
     snap = rows[0]
@@ -345,8 +365,9 @@ async def test_unmatched_import_offers_actions_and_keep(world):
     kind, payload = click.recorder.last
     assert kind == "edit"
     assert "Kept unlinked" in payload["content"]
-    assert payload["view"] is None
-    assert "kept unlinked" in all_text(payload["embed"])
+    assert "not linked to a tracked stockpile" not in payload["content"]
+    assert not action_labels(payload["view"])
+    assert [getattr(item, "label", None) for item in payload["view"].children][:3] == ["Inventory", "Changes", "Map"]
     w.bot.boards.request_refresh.assert_any_call(w.guild.id, "inventory")
 
 
@@ -358,8 +379,9 @@ async def test_auto_match_links_and_adopts_history(world):
     payload = interaction.recorder.last[1]
     text = all_text(payload["embed"])
     assert "**Public** - Rising Loom, Terminus (Seaport)" in text
-    assert "Tripod (crates): 38 -> 30 (-8)" in text
-    assert payload.get("view") is None
+    assert not action_labels(payload["view"])
+    changes = await open_tab(w, payload["view"], "Changes")
+    assert "Tripod (crates): 38 -> **30**" in changes["embed"].description
     rows = await snapshots(w)
     assert [r["stockpile_id"] for r in rows] == [row["id"], row["id"]]
 
@@ -371,10 +393,18 @@ async def test_match_ignores_store_type_only_when_unique(world):
     assert (await snapshots(w))[-1]["stockpile_id"] == row["id"]
     await add_stockpile(w, store_type="Aircraft Depot")
     await paste(w, w.member, SAMPLE)
-    assert (await snapshots(w))[-1]["stockpile_id"] is None
+    assert (await snapshots(w))[-1]["stockpile_id"] == row["id"]
     exact = await add_stockpile(w, store_type="Seaport")
     await paste(w, w.member, SAMPLE)
     assert (await snapshots(w))[-1]["stockpile_id"] == exact["id"]
+
+
+async def test_ambiguous_match_without_history_stays_unlinked(world):
+    w = world
+    await add_stockpile(w, store_type="Storage Depot")
+    await add_stockpile(w, store_type="Aircraft Depot")
+    await paste(w, w.member, SAMPLE)
+    assert (await snapshots(w))[-1]["stockpile_id"] is None
 
 
 async def test_changes_against_previous_snapshot(world):
@@ -386,20 +416,22 @@ async def test_changes_against_previous_snapshot(world):
         + "Bandages (Crate),3\n"
     )
     interaction = await paste(w, w.member, changed)
-    text = all_text(interaction.recorder.last[1]["embed"])
-    assert "1 new, 1 gone, 1 changed" in text
-    assert "Mortar Shell (crates): gone (was 56)" in text
-    assert "Argenti r.II Rifle (crates): 32 -> 40 (+8)" in text
-    assert "Bandages (crates): new, 3" in text
-    assert text.index("Mortar Shell") < text.index("Argenti")
+    payload = await open_tab(w, interaction.recorder.last[1]["view"], "Changes")
+    text = payload["embed"].description
+    assert "**Before:** import by" in text and "**After:** import by" in text
+    assert "Gone" not in text and "New" not in text
+    assert "Mortar Shell (crates): 56 -> **0**" in text
+    assert "Argenti r.II Rifle (crates): 32 -> **40**" in text
+    assert "Bandages (crates): 0 -> **3**" in text
+    assert "Changes" in payload["embed"].footer.text
 
 
-async def test_retention_keeps_twenty_per_stock_key(world):
+async def test_retention_keeps_history_per_stock_key(world):
     w = world
-    for _ in range(23):
+    for _ in range(w.inventory.KEEP_SNAPSHOTS + 3):
         await paste(w, w.member, SAMPLE)
     rows = await snapshots(w)
-    assert len(rows) == 20
+    assert len(rows) == w.inventory.KEEP_SNAPSHOTS == 50
     orphans = await w.bot.db.fetchval(
         "SELECT COUNT(*) FROM inventory_items WHERE snapshot_id NOT IN (SELECT id FROM inventory_snapshots)"
     )
@@ -432,7 +464,7 @@ async def test_track_as_stockpile_prefills_and_links(world):
     created = await w.stockpiles.list_entries(w.bot, w.guild.id, private=False)
     assert len(created) == 1 and created[0]["code"] == "445566"
     assert {r["stockpile_id"] for r in await snapshots(w)} == {created[0]["id"]}
-    assert payload["view"] is None
+    assert not action_labels(payload["view"])
     assert "Public** - Rising Loom, Terminus" in all_text(payload["embed"])
 
 
@@ -477,7 +509,7 @@ async def test_link_to_existing_lists_stockpiles_in_hex(world):
     kind, payload = pick.recorder.last
     assert kind == "edit" and "Linked to **KM North**" in payload["content"]
     assert (await snapshots(w))[0]["stockpile_id"] == target["id"]
-    assert payload["view"] is None
+    assert not action_labels(payload["view"])
     assert "**KM North** - Rising Loom, Terminus" in all_text(payload["embed"])
     relinked = await paste(w, w.member, SAMPLE.replace("Public", "Elsewhere"))
     assert (await snapshots(w))[-1]["stockpile_id"] is None
@@ -592,7 +624,7 @@ async def test_auto_match_skips_private_without_access(world):
     interaction = await paste(w, w.clerk, SAMPLE.replace("Public", "Secret"))
     payload = interaction.recorder.last[1]
     assert (await snapshots(w))[0]["stockpile_id"] is None
-    assert "Not tracked" in all_text(payload["embed"])
+    assert "Not linked to a tracked stockpile" in all_text(payload["embed"])
     click = make_interaction(w.bot, w.clerk, channel=w.channel)
     await find_button(payload["view"], "Link to existing").callback(click)
     assert "no tracked stockpiles" in click.recorder.last[1]["content"].lower()
@@ -807,17 +839,44 @@ async def test_import_rejects_headerless_without_stockpile(world):
     assert await snapshots(w) == []
 
 
-async def test_long_paste_warns_about_cut_off(world):
+async def test_cut_off_paste_is_refused_and_not_saved(world):
     w = world
     filler = "\n".join(f"Filler Item {index:04d},{index}" for index in range(400))
     text = (header() + "\n" + filler)[:4000]
     interaction = await paste(w, w.member, text)
-    payload = interaction.recorder.last[1]
+    kind, payload = interaction.recorder.last
+    assert kind == "send" and payload["ephemeral"]
     assert "4000 character limit" in payload["content"]
-    embed = payload["embed"]
-    assert len(embed) <= EMBED_TOTAL_LIMIT
-    assert all(len(field.value) <= 1024 for field in embed.fields)
-    assert len(embed.description) <= EMBED_DESCRIPTION_LIMIT
+    assert "/inventory upload" in payload["content"]
+    assert await snapshots(w) == []
+
+
+async def test_manual_link_is_remembered_for_next_import(world):
+    w = world
+    target = await add_stockpile(w, name="KM North")
+    first = await paste(w, w.member, SAMPLE)
+    view = first.recorder.last[1]["view"]
+    click = make_interaction(w.bot, w.member, channel=w.channel)
+    await find_button(view, "Link to existing").callback(click)
+    select = find_select(click.recorder.last[1]["view"])
+    select_values(select, [target["id"]])
+    await select.callback(make_interaction(w.bot, w.member, channel=w.channel))
+    second = await paste(w, w.member, SAMPLE.replace("Tripod (Crate),38", "Tripod (Crate),30"))
+    payload = second.recorder.last[1]
+    assert not action_labels(payload["view"])
+    assert "**KM North**" in all_text(payload["embed"])
+    changes = await open_tab(w, payload["view"], "Changes")
+    assert "Tripod (crates): 38 -> **30**" in changes["embed"].description
+    assert [r["stockpile_id"] for r in await snapshots(w)] == [target["id"], target["id"]]
+
+
+async def test_remembered_link_respects_private_access(world):
+    w = world
+    target = await add_stockpile(w, name="KM Secret", private=True)
+    await paste(w, w.member, SAMPLE, modal=w.inventory.PasteModal(w.bot, w.guild.id, stockpile=target))
+    clerk_import = await paste(w, w.clerk, SAMPLE)
+    assert (await snapshots(w))[-1]["stockpile_id"] is None
+    assert "KM Secret" not in all_text(clerk_import.recorder.last[1]["embed"])
 
 
 async def test_show_for_stockpile_and_prelinked_import(world):
@@ -836,10 +895,10 @@ async def test_show_for_stockpile_and_prelinked_import(world):
     assert modal.stockpile_id == row["id"]
     assert "KM North" in modal.help.content
     submitted = await paste(w, w.member, SAMPLE, modal=modal)
-    result = submitted.recorder.last[1]
-    text = all_text(result["embed"])
-    assert "does not match **KM North**" in text
-    assert "**KM North** - Rising Loom, Terminus" in text
+    kind, result = submitted.recorder.last
+    assert kind == "edit"
+    assert "does not match **KM North**" in result["content"]
+    assert "**KM North** - Rising Loom, Terminus" in all_text(result["embed"])
     rows = await snapshots(w)
     assert rows[-1]["stockpile_id"] == row["id"]
     assert rows[-1]["stock_key"] == "terminus|rising loom|seaport|public"
@@ -848,7 +907,8 @@ async def test_show_for_stockpile_and_prelinked_import(world):
     later = await paste(w, w.member, "Tripod (Crate),40\nBandages,10\n", modal=headerless)
     text = all_text(later.recorder.last[1]["embed"])
     assert "Warning" not in text
-    assert "Tripod (crates): 38 -> 40 (+2)" in text
+    changes = await open_tab(w, later.recorder.last[1]["view"], "Changes")
+    assert "Tripod (crates): 38 -> **40**" in changes["embed"].description
     newest = (await snapshots(w))[-1]
     assert newest["stock_key"] == "terminus|rising loom|seaport|km north"
 
@@ -857,8 +917,11 @@ async def test_show_for_stockpile_and_prelinked_import(world):
     embed = reopened.recorder.last[1]["embed"]
     assert embed.title == "Inventory: KM North"
     assert f"Imported by <@{w.member.id}>" in embed.description
-    assert "**Utility**" in embed.description and "Tripod: 40 crates = **200** units" in embed.description
-    assert "Changes since the previous import" in embed.description
+    view = reopened.recorder.last[1]["view"]
+    assert "2 item types" in embed.description
+    assert embed.image.url == "attachment://inventory.png"
+    changes = await open_tab(w, view, "Changes")
+    assert "Tripod (crates): 38 -> **40**" in changes["embed"].description
 
 
 async def test_prelinked_import_rejects_several_stockpiles(world):
@@ -901,22 +964,26 @@ async def test_stockpile_panel_inventory_button(world):
 async def test_contents_view_paginates_and_rechecks(world):
     w = world
     lines = "\n".join(f"Strange Widget Number {index:03d} (Crate),{index + 1}" for index in range(250))
+    changed = "\n".join(f"Strange Widget Number {index:03d} (Crate),{index + 2}" for index in range(250))
     row = await add_stockpile(w)
     cog = w.bot.get_cog("Inventory")
     await cog.upload.callback(cog, make_interaction(w.bot, w.member), make_upload("big.txt", (SAMPLE + lines).encode()))
+    await cog.upload.callback(cog, make_interaction(w.bot, w.member), make_upload("big.txt", (SAMPLE + changed).encode()))
     view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=row["id"])
     opener = make_interaction(w.bot, w.member)
     await view.send(opener)
-    first = opener.recorder.last[1]["embed"]
+    assert len(opener.recorder.last[1]["embed"]) <= EMBED_TOTAL_LIMIT
+    first = (await open_tab(w, view, "Changes"))["embed"]
     assert len(first) <= EMBED_TOTAL_LIMIT
+    assert "Strange Widget Number 000 (crates): 1 -> **2**" in first.description
     nxt = make_interaction(w.bot, w.member)
-    await find_button(view, "Next").callback(nxt)
+    await find_button(view, "Next part").callback(nxt)
     kind, payload = nxt.recorder.last
     assert kind == "edit" and payload["embed"].description != first.description
     assert len(payload["embed"]) <= EMBED_TOTAL_LIMIT
     await w.stockpiles.delete(w.bot, row)
     after = make_interaction(w.bot, w.member)
-    await find_button(view, "Previous").callback(after)
+    await find_button(view, "Previous part").callback(after)
     assert "no longer exists" in after.recorder.last[1]["content"]
     assert await snapshots(w) == []
 
@@ -1007,11 +1074,11 @@ async def test_pruned_snapshot_in_result_view(world):
     w = world
     first = await paste(w, w.member, SAMPLE)
     view = first.recorder.last[1]["view"]
-    for _ in range(20):
+    for _ in range(w.inventory.KEEP_SNAPSHOTS):
         await paste(w, w.member, SAMPLE)
     click = make_interaction(w.bot, w.member)
     await find_button(view, "Keep unlinked").callback(click)
-    assert "no longer exists" in click.recorder.last[1]["content"]
+    assert "no longer exist" in click.recorder.last[1]["content"]
 
 
 async def test_command_tree_shape(world):
@@ -1024,3 +1091,383 @@ async def test_command_tree_shape(world):
     totals = next(o for o in inventory["options"] if o["name"] == "totals")
     assert len(totals["options"][0]["choices"]) <= 25
     assert timeutil.now() > 0
+
+
+VEHICLE_EXPORT = (
+    "Terminus - Rising Loom - Seaport - Motor Pool - X: 0.45 Y: 0.66,2026.10.03-16.27.00\n"
+    "Dunne Transport (Crate),2\n"
+    "O’Brien V.101 Freeman,2\n"
+    "Basic Materials (Crate),120\n"
+    "Diesel,60\n"
+)
+
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def attached(payload: dict, key: str) -> list[discord.File]:
+    return list(payload.get(key) or [])
+
+
+def test_icons_cover_the_catalog():
+    from foxbot.core import itemimages
+
+    catalog = Catalog()
+    missing = [item.code for item in catalog.items.values() if itemimages.icon_path(item.code, False) is None]
+    assert len(missing) <= 10, missing
+    vehicles = [item for item in catalog.items.values() if item.category == "Vehicles"]
+    assert len(vehicles) >= 100
+    assert sum(1 for item in vehicles if itemimages.icon_path(item.code, True) is not None) >= len(vehicles) - 5
+    assert itemimages.icon_path("RareMaterials", True) is not None
+
+
+def test_grid_render_and_placeholder():
+    from foxbot.core import itemimages
+
+    data = itemimages.render(
+        [
+            ("Vehicles", [itemimages.Tile("TruckW", "Dunne Transport", 2, True, 2)]),
+            ("Other", [itemimages.Tile("NoSuchItem", "Mystery Gadget", 7)]),
+        ]
+    )
+    assert data.startswith(PNG_SIGNATURE)
+    assert itemimages.render([("Empty", [])]) is None
+    assert itemimages.initials("Mystery Gadget") == "MG"
+    assert itemimages.format_quantity(12500) == "12.5k"
+    assert itemimages.format_delta(-3) == "-3"
+    assert itemimages.render_icon("TruckW", "Dunne Transport").startswith(PNG_SIGNATURE)
+
+
+def test_grid_sections_mark_changes_and_grey_out_gone_items(world):
+    w = world
+    old = [
+        {"item_code": "Cloth", "item_name": "Basic Materials", "category": "Resources", "crated": 1, "quantity": 100, "per_crate": 100},
+        {"item_code": "Bandages", "item_name": "Bandages", "category": "Medical", "crated": 1, "quantity": 30, "per_crate": 40},
+    ]
+    new = [
+        {"item_code": "Cloth", "item_name": "Basic Materials", "category": "Resources", "crated": 1, "quantity": 120, "per_crate": 100},
+        {"item_code": "TruckW", "item_name": "Dunne Transport", "category": "Vehicles", "crated": 1, "quantity": 2, "per_crate": 3},
+    ]
+    sections = dict(w.inventory.grid_sections(new, old))
+    assert list(sections) == ["Medical", "Resources", "Vehicles"]
+    assert [t.delta for t in sections["Resources"]] == [20]
+    vehicle = sections["Vehicles"][0]
+    assert (vehicle.code, vehicle.crated, vehicle.quantity, vehicle.delta, vehicle.gone) == ("TruckW", True, 2, 2, False)
+    gone = sections["Medical"][0]
+    assert (gone.code, gone.quantity, gone.delta, gone.gone) == ("Bandages", 0, -30, True)
+    first_import = dict(w.inventory.grid_sections(new, None))
+    assert all(tile.delta is None and not tile.gone for tiles in first_import.values() for tile in tiles)
+
+
+async def test_vehicle_import_is_recognised_and_counted(world):
+    w = world
+    row = await add_stockpile(w, name="Motor Pool")
+    interaction = await paste(w, w.member, VEHICLE_EXPORT)
+    payload = interaction.recorder.last[1]
+    assert "Unrecognised" not in all_text(payload["embed"])
+    items = await w.bot.db.fetchall(
+        "SELECT * FROM inventory_items WHERE snapshot_id = (SELECT MAX(id) FROM inventory_snapshots) ORDER BY item_code"
+    )
+    by_code = {(item["item_code"], item["crated"]): item for item in items}
+    assert by_code[("TruckW", 1)]["category"] == "Vehicles"
+    assert by_code[("TruckW", 1)]["quantity"] == 2 and by_code[("TruckW", 1)]["per_crate"] == 3
+    assert by_code[("ArmoredCar2LargeW", 0)]["quantity"] == 2
+    files = attached(payload, "files")
+    assert [f.filename for f in files] == ["inventory.png"]
+    assert payload["embed"].image.url == "attachment://inventory.png"
+    assert files[0].fp.read().startswith(PNG_SIGNATURE)
+    opener = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.inventory.show_for_stockpile(w.bot, opener, row)
+    shown = opener.recorder.last[1]
+    assert [f.filename for f in attached(shown, "files")] == ["inventory.png"]
+    table = "\n".join(w.inventory.numbers_pages(items))
+    assert re.search(r"Dunne Transport\s+2\s+-\s+6\n", table)
+    assert re.search(r"O.Brien V\.101 Freeman\s+-\s+2\s+2\n", table)
+
+
+async def test_tabs_and_history_navigation(world):
+    w = world
+    row = await add_stockpile(w, name="Big Depot")
+    modal = lambda: w.inventory.PasteModal(w.bot, w.guild.id, stockpile=row)
+    await paste(w, w.member, header(name="Big Depot") + "\nTripod (Crate),10\nBandages,5\n", modal=modal())
+    await paste(w, w.clerk, header(name="Big Depot") + "\nTripod (Crate),12\nBandages,5\n", modal=modal())
+    await paste(w, w.member, header(name="Big Depot") + "\nTripod (Crate),7\nSalvage,40\n", modal=modal())
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=row["id"])
+    opener = make_interaction(w.bot, w.member, channel=w.channel)
+    await view.send(opener)
+    first = opener.recorder.last[1]
+    assert [f.filename for f in attached(first, "files")] == ["inventory.png"]
+    labels = [getattr(item, "label", None) for item in view.children]
+    assert labels[:3] == ["Inventory", "Changes", "Map"]
+    assert find_button(view, "Inventory").disabled
+    select = find_select(view)
+    assert len(select.options) == 3
+    assert [o.default for o in select.options] == [True, False, False]
+    assert select.options[0].description.startswith("Newest | 2 item types")
+    assert find_button(view, "Page 1/3").disabled
+    assert find_button(view, "Back").disabled and not find_button(view, "Next").disabled
+    older = make_interaction(w.bot, w.member, channel=w.channel)
+    await find_button(view, "Next").callback(older)
+    second = older.recorder.last[1]
+    assert find_button(view, "Page 2/3")
+    assert "Viewing an older import" in second["embed"].description
+    assert f"Imported by <@{w.clerk.id}>" in second["embed"].description
+    assert [f.filename for f in second["attachments"]] == ["inventory.png"]
+    assert not find_button(view, "Back").disabled
+    changes = await open_tab(w, view, "Changes")
+    assert "Tripod (crates): 10 -> **12**" in changes["embed"].description
+    assert changes["attachments"] == []
+    assert find_select(view) and find_button(view, "Page 2/3")
+    oldest = make_interaction(w.bot, w.member, channel=w.channel)
+    await find_button(view, "Next").callback(oldest)
+    assert "first import of this stockpile" in oldest.recorder.last[1]["embed"].description
+    assert find_button(view, "Next").disabled and find_button(view, "Page 3/3")
+    newer = make_interaction(w.bot, w.member, channel=w.channel)
+    await find_button(view, "Back").callback(newer)
+    assert find_button(view, "Page 2/3")
+    select = find_select(view)
+    select_values(select, [select.options[0].value])
+    picked = make_interaction(w.bot, w.member, channel=w.channel)
+    await select.callback(picked)
+    latest = picked.recorder.last[1]
+    assert find_button(view, "Page 1/3")
+    assert "Tripod (crates): 12 -> **7**" in latest["embed"].description
+    assert "Bandages (loose): 5 -> **0**" in latest["embed"].description
+    assert "Salvage (loose): 0 -> **40**" in latest["embed"].description
+    inventory_tab = await open_tab(w, view, "Inventory")
+    assert [f.filename for f in inventory_tab["attachments"]] == ["inventory.png"]
+
+
+async def test_inventory_tab_without_pillow_shows_a_table(world, monkeypatch):
+    from foxbot.core import itemimages
+
+    monkeypatch.setattr(itemimages, "Image", None)
+    w = world
+    row = await add_stockpile(w, name="Motor Pool")
+    await paste(w, w.member, VEHICLE_EXPORT)
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=row["id"])
+    opener = make_interaction(w.bot, w.member, channel=w.channel)
+    await view.send(opener)
+    labels = [getattr(item, "label", None) for item in view.children]
+    assert labels[:2] == ["Inventory", "Changes"]
+    payload = opener.recorder.last[1]
+    assert "```" in payload["embed"].description and not attached(payload, "files")
+
+
+async def test_find_shows_item_icon_and_totals_show_grid(world):
+    w = world
+    await add_stockpile(w, name="Motor Pool")
+    await paste(w, w.member, VEHICLE_EXPORT)
+    finder = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.inventory.show_find(w.bot, finder, "Dunne Transport")
+    found = finder.recorder.last[1]
+    assert found["embed"].thumbnail.url == "attachment://item.png"
+    assert [f.filename for f in attached(found, "files")] == ["item.png"]
+    assert "**6** units" in all_text(found["embed"])
+    totals = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.inventory.show_totals(w.bot, totals, "Vehicles")
+    shown = totals.recorder.last[1]
+    assert shown["embed"].image.url == "attachment://inventory.png"
+    assert [f.filename for f in attached(shown, "files")] == ["inventory.png"]
+
+
+async def test_inventory_works_without_pillow(world, monkeypatch):
+    from foxbot.core import itemimages
+
+    monkeypatch.setattr(itemimages, "Image", None)
+    w = world
+    row = await add_stockpile(w, name="Motor Pool")
+    interaction = await paste(w, w.member, VEHICLE_EXPORT)
+    payload = interaction.recorder.last[1]
+    assert not attached(payload, "files")
+    assert not payload["embed"].image.url
+    opener = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.inventory.show_for_stockpile(w.bot, opener, row)
+    assert not attached(opener.recorder.last[1], "files")
+    finder = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.inventory.show_find(w.bot, finder, "Dunne Transport")
+    assert not attached(finder.recorder.last[1], "files")
+
+
+def test_history_window_stays_within_bounds(world):
+    window = world.inventory.history_window
+    assert list(window(3, 0)) == [0, 1, 2]
+    assert list(window(50, 0)) == list(range(25))
+    assert list(window(50, 30)) == list(range(18, 43))
+    assert list(window(50, 49)) == list(range(25, 50))
+
+
+async def test_history_select_is_limited_to_25(world):
+    w = world
+    row = await add_stockpile(w)
+    modal = lambda: w.inventory.PasteModal(w.bot, w.guild.id, stockpile=row)
+    for index in range(30):
+        await paste(w, w.member, f"Tripod (Crate),{index + 1}\n", modal=modal())
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=row["id"])
+    await view.send(make_interaction(w.bot, w.member, channel=w.channel))
+    select = find_select(view)
+    assert len(select.options) == 25
+    assert select.options[0].default
+    assert find_button(view, "Page 1/30")
+
+
+CSV_EXPORT = (
+    "Ash Fields - The Calamity - Storage Depot - KM Main - X: 0.5123456 Y: 0.4876543,2026.10.03-16.27.00\n"
+    "Basic Materials (Crate),120\n"
+    "Refined Materials (Crate),40\n"
+    "Bandages (Crate),30\n"
+    "Salvage,500\n"
+    "Garrison Supplies (Crate),12\n"
+)
+
+
+async def submit_csv(w, member, text, *, code="123456", priority="High", visibility="Public"):
+    modal = w.inventory.StockpileFromExportModal(w.bot, w.guild.id)
+    set_label_value(modal.contents, text)
+    set_label_value(modal.code, code)
+    set_label_value(modal.priority, priority)
+    set_label_value(modal.visibility, visibility)
+    interaction = make_interaction(w.bot, member, channel=w.channel)
+    await modal.on_submit(interaction)
+    return interaction
+
+
+async def test_stockpile_board_offers_add_from_csv(world):
+    w = world
+    render = await w.bot.boards.providers["stockpile"].render(w.guild)
+    assert "csv" in {button.action for button in render.buttons}
+    click = make_interaction(w.bot, w.member, channel=w.channel)
+    await w.bot.boards.providers["stockpile"].on_button(click, "csv")
+    modal = click.response.modal
+    assert isinstance(modal, w.inventory.StockpileFromExportModal)
+    assert len(modal.children) <= 5
+    cog = w.bot.get_cog("Stockpiles")
+    slash = make_interaction(w.bot, w.member, channel=w.channel)
+    await cog.add_csv.callback(cog, slash)
+    assert isinstance(slash.response.modal, w.inventory.StockpileFromExportModal)
+    denied = make_interaction(w.bot, w.outsider, channel=w.channel)
+    await w.bot.boards.providers["stockpile"].on_button(denied, "csv")
+    assert denied.response.modal is None and "permission" in denied.recorder.last[1]["content"]
+
+
+async def test_create_stockpile_from_csv(world):
+    w = world
+    interaction = await submit_csv(w, w.member, CSV_EXPORT, visibility="Private")
+    kind, payload = interaction.recorder.last
+    assert kind == "send" and payload["ephemeral"]
+    assert "Stockpile **KM Main** created from the export with 5 item types" in payload["content"]
+    assert "Not recognised: Garrison Supplies" in payload["content"]
+    assert "Only you and admins can see it" in payload["content"]
+    created = await w.stockpiles.list_entries(w.bot, w.guild.id, private=True)
+    assert len(created) == 1
+    row = created[0]
+    assert (row["name"], row["hex"], row["region"], row["store_type"], row["code"], row["priority"]) == (
+        "KM Main",
+        "Ash Fields",
+        "The Calamity",
+        "Storage Depot",
+        "123456",
+        "High",
+    )
+    snaps = await snapshots(w)
+    assert [s["stockpile_id"] for s in snaps] == [row["id"]]
+    assert "123456" in all_text(payload["embed"])
+    again = await submit_csv(w, w.member, CSV_EXPORT.replace("Salvage,500", "Salvage,600"), code="999999")
+    assert "already tracked" in again.recorder.last[1]["content"]
+    assert len(await w.stockpiles.list_entries(w.bot, w.guild.id, private=True)) == 1
+    assert (await w.stockpiles.fetch(w.bot, w.guild.id, row["id"]))["code"] == "123456"
+    assert [s["stockpile_id"] for s in await snapshots(w)] == [row["id"], row["id"]]
+
+
+async def test_create_stockpile_from_csv_rejections(world):
+    w = world
+    headerless = await submit_csv(w, w.member, "Tripod (Crate),5\n")
+    assert "first line" in headerless.recorder.last[1]["content"]
+    double = await submit_csv(w, w.member, FIR_TSV)
+    assert "several stockpiles" in double.recorder.last[1]["content"]
+    filler = "\n".join(f"Filler Item {index:04d},{index}" for index in range(400))
+    cut = await submit_csv(w, w.member, (header() + "\n" + filler)[:4000])
+    assert "4000 character limit" in cut.recorder.last[1]["content"]
+    outsider = await submit_csv(w, w.outsider, CSV_EXPORT)
+    assert "permission" in outsider.recorder.last[1]["content"]
+    assert await w.stockpiles.list_entries(w.bot, w.guild.id, private=False) == []
+    assert await snapshots(w) == []
+
+
+JPEG_SIGNATURE = b"\xff\xd8\xff"
+
+
+def test_header_coordinates_are_parsed():
+    stock = parse_header("Terminus - Rising Loom - Seaport - Public - X: 0.4577449 Y: 0.6644695,2026.06.23-16.30.38")
+    assert stock.map_x == pytest.approx(0.4577449) and stock.map_y == pytest.approx(0.6644695)
+    odd = parse_header("Terminus - Rising Loom - Seaport - Public - X: 7 Y: 0,5,2026.06.23-16.30.38")
+    assert odd is None or odd.map_x is None
+
+
+def test_every_war_hex_has_a_map_and_a_world_position():
+    from foxbot.core import mapimages
+    from foxbot.core.locations import SEED_PATH, LocationService
+
+    locations = LocationService(Path("/nonexistent"), "http://127.0.0.1:9")
+    assert locations._load_file(SEED_PATH) and locations.has_positions()
+    keys = {hex_.key for hex_ in locations.hexes.values()}
+    assert len(keys) == 53
+    assert all(mapimages.has_hex(key) for key in keys)
+    assert set(mapimages.layout()["hexes"]) == keys
+    assert locations.position("Terminus", "Rising Loom") == pytest.approx((0.489286, 0.7042201))
+    assert mapimages.render_hex("TerminusHex", 0.45, 0.66, label="KM").startswith(JPEG_SIGNATURE)
+    assert mapimages.render_world("TerminusHex", 0.45, 0.66, label="KM").startswith(JPEG_SIGNATURE)
+
+
+async def test_map_tab_uses_export_position_and_switches_to_world(world):
+    w = world
+    row = await add_stockpile(w)
+    interaction = await paste(w, w.member, SAMPLE)
+    snap = (await snapshots(w))[-1]
+    assert (snap["map_x"], snap["map_y"]) == pytest.approx((0.4577449, 0.6644695))
+    view = interaction.recorder.last[1]["view"]
+    hex_map = await open_tab(w, view, "Map")
+    assert [f.filename for f in hex_map["attachments"]] == ["map.jpg"]
+    assert hex_map["embed"].image.url == "attachment://map.jpg"
+    assert "Exact spot from the in-game export (X 0.458, Y 0.664)" in hex_map["embed"].description
+    assert find_button(view, "Hex map").disabled and not find_button(view, "World map").disabled
+    assert find_select(view) and find_button(view, "Page 1/1")
+    world_map = await open_tab(w, view, "World map")
+    assert [f.filename for f in world_map["attachments"]] == ["map.jpg"]
+    assert find_button(view, "World map").disabled
+    stockpile_view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=row["id"])
+    await stockpile_view.send(make_interaction(w.bot, w.member, channel=w.channel))
+    again = await open_tab(w, stockpile_view, "Map")
+    assert "Exact spot" in again["embed"].description
+
+
+async def test_map_tab_falls_back_to_town_then_hex(world):
+    w = world
+    cog = w.bot.get_cog("Inventory")
+    await cog.upload.callback(cog, make_interaction(w.bot, w.member), make_upload("fir.tsv", FIR_TSV.encode()))
+    snaps = await snapshots(w)
+    assert all(s["map_x"] is None for s in snaps)
+    stockpile = await add_stockpile(w, name="Depot", hex_name="Piper's Enclave", region="Syrinx Pass")
+    await w.inventory.run_import(
+        w.bot, make_interaction(w.bot, w.member, channel=w.channel), w.guild.id, "Tripod (Crate),4\n", stockpile=stockpile
+    )
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=stockpile["id"])
+    await view.send(make_interaction(w.bot, w.member, channel=w.channel))
+    approximate = await open_tab(w, view, "Map")
+    assert "Approximate: the map marker of Syrinx Pass" in approximate["embed"].description
+    assert [f.filename for f in approximate["attachments"]] == ["map.jpg"]
+    hex_only = await add_stockpile(w, name="Somewhere", hex_name="Onyx", region="")
+    await w.inventory.run_import(
+        w.bot, make_interaction(w.bot, w.member, channel=w.channel), w.guild.id, "Tripod (Crate),4\n", stockpile=hex_only
+    )
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=hex_only["id"])
+    await view.send(make_interaction(w.bot, w.member, channel=w.channel))
+    payload = await open_tab(w, view, "Map")
+    assert "Only the hex is known" in payload["embed"].description
+    nowhere = await add_stockpile(w, name="Lost", hex_name="Atlantis", region="Deep End")
+    await w.inventory.run_import(
+        w.bot, make_interaction(w.bot, w.member, channel=w.channel), w.guild.id, "Tripod (Crate),4\n", stockpile=nowhere
+    )
+    view = w.inventory.ContentsView(w.bot, w.guild.id, w.member.id, stockpile_id=nowhere["id"])
+    await view.send(make_interaction(w.bot, w.member, channel=w.channel))
+    payload = await open_tab(w, view, "Map")
+    assert "not on the war map" in payload["embed"].description and payload["attachments"] == []
